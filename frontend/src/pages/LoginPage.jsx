@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import PublicNav from "./public/PublicNav";
+import "./public/landing.css";
 
 export default function LoginPage() {
   const [modo, setModo] = useState("paciente");
@@ -33,46 +35,59 @@ export default function LoginPage() {
   }
 
   return (
-    <div>
-      <h1>Clínica Dental El Mirador</h1>
-      <nav className="tabs">
-        <button
-          type="button"
-          className={modo === "paciente" ? "activo" : ""}
-          onClick={() => cambiarModo("paciente")}
-        >
-          Soy paciente
-        </button>
-        <button
-          type="button"
-          className={modo === "staff" ? "activo" : ""}
-          onClick={() => cambiarModo("staff")}
-        >
-          Soy del equipo
-        </button>
-      </nav>
+    <div className="cs-landing">
+      <PublicNav />
 
-      <form onSubmit={handleSubmit}>
-        <label>
-          <span>{modo === "paciente" ? "Teléfono" : "Usuario"}</span>
-          <input
-            type="text"
-            placeholder={modo === "paciente" ? "+56 9 1234 5678" : undefined}
-            value={identificador}
-            onChange={(e) => setIdentificador(e.target.value)}
-          />
-        </label>
-        <label>
-          <span>Contraseña</span>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        {error && <p role="alert">{error}</p>}
-        <button type="submit">Ingresar</button>
-      </form>
+      <section>
+        <div className="cs-container cs-login-card">
+          <span className="cs-topper">Acceso</span>
+          <h2 className="cs-title">Ingresa a tu cuenta</h2>
+          <p className="cs-text">
+            Revisa tus citas, tu ficha y tus pagos, o entra al panel del equipo.
+          </p>
+
+          <div className="cs-login-tabs">
+            <button
+              type="button"
+              className={modo === "paciente" ? "activo" : ""}
+              onClick={() => cambiarModo("paciente")}
+            >
+              Soy paciente
+            </button>
+            <button
+              type="button"
+              className={modo === "staff" ? "activo" : ""}
+              onClick={() => cambiarModo("staff")}
+            >
+              Staff
+            </button>
+          </div>
+
+          <form className="cs-reserva-paso cs-login-form" onSubmit={handleSubmit}>
+            <label>
+              <span>{modo === "paciente" ? "Teléfono" : "Usuario"}</span>
+              <input
+                type="text"
+                placeholder={modo === "paciente" ? "+56 9 1234 5678" : undefined}
+                value={identificador}
+                onChange={(e) => setIdentificador(e.target.value)}
+              />
+            </label>
+            <label>
+              <span>Contraseña</span>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </label>
+            {error && <p role="alert">{error}</p>}
+            <button type="submit" className="cs-link">
+              Ingresar
+            </button>
+          </form>
+        </div>
+      </section>
     </div>
   );
 }

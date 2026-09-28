@@ -22,6 +22,6 @@ describe("App", () => {
   it("una ruta protegida sin sesion redirige a /login", () => {
     window.history.pushState({}, "", "/staff");
     render(<App />);
-    expect(screen.getByText("Clínica Dental El Mirador")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Ingresa a tu cuenta" })).toBeInTheDocument();
   });
 });

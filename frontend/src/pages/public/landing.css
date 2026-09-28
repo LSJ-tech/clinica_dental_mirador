@@ -396,6 +396,43 @@
   max-width: 520px;
 }
 
+/* Login */
+
+.cs-login-card {
+  max-width: 420px;
+}
+
+.cs-login-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 24px 0;
+}
+
+.cs-login-tabs button {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--dental-accent);
+  background: #fff;
+  color: var(--dental-accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cs-login-tabs button.activo {
+  background: var(--dental-accent);
+  color: #fff;
+}
+
+.cs-login-form button[type="submit"] {
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  width: 100%;
+  text-align: center;
+}
+
 /* Equipo */
 
 .cs-team-grid {
