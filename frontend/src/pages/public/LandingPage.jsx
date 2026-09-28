@@ -78,6 +78,9 @@ export default function LandingPage() {
           <li>
             <a href="#services-1354">Servicios</a>
           </li>
+          <li>
+            <Link to="/equipo">Nuestro equipo</Link>
+          </li>
         </ul>
         <Link to="/login" className="cs-button-outline">
           Ingresar

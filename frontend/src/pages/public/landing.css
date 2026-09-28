@@ -316,6 +316,84 @@
   color: #cfe0ee;
 }
 
+/* Equipo */
+
+.cs-team-grid {
+  list-style: none;
+  margin: 32px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.cs-team-card {
+  border: 1px solid var(--dental-bg-soft);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+.cs-team-foto {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 16px;
+}
+
+.cs-team-iniciales {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dental-bg-soft);
+  color: var(--dental-primary);
+  font-weight: 700;
+  font-size: 32px;
+}
+
+.cs-team-card .cs-h3 {
+  background: none;
+  color: var(--dental-ink);
+  padding: 0;
+  display: block;
+  width: auto;
+  margin: 0 0 4px;
+}
+
+.cs-team-cargo {
+  display: block;
+  color: var(--dental-accent);
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.cs-team-credenciales {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cs-team-credenciales li {
+  color: var(--dental-muted);
+  font-size: 13px;
+  line-height: 1.4;
+  padding-left: 14px;
+  position: relative;
+}
+
+.cs-team-credenciales li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--dental-accent);
+}
+
 @media (max-width: 600px) {
   .cs-landing .cs-title {
     font-size: 26px;
