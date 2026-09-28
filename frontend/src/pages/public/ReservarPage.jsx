@@ -83,7 +83,14 @@ export default function ReservarPage() {
       <section>
         <div className="cs-container">
           <span className="cs-topper">Reserva tu hora</span>
-          <h2 className="cs-title">Agenda tu cita en un par de pasos</h2>
+          <h2 className="cs-title">Agenda tu hora de evaluación</h2>
+          {!confirmada && (
+            <p className="cs-text">
+              Esta primera hora es para una evaluación y presupuesto. Los tratamientos que
+              necesites después (limpieza, endodoncia, ortodoncia, etc.) se agendan
+              directamente en la clínica una vez evaluado tu caso.
+            </p>
+          )}
 
           {confirmada ? (
             <div className="cs-reserva-confirmacion">
@@ -188,9 +195,9 @@ export default function ReservarPage() {
                     />
                   </label>
                   <label>
-                    <span>Motivo (opcional)</span>
+                    <span>Cuéntanos brevemente qué te pasa (opcional)</span>
                     <input
-                      placeholder="Ej: limpieza, dolor de muela..."
+                      placeholder="Ej: me duele una muela, quiero un chequeo general..."
                       value={datos.motivo}
                       onChange={(e) => setDatos({ ...datos, motivo: e.target.value })}
                     />

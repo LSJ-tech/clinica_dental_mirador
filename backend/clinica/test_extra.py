@@ -294,6 +294,16 @@ class TestReservaPublicaConCuenta:
         paciente = Paciente.objects.get(rut="11111111-1")
         assert paciente.user_id is None
 
+    def test_sin_motivo_queda_marcada_como_evaluacion(self):
+        respuesta = self.client.post("/api/reservas/", self._payload())
+        cita = Cita.objects.get(pk=respuesta.data["id"])
+        assert cita.motivo == "Evaluación / presupuesto inicial"
+
+    def test_con_motivo_se_respeta_lo_que_escribio_el_paciente(self):
+        respuesta = self.client.post("/api/reservas/", self._payload(motivo="Me duele una muela"))
+        cita = Cita.objects.get(pk=respuesta.data["id"])
+        assert cita.motivo == "Me duele una muela"
+
     def test_crear_cuenta_sin_password_es_rechazado(self):
         respuesta = self.client.post("/api/reservas/", self._payload(crear_cuenta=True))
         assert respuesta.status_code == 400

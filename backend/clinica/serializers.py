@@ -153,12 +153,17 @@ class ReservaPublicaSerializer(serializers.Serializer):
             paciente.save(update_fields=["user"])
             self.cuenta_creada = True
 
+        # La reserva pública es siempre una primera hora de evaluación /
+        # presupuesto (igual que en el sitio real de la clínica: no se
+        # eligen tratamientos específicos online, esos los agenda el staff
+        # después de evaluar). Si el paciente no escribió nada en "motivo",
+        # que quede explícito para quien vea la Agenda.
         return Cita.objects.create(
             paciente=paciente,
             profesional=validated_data["profesional"],
             fecha=validated_data["fecha"],
             hora=validated_data["hora"],
-            motivo=validated_data.get("motivo", ""),
+            motivo=validated_data.get("motivo") or "Evaluación / presupuesto inicial",
             estado="pendiente",
         )
 
