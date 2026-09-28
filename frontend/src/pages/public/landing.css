@@ -4,11 +4,15 @@
    otro rubro, no de una clínica dental). */
 
 .cs-landing {
-  --dental-primary: #1a7a6e;
-  --dental-primary-dark: #0f5951;
-  --dental-ink: #10221f;
-  --dental-muted: #5c6d6a;
-  --dental-bg-soft: #f2f8f7;
+  /* Paleta tomada del sitio real de la clínica (clinicadentalelmirador.cl),
+     extraída de su propio CSS -- no inventada. */
+  --dental-primary: #113f60; /* azul marino -- el color mas usado en su sitio */
+  --dental-primary-dark: #0c2e46;
+  --dental-accent: #0264ad; /* azul de acento, para botones/links */
+  --dental-accent-dark: #1b537b;
+  --dental-ink: #000000;
+  --dental-muted: #7a7a7a;
+  --dental-bg-soft: #eff0eb;
   text-align: left;
   color: var(--dental-ink);
   font-size: 16px;
@@ -58,20 +62,20 @@
 }
 
 .cs-landing .cs-link {
-  background: var(--dental-primary);
+  background: var(--dental-accent);
   color: #fff;
 }
 
 .cs-landing .cs-link:hover {
-  background: var(--dental-primary-dark);
+  background: var(--dental-accent-dark);
 }
 
 .cs-landing .cs-button-outline {
   display: inline-block;
   padding: 12px 28px;
   border-radius: 999px;
-  border: 1px solid var(--dental-primary);
-  color: var(--dental-primary);
+  border: 1px solid var(--dental-accent);
+  color: var(--dental-accent);
   text-decoration: none;
   font-weight: 600;
   margin-left: 12px;
@@ -84,7 +88,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px 24px;
-  border-bottom: 1px solid #e4ece9;
+  border-bottom: 1px solid var(--dental-bg-soft);
   position: sticky;
   top: 0;
   background: #fff;
@@ -115,7 +119,7 @@
 
 .cs-placeholder {
   border-radius: 16px;
-  background: linear-gradient(135deg, var(--dental-bg-soft), #dcefe9);
+  background: linear-gradient(135deg, var(--dental-bg-soft), #cfe0ee);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -237,7 +241,7 @@
   align-items: flex-end;
   height: 100%;
   padding: 20px;
-  background: linear-gradient(0deg, rgba(15, 89, 81, 0.85), rgba(15, 89, 81, 0));
+  background: linear-gradient(0deg, rgba(17, 63, 96, 0.85), rgba(17, 63, 96, 0));
   color: #fff;
   border-radius: 0;
 }
@@ -258,8 +262,8 @@
 /* Footer */
 
 .cs-landing-footer {
-  background: var(--dental-ink);
-  color: #d7e6e3;
+  background: var(--dental-primary);
+  color: #cfe0ee;
   padding: 40px 24px;
 }
 
@@ -271,7 +275,7 @@
 }
 
 .cs-landing-footer a {
-  color: #d7e6e3;
+  color: #cfe0ee;
 }
 
 @media (max-width: 600px) {
