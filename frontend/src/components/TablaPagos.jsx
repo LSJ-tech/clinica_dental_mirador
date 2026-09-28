@@ -1,3 +1,5 @@
+import Badge from "./Badge";
+
 export default function TablaPagos({ pagos }) {
   return (
     <table>
@@ -15,7 +17,9 @@ export default function TablaPagos({ pagos }) {
             <td>{p.fecha}</td>
             <td>${p.monto}</td>
             <td>{p.medio_pago}</td>
-            <td>{p.estado}</td>
+            <td>
+              <Badge estado={p.estado} />
+            </td>
           </tr>
         ))}
       </tbody>

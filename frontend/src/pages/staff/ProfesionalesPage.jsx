@@ -60,6 +60,7 @@ export default function ProfesionalesPage() {
   return (
     <div>
       <h1>Profesionales</h1>
+      <section className="panel-card">
       <table>
         <thead>
           <tr>
@@ -97,7 +98,9 @@ export default function ProfesionalesPage() {
           ))}
         </tbody>
       </table>
+      </section>
 
+      <section className="panel-card">
       <h2>{editandoId ? "Editar profesional" : "Nuevo profesional"}</h2>
       <form onSubmit={handleSubmit}>
         <label>
@@ -137,6 +140,7 @@ export default function ProfesionalesPage() {
           </button>
         )}
       </form>
+      </section>
     </div>
   );
 }

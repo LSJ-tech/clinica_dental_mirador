@@ -30,15 +30,15 @@ export default function FichaClinicaPage() {
   return (
     <div>
       <h1>Mi ficha clínica</h1>
-      <section>
+      <section className="panel-card">
         <h2>Historial</h2>
         <p>{ficha.historial || "Sin registros todavía."}</p>
       </section>
-      <section>
+      <section className="panel-card">
         <h2>Notas clínicas</h2>
         <p>{ficha.notas_clinicas || "Sin notas todavía."}</p>
       </section>
-      <section>
+      <section className="panel-card">
         <h2>Tratamientos</h2>
         {tratamientos.length === 0 && <p>No tienes tratamientos registrados.</p>}
         {tratamientos.length > 0 && <TablaTratamientos tratamientos={tratamientos} />}

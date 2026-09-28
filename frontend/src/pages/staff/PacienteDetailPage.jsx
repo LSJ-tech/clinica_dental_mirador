@@ -12,6 +12,7 @@ import TablaPagos from "../../components/TablaPagos";
 import TablaTratamientos from "../../components/TablaTratamientos";
 import CampoProfesional from "../../components/CampoProfesional";
 import CampoHora from "../../components/CampoHora";
+import Badge from "../../components/Badge";
 
 const TABS = ["Ficha", "Tratamientos", "Pagos", "Citas"];
 
@@ -39,32 +40,34 @@ export default function PacienteDetailPage() {
   return (
     <div>
       <h1>{paciente.nombre}</h1>
-      <form onSubmit={guardarPaciente}>
-        <label>
-          <span>Nombre</span>
-          <input
-            value={paciente.nombre}
-            onChange={(e) => setPaciente({ ...paciente, nombre: e.target.value })}
-          />
-        </label>
-        <label>
-          <span>Teléfono</span>
-          <input
-            value={paciente.telefono}
-            onChange={(e) => setPaciente({ ...paciente, telefono: e.target.value })}
-          />
-        </label>
-        <label>
-          <span>Fecha de nacimiento</span>
-          <input
-            type="date"
-            value={paciente.fecha_nacimiento || ""}
-            onChange={(e) => setPaciente({ ...paciente, fecha_nacimiento: e.target.value })}
-          />
-        </label>
-        <span>RUT: {paciente.rut}</span>
-        <button type="submit">Guardar</button>
-      </form>
+      <section className="panel-card">
+        <form onSubmit={guardarPaciente}>
+          <label>
+            <span>Nombre</span>
+            <input
+              value={paciente.nombre}
+              onChange={(e) => setPaciente({ ...paciente, nombre: e.target.value })}
+            />
+          </label>
+          <label>
+            <span>Teléfono</span>
+            <input
+              value={paciente.telefono}
+              onChange={(e) => setPaciente({ ...paciente, telefono: e.target.value })}
+            />
+          </label>
+          <label>
+            <span>Fecha de nacimiento</span>
+            <input
+              type="date"
+              value={paciente.fecha_nacimiento || ""}
+              onChange={(e) => setPaciente({ ...paciente, fecha_nacimiento: e.target.value })}
+            />
+          </label>
+          <span className="rut-paciente">RUT: {paciente.rut}</span>
+          <button type="submit">Guardar</button>
+        </form>
+      </section>
 
       <nav className="tabs">
         {TABS.map((t) => (
@@ -79,10 +82,12 @@ export default function PacienteDetailPage() {
         ))}
       </nav>
 
-      {tab === "Ficha" && <TabFicha pacienteId={id} />}
-      {tab === "Tratamientos" && <TabTratamientos pacienteId={id} />}
-      {tab === "Pagos" && <TabPagos pacienteId={id} />}
-      {tab === "Citas" && <TabCitas pacienteId={id} />}
+      <section className="panel-card">
+        {tab === "Ficha" && <TabFicha pacienteId={id} />}
+        {tab === "Tratamientos" && <TabTratamientos pacienteId={id} />}
+        {tab === "Pagos" && <TabPagos pacienteId={id} />}
+        {tab === "Citas" && <TabCitas pacienteId={id} />}
+      </section>
     </div>
   );
 }
@@ -294,8 +299,10 @@ function TabCitas({ pacienteId }) {
               <td>{c.fecha}</td>
               <td>{c.hora}</td>
               <td>{c.profesional_nombre}</td>
-              <td>{c.estado}</td>
               <td>
+                <Badge estado={c.estado} />
+              </td>
+              <td className="acciones">
                 <button onClick={() => cambiarEstado(c, "confirmada")}>Confirmar</button>
                 <button onClick={() => cambiarEstado(c, "completada")}>Completar</button>
                 <button onClick={() => cambiarEstado(c, "cancelada")}>Cancelar</button>

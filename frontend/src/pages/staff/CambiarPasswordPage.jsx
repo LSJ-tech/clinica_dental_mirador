@@ -37,6 +37,7 @@ export default function CambiarPasswordPage() {
   return (
     <div>
       <h1>Cambiar contraseña</h1>
+      <section className="panel-card">
       <form onSubmit={handleSubmit}>
         <label>
           <span>Contraseña actual</span>
@@ -69,6 +70,7 @@ export default function CambiarPasswordPage() {
         {exito && <p>Contraseña actualizada correctamente.</p>}
         <button type="submit">Guardar</button>
       </form>
+      </section>
     </div>
   );
 }

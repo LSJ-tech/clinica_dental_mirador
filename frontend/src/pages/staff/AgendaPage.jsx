@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { citasApi, pacientesApi, profesionalesApi } from "../../api/resources";
 import CampoProfesional from "../../components/CampoProfesional";
 import CampoHora from "../../components/CampoHora";
+import Badge from "../../components/Badge";
 
 function hoyISO() {
   return new Date().toISOString().slice(0, 10);
@@ -48,43 +49,48 @@ export default function AgendaPage() {
   return (
     <div>
       <h1>Agenda</h1>
-      <label>
-        <span>Fecha</span>
-        <input type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} />
-      </label>
+      <section className="panel-card">
+        <label>
+          <span>Fecha</span>
+          <input type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} />
+        </label>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Hora</th>
-            <th>Paciente</th>
-            <th>Profesional</th>
-            <th>Box</th>
-            <th>Estado</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {citas.map((cita) => (
-            <tr key={cita.id}>
-              <td>{cita.hora}</td>
-              <td>{cita.paciente_nombre}</td>
-              <td>{cita.profesional_nombre}</td>
-              <td>{cita.box}</td>
-              <td>{cita.estado}</td>
-              <td>
-                <button onClick={() => cambiarEstado(cita, "confirmada")}>Confirmar</button>
-                <button onClick={() => cambiarEstado(cita, "completada")}>Completar</button>
-                <button onClick={() => cambiarEstado(cita, "no_asistio")}>No asistió</button>
-                <button onClick={() => cambiarEstado(cita, "cancelada")}>Cancelar</button>
-              </td>
+        <table>
+          <thead>
+            <tr>
+              <th>Hora</th>
+              <th>Paciente</th>
+              <th>Profesional</th>
+              <th>Box</th>
+              <th>Estado</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {citas.map((cita) => (
+              <tr key={cita.id}>
+                <td>{cita.hora}</td>
+                <td>{cita.paciente_nombre}</td>
+                <td>{cita.profesional_nombre}</td>
+                <td>{cita.box}</td>
+                <td>
+                  <Badge estado={cita.estado} />
+                </td>
+                <td className="acciones">
+                  <button onClick={() => cambiarEstado(cita, "confirmada")}>Confirmar</button>
+                  <button onClick={() => cambiarEstado(cita, "completada")}>Completar</button>
+                  <button onClick={() => cambiarEstado(cita, "no_asistio")}>No asistió</button>
+                  <button onClick={() => cambiarEstado(cita, "cancelada")}>Cancelar</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
 
-      <h2>Agendar hora</h2>
-      <form onSubmit={handleCrear}>
+      <section className="panel-card">
+        <h2>Agendar hora</h2>
+        <form onSubmit={handleCrear}>
         <label>
           <span>Paciente</span>
           <select
@@ -116,6 +122,7 @@ export default function AgendaPage() {
         {error && <p role="alert">{error}</p>}
         <button type="submit">Agendar</button>
       </form>
+      </section>
     </div>
   );
 }

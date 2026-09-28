@@ -1,15 +1,20 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
+  /* Misma paleta que landing.css (extraída del sitio real de la clínica),
+     para que el panel interno se sienta parte de la misma marca en vez
+     de la plantilla genérica de Vite (violeta) que traía antes. */
+  --text: #52606d;
+  --text-h: #101828;
   --bg: #fff;
-  --border: #e5e4e7;
+  --border: #e2e6ea;
   --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
+  --accent: #0264ad;
+  --accent-dark: #113f60;
+  --accent-bg: rgba(2, 100, 173, 0.08);
+  --accent-border: rgba(2, 100, 173, 0.4);
   --social-bg: rgba(244, 243, 236, 0.5);
+  --bg-soft: #f5f7f9;
   --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+    rgba(16, 24, 40, 0.08) 0 4px 12px -2px, rgba(16, 24, 40, 0.04) 0 2px 4px -2px;
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -37,10 +42,12 @@
     --bg: #16171d;
     --border: #2e303a;
     --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
+    --accent: #4da3e0;
+    --accent-dark: #7cc0ee;
+    --accent-bg: rgba(77, 163, 224, 0.15);
+    --accent-border: rgba(77, 163, 224, 0.5);
     --social-bg: rgba(47, 48, 58, 0.5);
+    --bg-soft: #1c1d24;
     --shadow:
       rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
   }
@@ -55,11 +62,6 @@ body {
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: left;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -74,22 +76,18 @@ h2 {
 }
 
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
+  font-size: 32px;
+  letter-spacing: -0.5px;
+  margin: 0 0 20px;
   @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+    font-size: 26px;
   }
 }
 h2 {
-  font-size: 24px;
+  font-size: 20px;
   line-height: 118%;
   letter-spacing: -0.24px;
   margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
 }
 p {
   margin: 0;
@@ -110,30 +108,101 @@ code {
   background: var(--code-bg);
 }
 
-/* Estilos de la app (paneles, tablas, formularios) -- por encima de los
-   estilos de landing de arriba, que vienen de la plantilla base de Vite. */
+/* Estilos de la app (paneles de staff y paciente). */
 
-.nav {
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  background: var(--bg-soft);
+}
+
+.app-header {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 16px;
   align-items: center;
-  padding: 16px 24px;
+  gap: 12px 24px;
+  padding: 12px 24px;
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
-.nav a {
-  color: var(--text-h);
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: var(--accent-dark);
+  white-space: nowrap;
+}
+
+.app-brand img {
+  height: 36px;
+  width: auto;
+}
+
+.app-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  flex: 1;
+}
+
+.app-nav a {
+  color: var(--text);
   text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 6px;
 }
 
-.nav button {
+.app-nav a:hover {
+  background: var(--accent-bg);
+  color: var(--accent-dark);
+}
+
+.app-nav a.active {
+  background: var(--accent-bg);
+  color: var(--accent-dark);
+}
+
+.app-logout {
   margin-left: auto;
+  background: transparent;
+  border-color: var(--border);
 }
 
-.contenido {
-  padding: 24px;
-  text-align: left;
+.app-content {
+  flex: 1;
+  padding: 32px 24px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.panel-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+
+.panel-card table {
+  margin-top: 4px;
+}
+
+.rut-paciente {
+  display: inline-block;
+  color: var(--text);
+  font-size: 14px;
+  margin: 4px 0;
 }
 
 /* display:block en vez de envolver cada <table> en un contenedor propio:
@@ -149,29 +218,69 @@ table {
   margin: 12px 0;
 }
 
-th,
+th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  border-bottom: 1px solid var(--border);
+}
+
 td {
   text-align: left;
-  padding: 8px 12px;
+  padding: 12px 14px;
   border-bottom: 1px solid var(--border);
   font-size: 15px;
   white-space: nowrap;
 }
 
+tbody tr:hover {
+  background: var(--bg-soft);
+}
+
+td.acciones {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  border-bottom: none;
+}
+
+td.acciones button {
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
 form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
   max-width: 420px;
   margin: 12px 0;
   text-align: left;
 }
 
+form.form-inline {
+  flex-direction: row;
+  align-items: flex-end;
+  max-width: none;
+  flex-wrap: wrap;
+}
+
+form.form-inline input {
+  flex: 1;
+  min-width: 240px;
+}
+
 form label {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
   font-size: 14px;
+  font-weight: 500;
+  color: var(--text-h);
 }
 
 input,
@@ -179,26 +288,44 @@ select,
 textarea,
 button {
   font: inherit;
-  padding: 8px 10px;
+  padding: 9px 12px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
   background: var(--bg);
   color: var(--text-h);
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical;
 }
 
 button {
   cursor: pointer;
   width: fit-content;
+  font-weight: 600;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
 button:hover {
   border-color: var(--accent-border);
 }
 
+button[type="submit"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+button[type="submit"]:hover {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+}
+
 .tabs {
   display: flex;
   gap: 8px;
-  margin: 16px 0;
+  margin: 16px 0 0;
   border-bottom: 1px solid var(--border);
 }
 
@@ -207,32 +334,72 @@ button:hover {
   border-radius: 0;
   border-bottom: 2px solid transparent;
   background: none;
-  padding: 8px 4px;
+  padding: 10px 6px;
+  color: var(--text);
 }
 
 .tabs button.activo {
   border-bottom-color: var(--accent);
-  color: var(--accent);
+  color: var(--accent-dark);
 }
 
 .tarjetas {
   display: flex;
   gap: 16px;
+  flex-wrap: wrap;
 }
 
 .tarjeta {
+  background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 20px 28px;
   display: flex;
   flex-direction: column;
   gap: 4px;
-  min-width: 140px;
+  min-width: 160px;
 }
 
 .tarjeta strong {
   font-size: 32px;
-  color: var(--text-h);
+  color: var(--accent-dark);
+}
+
+.tarjeta span {
+  font-size: 14px;
+  color: var(--text);
+}
+
+/* Badges de estado (citas, pagos, tratamientos). */
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-ambar {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-verde {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge-rojo {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.badge-azul {
+  background: #dbeafe;
+  color: #1e40af;
 }
 
 [role="alert"] {
@@ -240,11 +407,15 @@ button:hover {
 }
 
 @media (max-width: 600px) {
-  .nav {
+  .app-header {
     padding: 12px 16px;
   }
 
-  .contenido {
+  .app-content {
+    padding: 20px 16px;
+  }
+
+  .panel-card {
     padding: 16px;
   }
 

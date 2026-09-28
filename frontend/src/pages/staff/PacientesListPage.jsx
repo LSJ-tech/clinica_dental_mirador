@@ -37,7 +37,8 @@ export default function PacientesListPage() {
   return (
     <div>
       <h1>Pacientes</h1>
-      <form onSubmit={handleBuscarSubmit}>
+      <section className="panel-card">
+      <form className="form-inline" onSubmit={handleBuscarSubmit}>
         <input
           placeholder="Buscar por nombre, RUT o teléfono"
           value={q}
@@ -66,7 +67,9 @@ export default function PacientesListPage() {
           ))}
         </tbody>
       </table>
+      </section>
 
+      <section className="panel-card">
       <button onClick={() => setMostrarForm(!mostrarForm)}>
         {mostrarForm ? "Cancelar" : "Nuevo paciente"}
       </button>
@@ -110,6 +113,7 @@ export default function PacientesListPage() {
           <button type="submit">Crear</button>
         </form>
       )}
+      </section>
     </div>
   );
 }

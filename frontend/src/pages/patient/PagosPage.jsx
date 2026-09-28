@@ -19,7 +19,11 @@ export default function PagosPage() {
       {error && <p role="alert">{error}</p>}
       {!error && pagos === null && <p>Cargando...</p>}
       {pagos?.length === 0 && <p>No tienes pagos registrados.</p>}
-      {pagos && pagos.length > 0 && <TablaPagos pagos={pagos} />}
+      {pagos && pagos.length > 0 && (
+        <section className="panel-card">
+          <TablaPagos pagos={pagos} />
+        </section>
+      )}
     </div>
   );
 }

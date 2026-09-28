@@ -1,3 +1,5 @@
+import Badge from "./Badge";
+
 export default function TablaTratamientos({ tratamientos }) {
   return (
     <table>
@@ -13,7 +15,9 @@ export default function TablaTratamientos({ tratamientos }) {
           <tr key={t.id}>
             <td>{t.tipo}</td>
             <td>${t.costo}</td>
-            <td>{t.estado}</td>
+            <td>
+              <Badge estado={t.estado} />
+            </td>
           </tr>
         ))}
       </tbody>
