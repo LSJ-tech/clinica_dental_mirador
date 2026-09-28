@@ -32,9 +32,16 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (telefono, password) => {
     const respuesta = await client.post("/token/", { username: telefono, password });
-    localStorage.setItem("access_token", respuesta.data.access);
-    localStorage.setItem("refresh_token", respuesta.data.refresh);
-    setToken(respuesta.data.access);
+    const { access, refresh } = respuesta.data;
+    // No guardar en localStorage lo que venga en la respuesta sin mirar:
+    // solo strings no vacíos, nunca objetos/null/undefined por una
+    // respuesta inesperada del backend.
+    if (typeof access !== "string" || !access || typeof refresh !== "string" || !refresh) {
+      throw new Error("Respuesta de login inválida.");
+    }
+    localStorage.setItem("access_token", access);
+    localStorage.setItem("refresh_token", refresh);
+    setToken(access);
     const me = await meApi.get();
     setIsStaff(me.data.is_staff);
     setPaciente(me.data.paciente);
@@ -50,8 +57,8 @@ export function AuthProvider({ children }) {
   }, []);
 
   // Sin esto, cada render de AuthProvider crea un objeto value nuevo y
-  // vuelve a renderizar TODO lo que consume el contexto, aunque nada haya
-  // cambiado realmente.
+  // vuelve a renderizar cada componente que consume el contexto, aunque
+  // nada haya cambiado realmente.
   const value = useMemo(
     () => ({ token, isAuthenticated: !!token, isStaff, paciente, loading, login, logout }),
     [token, isStaff, paciente, loading, login, logout]

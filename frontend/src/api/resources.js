@@ -5,12 +5,15 @@ export const meApi = {
 };
 
 function crudResource(path) {
+  // encodeURIComponent en el id: viene de datos del propio backend hoy,
+  // pero sin esto un id con "/" o ".." podria alterar la ruta a la que
+  // realmente pega la request (path traversal / SSRF del lado cliente).
   return {
     list: (params) => client.get(`/${path}/`, { params }),
-    get: (id) => client.get(`/${path}/${id}/`),
+    get: (id) => client.get(`/${path}/${encodeURIComponent(id)}/`),
     create: (data) => client.post(`/${path}/`, data),
-    update: (id, data) => client.patch(`/${path}/${id}/`, data),
-    remove: (id) => client.delete(`/${path}/${id}/`),
+    update: (id, data) => client.patch(`/${path}/${encodeURIComponent(id)}/`, data),
+    remove: (id) => client.delete(`/${path}/${encodeURIComponent(id)}/`),
   };
 }
 
