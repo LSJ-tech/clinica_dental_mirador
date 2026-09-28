@@ -172,7 +172,7 @@ SIMPLE_JWT = {
 # CORS
 # Sin DJANGO_CORS_ALLOWED_ORIGINS (desarrollo), se permite el dev server
 # por defecto de Vite. En producción hay que apuntarlo al dominio real
-# del frontend (ej. https://elmirador.devquad.cl).
+# del frontend (ej. https://clinicadentalelmirador.devquad.cl).
 
 CORS_ALLOWED_ORIGINS = [
     o.strip() for o in os.environ.get(

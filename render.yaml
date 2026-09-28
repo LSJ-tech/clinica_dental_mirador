@@ -2,7 +2,7 @@
 # Ver informes/informe_tecnico.md para el contexto de arquitectura.
 #
 # URLs *.onrender.com por ahora -- cuando el dominio propio
-# (elmirador.devquad.cl) tenga su DNS configurado, agregarlo a
+# (clinicadentalelmirador.devquad.cl) tenga su DNS configurado, agregarlo a
 # DJANGO_ALLOWED_HOSTS / DJANGO_CSRF_TRUSTED_ORIGINS / DJANGO_CORS_ALLOWED_ORIGINS
 # del backend, y como custom domain del static site.
 #
@@ -29,9 +29,9 @@ services:
       - key: DJANGO_ALLOWED_HOSTS
         value: clinica-mirador-backend.onrender.com
       - key: DJANGO_CSRF_TRUSTED_ORIGINS
-        value: https://clinica-mirador-backend.onrender.com,https://elmirador.devquad.cl
+        value: https://clinica-mirador-backend.onrender.com,https://clinicadentalelmirador.devquad.cl
       - key: DJANGO_CORS_ALLOWED_ORIGINS
-        value: https://clinica-mirador-frontend.onrender.com,https://elmirador.devquad.cl
+        value: https://clinica-mirador-frontend.onrender.com,https://clinicadentalelmirador.devquad.cl
       - key: DATABASE_URL
         fromDatabase:
           name: clinica-mirador-db

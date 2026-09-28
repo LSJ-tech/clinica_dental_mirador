@@ -51,6 +51,6 @@ Nota: esto es distinto de `gestion/whatsapp.py` en PataAgenda, que solo genera l
 
 - **Hosting:** Render, en un Web Service + base de datos PostgreSQL propios de este cliente (no se comparte instancia ni base de datos con PataAgenda ni otros clientes).
 - **Plan pagado (no free tier):** evita que el servicio "duerma" por inactividad, importante porque el sistema se usa en horario de atención.
-- **Subdominio:** propuesta de `elmirador.devquad.cl` apuntando por CNAME al Web Service en Render.
+- **Subdominio:** `clinicadentalelmirador.devquad.cl` apuntando por CNAME al servicio en Render.
 - **Datos de salud:** al tratarse de fichas clínicas, se debe restringir el acceso a `FichaClinica` y `Tratamiento` solo al staff de la clínica y al propio paciente (via `UsuarioPaciente`), con permisos separados de los datos administrativos (agenda, pagos).
 - **Backups:** respaldo automático de la base de datos (Render lo ofrece en los planes pagados), dado que se almacena información clínica sensible.
