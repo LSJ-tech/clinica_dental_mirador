@@ -5,11 +5,17 @@
 # (elmirador.devquad.cl) tenga su DNS configurado, agregarlo a
 # DJANGO_ALLOWED_HOSTS / DJANGO_CSRF_TRUSTED_ORIGINS / DJANGO_CORS_ALLOWED_ORIGINS
 # del backend, y como custom domain del static site.
+#
+# plan: free en el backend -- suficiente para esta demo/prueba inicial, sin
+# costo. Ojo: se "duerme" tras ~15 min sin trafico y tarda unos 30-50 seg en
+# despertar en la primera visita del dia (ver informes/informe_tecnico.md,
+# seccion Infraestructura). Subir a "starter" antes de que la clinica lo use
+# de verdad en horario de atencion.
 services:
   - type: web
     name: clinica-mirador-backend
     env: python
-    plan: starter
+    plan: free
     rootDir: backend
     buildCommand: "./build.sh"
     startCommand: "gunicorn mirador.wsgi:application"
