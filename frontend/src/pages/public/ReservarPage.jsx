@@ -57,12 +57,17 @@ export default function ReservarPage() {
       });
       setConfirmada(respuesta.data);
     } catch (err) {
-      if (err.response?.status === 400) {
-        setError(
-          "Ese horario ya no está disponible. Elige otro por favor."
-        );
+      if (err.response?.status === 400 && err.response.data?.horario) {
+        // El backend distingue esto (bajo la key "horario") de otros 400
+        // sin relacion con el horario, como una contraseña invalida --
+        // antes cualquier 400 mostraba este mismo mensaje, ocultando el
+        // motivo real del rechazo.
+        setError("Ese horario ya no está disponible. Elige otro por favor.");
         setHoraElegida(null);
         disponibilidadApi.get({ profesional, fecha }).then((r) => setSlots(r.data.slots));
+      } else if (err.response?.status === 400 && err.response.data) {
+        const mensaje = Object.values(err.response.data).flat().join(" ");
+        setError(mensaje || "No se pudo completar la reserva. Intenta nuevamente.");
       } else {
         setError("No se pudo completar la reserva. Intenta nuevamente.");
       }

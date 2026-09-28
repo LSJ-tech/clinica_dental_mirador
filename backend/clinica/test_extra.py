@@ -297,7 +297,7 @@ class TestReservaPublicaConCuenta:
     def test_crear_cuenta_sin_password_es_rechazado(self):
         respuesta = self.client.post("/api/reservas/", self._payload(crear_cuenta=True))
         assert respuesta.status_code == 400
-        assert "password" in respuesta.data
+        assert "contraseña" in str(respuesta.data).lower()
 
     def test_crear_cuenta_con_password_crea_usuario_con_rut_normalizado(self):
         respuesta = self.client.post(

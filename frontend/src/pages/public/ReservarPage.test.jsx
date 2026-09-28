@@ -76,7 +76,9 @@ describe("ReservarPage", () => {
   it("si el horario ya no esta disponible, muestra error y recarga los slots", async () => {
     const user = userEvent.setup();
     disponibilidadApi.get.mockResolvedValue({ data: { slots: ["09:00"] } });
-    reservasApi.create.mockRejectedValue({ response: { status: 400 } });
+    reservasApi.create.mockRejectedValue({
+      response: { status: 400, data: { horario: "Ese profesional ya tiene una cita a esa hora." } },
+    });
     renderPage();
     await completarHastaElegirHora(user);
     await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
@@ -86,6 +88,28 @@ describe("ReservarPage", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Ese horario ya no está disponible. Elige otro por favor."
     );
+  });
+
+  it("un 400 que no es por choque de horario muestra el mensaje real (no el de horario ocupado)", async () => {
+    const user = userEvent.setup();
+    disponibilidadApi.get.mockResolvedValue({ data: { slots: ["09:00"] } });
+    reservasApi.create.mockRejectedValue({
+      response: {
+        status: 400,
+        data: { password: ["Esta contraseña es demasiado corta."] },
+      },
+    });
+    renderPage();
+    await completarHastaElegirHora(user);
+    await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
+    await user.type(screen.getByLabelText("RUT"), "1-9");
+    await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.click(screen.getByText(/Confirmar hora/));
+    const alerta = await screen.findByRole("alert");
+    expect(alerta).toHaveTextContent("Esta contraseña es demasiado corta.");
+    expect(alerta).not.toHaveTextContent("horario ya no está disponible");
+    // No debe haber perdido la hora elegida (el form sigue mostrando el boton de confirmar).
+    expect(screen.getByText(/Confirmar hora/)).toBeInTheDocument();
   });
 
   it("muestra un error generico si la reserva falla por otro motivo", async () => {

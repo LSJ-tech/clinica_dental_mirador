@@ -43,7 +43,11 @@ def _validar_sin_choque(profesional, fecha, hora, excluir_pk=None):
     if excluir_pk:
         choque = choque.exclude(pk=excluir_pk)
     if choque.exists():
-        raise serializers.ValidationError("Ese profesional ya tiene una cita a esa hora.")
+        # Bajo la key "horario" (no un error plano) para que el frontend de
+        # la reserva publica distinga esto -- "elige otra hora" -- de otros
+        # 400 sin relacion con el horario (ej. contraseña invalida al crear
+        # cuenta), que antes se mostraban con el mismo mensaje equivocado.
+        raise serializers.ValidationError({"horario": "Ese profesional ya tiene una cita a esa hora."})
 
 
 class CitaSerializer(serializers.ModelSerializer):
@@ -117,16 +121,16 @@ class ReservaPublicaSerializer(serializers.Serializer):
             profesional=profesional, dia_semana=fecha.weekday()
         ).first()
         if not horario or not (horario.hora_inicio <= hora < horario.hora_fin):
-            raise serializers.ValidationError("Ese horario no está disponible para este profesional.")
+            raise serializers.ValidationError(
+                {"horario": "Ese horario no está disponible para este profesional."}
+            )
 
         _validar_sin_choque(profesional, fecha, hora)
 
         if data.get("crear_cuenta"):
             password = data.get("password")
             if not password:
-                raise serializers.ValidationError(
-                    {"password": "Ingresa una contraseña para crear tu cuenta."}
-                )
+                raise serializers.ValidationError("Ingresa una contraseña para crear tu cuenta.")
             validate_password(password)
 
         return data
