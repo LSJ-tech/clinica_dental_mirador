@@ -10,8 +10,11 @@ const SERVICIOS = [
   { destacado: "Corrección", nombre: "Ortodoncia" },
   { destacado: "Tratamiento de", nombre: "Endodoncia" },
   { destacado: "Prótesis", nombre: "Fijas y Removibles" },
+  { destacado: "Servicio de", nombre: "Extracciones" },
+  { destacado: "Higiene y", nombre: "Limpieza Dental" },
   { destacado: "Atención de", nombre: "Urgencias" },
   { destacado: "Cuidado para", nombre: "Niños y Adultos" },
+  { destacado: "Servicios de", nombre: "Estética Facial" },
 ];
 
 export default function LandingPage() {
