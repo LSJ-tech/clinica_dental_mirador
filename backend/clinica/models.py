@@ -54,6 +54,35 @@ class Profesional(models.Model):
         return self.nombre
 
 
+class HorarioProfesional(models.Model):
+    DIA_SEMANA_CHOICES = [
+        (0, "Lunes"),
+        (1, "Martes"),
+        (2, "Miércoles"),
+        (3, "Jueves"),
+        (4, "Viernes"),
+        (5, "Sábado"),
+        (6, "Domingo"),
+    ]
+
+    # Sin fila para un día = ese día no atiende. No hay un booleano
+    # "activo" en una fila siempre presente porque así se evita tener que
+    # sembrar 7 filas por profesional y mantenerlas sincronizadas.
+    profesional = models.ForeignKey(
+        Profesional, on_delete=models.CASCADE, related_name="horarios"
+    )
+    dia_semana = models.IntegerField(choices=DIA_SEMANA_CHOICES)
+    hora_inicio = models.TimeField()
+    hora_fin = models.TimeField()
+
+    class Meta:
+        ordering = ["dia_semana"]
+        unique_together = ("profesional", "dia_semana")
+
+    def __str__(self):
+        return f"{self.profesional.nombre} · {self.get_dia_semana_display()}"
+
+
 class Cita(models.Model):
     ESTADO_CHOICES = [
         ("pendiente", "Pendiente"),
@@ -76,6 +105,10 @@ class Cita(models.Model):
     hora = models.TimeField()
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default="pendiente")
     box = models.CharField(max_length=20, blank=True)
+    # Motivo breve que el paciente escribe al reservar desde la web pública
+    # (ej. "limpieza", "me duele una muela"). Opcional también para citas
+    # creadas por staff.
+    motivo = models.CharField(max_length=200, blank=True)
 
     # Campos para la integración con WhatsApp Cloud API (milestone futuro):
     # dejan lista la trazabilidad de cada recordatorio sin necesitar una

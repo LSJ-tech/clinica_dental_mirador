@@ -326,6 +326,62 @@
   color: #cfe0ee;
 }
 
+/* Reservar hora */
+
+.cs-reserva-paso {
+  margin-top: 24px;
+  max-width: 480px;
+}
+
+.cs-reserva-paso label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: var(--dental-ink);
+}
+
+.cs-reserva-paso input,
+.cs-reserva-paso select {
+  padding: 10px 12px;
+  border: 1px solid var(--dental-bg-soft);
+  border-radius: 8px;
+  font: inherit;
+}
+
+.cs-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 8px;
+  max-width: 560px;
+}
+
+.cs-slot {
+  padding: 10px 8px;
+  border: 1px solid var(--dental-accent);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--dental-accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cs-slot:hover {
+  background: var(--dental-bg-soft);
+}
+
+.cs-slot-activo {
+  background: var(--dental-accent);
+  color: #fff;
+}
+
+.cs-reserva-confirmacion {
+  margin-top: 24px;
+  max-width: 520px;
+}
+
 /* Equipo */
 
 .cs-team-grid {

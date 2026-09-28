@@ -20,3 +20,12 @@ export const profesionalesApi = crudResource("profesionales");
 export const citasApi = crudResource("citas");
 export const tratamientosApi = crudResource("tratamientos");
 export const pagosApi = crudResource("pagos");
+export const horariosProfesionalApi = crudResource("horarios-profesional");
+
+export const disponibilidadApi = {
+  get: (params) => client.get("/disponibilidad/", { params }),
+};
+
+export const reservasApi = {
+  create: (data) => client.post("/reservas/", data),
+};

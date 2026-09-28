@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Cita, FichaClinica, Pago, Paciente, Profesional, Tratamiento
+from .models import Cita, FichaClinica, HorarioProfesional, Pago, Paciente, Profesional, Tratamiento
 
 
 @admin.register(Paciente)
@@ -19,6 +19,12 @@ class FichaClinicaAdmin(admin.ModelAdmin):
 class ProfesionalAdmin(admin.ModelAdmin):
     list_display = ["nombre", "especialidad", "box_asignado"]
     search_fields = ["nombre", "especialidad"]
+
+
+@admin.register(HorarioProfesional)
+class HorarioProfesionalAdmin(admin.ModelAdmin):
+    list_display = ["profesional", "dia_semana", "hora_inicio", "hora_fin"]
+    list_filter = ["dia_semana"]
 
 
 @admin.register(Cita)

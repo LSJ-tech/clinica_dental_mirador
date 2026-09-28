@@ -11,13 +11,15 @@ Es un desarrollo nuevo, no una extensión de [PataAgenda](https://patagenda.devq
 
 ## Estado
 
-App funcional en local, completa salvo WhatsApp:
+Desplegado en Render (backend + frontend + DB), completo salvo WhatsApp:
 
+- **Landing pública** (`/`): marketing, servicios, equipo real (`/equipo`) y ubicación con mapa.
+- **Reserva de hora pública, sin login** (`/reservar`): elige profesional y fecha, ve las horas realmente disponibles (respeta el horario semanal de cada profesional y evita choques), y agenda con nombre/RUT/teléfono — la cita queda "pendiente" hasta que el staff la confirme.
 - **Portal del paciente**: mis citas, mi ficha clínica (historial, notas, tratamientos) y mis pagos — todo de solo lectura para el paciente.
-- **Panel de staff**: pacientes (buscar/crear/editar, con pestañas de ficha/tratamientos/pagos/citas), agenda por día (crear citas, confirmar/completar/cancelar), y profesionales (CRUD).
+- **Panel de staff**: pacientes (buscar/crear/editar, con pestañas de ficha/tratamientos/pagos/citas), agenda por día (crear citas, confirmar/completar/cancelar), y profesionales (CRUD + horario semanal editable por día).
 - Login único (`/login`) que redirige a `/citas` o `/staff` según el rol.
 
-Todavía sin desplegar, sin integración real de WhatsApp Cloud API, y sin editor de odontograma (el campo existe en el modelo pero no tiene UI propia todavía). La creación de la cuenta de acceso de un paciente (`Paciente.user`) sigue siendo manual por Django admin/shell.
+Sin integración real de WhatsApp Cloud API todavía, y sin editor de odontograma (el campo existe en el modelo pero no tiene UI propia). La creación de la cuenta de acceso de un paciente (`Paciente.user`) sigue siendo manual por Django admin/shell.
 
 ## Cómo correr en local
 

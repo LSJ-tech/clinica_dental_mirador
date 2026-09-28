@@ -5,6 +5,7 @@ import Layout from "./components/Layout";
 import LoginPage from "./pages/LoginPage";
 import LandingPage from "./pages/public/LandingPage";
 import EquipoPage from "./pages/public/EquipoPage";
+import ReservarPage from "./pages/public/ReservarPage";
 import CitasPage from "./pages/patient/CitasPage";
 import FichaClinicaPage from "./pages/patient/FichaClinicaPage";
 import PagosPage from "./pages/patient/PagosPage";
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<LandingPage />} />
           <Route path="/equipo" element={<EquipoPage />} />
+          <Route path="/reservar" element={<ReservarPage />} />
 
           <Route
             path="/citas"

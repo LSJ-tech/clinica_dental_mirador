@@ -84,6 +84,9 @@ export default function LandingPage() {
           <li>
             <a href="#ubicacion">Ubicación</a>
           </li>
+          <li>
+            <Link to="/reservar">Reservar hora</Link>
+          </li>
         </ul>
         <Link to="/login" className="cs-button-outline">
           Ingresar
@@ -100,9 +103,9 @@ export default function LandingPage() {
               endodoncia, prótesis y urgencias, con convenio para derivaciones de implantología y
               maxilofacial.
             </p>
-            <a href="#services-1354" className="cs-link">
-              Ver servicios
-            </a>
+            <Link to="/reservar" className="cs-link">
+              Reservar hora
+            </Link>
             <a href={WHATSAPP_DUDAS_URL} className="cs-button-outline" target="_blank" rel="noreferrer">
               ¿Dudas? Escríbenos por WhatsApp
             </a>

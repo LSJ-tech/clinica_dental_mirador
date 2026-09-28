@@ -1,18 +1,25 @@
+import datetime
+
 from django.db.models import Q
+from django.utils import timezone
 from rest_framework import permissions, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Cita, FichaClinica, Pago, Paciente, Profesional, Tratamiento
+from .models import Cita, FichaClinica, HorarioProfesional, Pago, Paciente, Profesional, Tratamiento
 from .permissions import EsPacientePropioOStaff, SoloStaffEscribe
 from .serializers import (
     CitaSerializer,
     FichaClinicaSerializer,
+    HorarioProfesionalSerializer,
     PacienteSerializer,
     PagoSerializer,
     ProfesionalSerializer,
+    ReservaPublicaSerializer,
     TratamientoSerializer,
 )
+
+DURACION_SLOT_MINUTOS = 30
 
 
 class PacienteViewSet(viewsets.ModelViewSet):
@@ -47,8 +54,23 @@ class FichaClinicaViewSet(viewsets.ModelViewSet):
 
 class ProfesionalViewSet(viewsets.ModelViewSet):
     serializer_class = ProfesionalSerializer
-    permission_classes = [permissions.IsAuthenticated, SoloStaffEscribe]
+    # Sin IsAuthenticated a propósito: cualquiera necesita poder ver la
+    # lista de profesionales para elegir uno al reservar hora en la web
+    # pública. SoloStaffEscribe ya deja las escrituras solo para staff.
+    permission_classes = [SoloStaffEscribe]
     queryset = Profesional.objects.all()
+
+
+class HorarioProfesionalViewSet(viewsets.ModelViewSet):
+    serializer_class = HorarioProfesionalSerializer
+    permission_classes = [permissions.IsAuthenticated, SoloStaffEscribe]
+
+    def get_queryset(self):
+        qs = HorarioProfesional.objects.all()
+        profesional_id = self.request.query_params.get("profesional")
+        if profesional_id:
+            qs = qs.filter(profesional_id=profesional_id)
+        return qs
 
 
 class CitaViewSet(viewsets.ModelViewSet):
@@ -115,3 +137,65 @@ class MeView(APIView):
             "is_staff": request.user.is_staff,
             "paciente": PacienteSerializer(paciente).data if paciente else None,
         })
+
+
+class DisponibilidadView(APIView):
+    """
+    Horas libres de un profesional en una fecha dada, para la reserva
+    pública. Pública a propósito (AllowAny): solo expone horas ocupadas o
+    no, nunca de quién son.
+    """
+
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        profesional_id = request.query_params.get("profesional")
+        fecha_str = request.query_params.get("fecha")
+        if not profesional_id or not fecha_str:
+            return Response({"detail": "Faltan los parámetros profesional y fecha."}, status=400)
+        try:
+            fecha = datetime.date.fromisoformat(fecha_str)
+        except ValueError:
+            return Response({"detail": "Fecha inválida."}, status=400)
+
+        horario = HorarioProfesional.objects.filter(
+            profesional_id=profesional_id, dia_semana=fecha.weekday()
+        ).first()
+        if not horario:
+            return Response({"slots": []})
+
+        ocupadas = set(
+            Cita.objects.filter(profesional_id=profesional_id, fecha=fecha)
+            .exclude(estado="cancelada")
+            .values_list("hora", flat=True)
+        )
+
+        ahora = timezone.localtime()
+        paso = datetime.timedelta(minutes=DURACION_SLOT_MINUTOS)
+        cursor = datetime.datetime.combine(fecha, horario.hora_inicio)
+        fin = datetime.datetime.combine(fecha, horario.hora_fin)
+
+        slots = []
+        while cursor < fin:
+            hora_slot = cursor.time()
+            ya_paso = fecha == ahora.date() and hora_slot <= ahora.time()
+            if hora_slot not in ocupadas and not ya_paso:
+                slots.append(hora_slot.strftime("%H:%M"))
+            cursor += paso
+
+        return Response({"slots": slots})
+
+
+class ReservaPublicaView(APIView):
+    """Crea una Cita desde la web pública, sin login."""
+
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = ReservaPublicaSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        cita = serializer.save()
+        return Response(
+            {"id": cita.id, "fecha": cita.fecha, "hora": cita.hora, "estado": cita.estado},
+            status=201,
+        )
