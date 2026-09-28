@@ -102,4 +102,86 @@ describe("ReservarPage", () => {
       "No se pudo completar la reserva. Intenta nuevamente."
     );
   });
+
+  it("el checkbox de crear cuenta muestra los campos de contraseña", async () => {
+    const user = userEvent.setup();
+    disponibilidadApi.get.mockResolvedValue({ data: { slots: ["09:00"] } });
+    renderPage();
+    await completarHastaElegirHora(user);
+    expect(screen.queryByLabelText("Contraseña")).not.toBeInTheDocument();
+
+    await user.click(screen.getByLabelText("Quiero crear una cuenta para ver mis citas, ficha y pagos"));
+    expect(screen.getByLabelText("Contraseña")).toBeInTheDocument();
+    expect(screen.getByLabelText("Repetir contraseña")).toBeInTheDocument();
+  });
+
+  it("rechaza si las contraseñas no coinciden, sin llamar al api", async () => {
+    const user = userEvent.setup();
+    disponibilidadApi.get.mockResolvedValue({ data: { slots: ["09:00"] } });
+    renderPage();
+    await completarHastaElegirHora(user);
+    await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
+    await user.type(screen.getByLabelText("RUT"), "1-9");
+    await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.click(
+      screen.getByLabelText("Quiero crear una cuenta para ver mis citas, ficha y pagos")
+    );
+    await user.type(screen.getByLabelText("Contraseña"), "claveSegura123");
+    await user.type(screen.getByLabelText("Repetir contraseña"), "otraClave456");
+    await user.click(screen.getByText(/Confirmar hora/));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Las contraseñas no coinciden."
+    );
+    expect(reservasApi.create).not.toHaveBeenCalled();
+  });
+
+  it("crea la cuenta al reservar y lo muestra en la confirmacion", async () => {
+    const user = userEvent.setup();
+    disponibilidadApi.get.mockResolvedValue({ data: { slots: ["09:00"] } });
+    reservasApi.create.mockResolvedValue({
+      data: { fecha: "2026-02-01", hora: "09:00:00", cuenta_creada: true },
+    });
+    renderPage();
+    await completarHastaElegirHora(user);
+    await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
+    await user.type(screen.getByLabelText("RUT"), "11.111.111-1");
+    await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.click(
+      screen.getByLabelText("Quiero crear una cuenta para ver mis citas, ficha y pagos")
+    );
+    await user.type(screen.getByLabelText("Contraseña"), "claveSegura123");
+    await user.type(screen.getByLabelText("Repetir contraseña"), "claveSegura123");
+    await user.click(screen.getByText(/Confirmar hora/));
+
+    await waitFor(() =>
+      expect(reservasApi.create).toHaveBeenCalledWith(
+        expect.objectContaining({ crear_cuenta: true, password: "claveSegura123" })
+      )
+    );
+    expect(
+      await screen.findByText(/Tu cuenta quedó creada/)
+    ).toBeInTheDocument();
+  });
+
+  it("no marca cuenta_creada en la confirmacion si no se pidio crear cuenta", async () => {
+    const user = userEvent.setup();
+    disponibilidadApi.get.mockResolvedValue({ data: { slots: ["09:00"] } });
+    reservasApi.create.mockResolvedValue({
+      data: { fecha: "2026-02-01", hora: "09:00:00", cuenta_creada: false },
+    });
+    renderPage();
+    await completarHastaElegirHora(user);
+    await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
+    await user.type(screen.getByLabelText("RUT"), "1-9");
+    await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.click(screen.getByText(/Confirmar hora/));
+
+    await waitFor(() =>
+      expect(reservasApi.create).toHaveBeenCalledWith(
+        expect.objectContaining({ crear_cuenta: false, password: undefined })
+      )
+    );
+    expect(screen.queryByText(/Tu cuenta quedó creada/)).not.toBeInTheDocument();
+  });
 });

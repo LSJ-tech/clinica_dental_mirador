@@ -1,8 +1,9 @@
+from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
 from .models import Cita, FichaClinica, HorarioProfesional, Pago, Paciente, Profesional, Tratamiento
-from .validators import normalizar_telefono_cl
+from .validators import normalizar_rut, normalizar_telefono_cl
 
 
 class PacienteSerializer(serializers.ModelSerializer):
@@ -95,6 +96,14 @@ class ReservaPublicaSerializer(serializers.Serializer):
     fecha = serializers.DateField()
     hora = serializers.TimeField()
     motivo = serializers.CharField(max_length=200, required=False, allow_blank=True)
+    # Cuenta opcional para el portal del paciente: el RUT ya normalizado
+    # (validate_rut corre antes) queda como username, no el telefono --
+    # es mas estable y es lo que un paciente chileno espera usar.
+    crear_cuenta = serializers.BooleanField(default=False, required=False)
+    password = serializers.CharField(write_only=True, required=False, allow_blank=True)
+
+    def validate_rut(self, valor):
+        return normalizar_rut(valor)
 
     def validate_telefono(self, valor):
         return normalizar_telefono_cl(valor)
@@ -111,6 +120,15 @@ class ReservaPublicaSerializer(serializers.Serializer):
             raise serializers.ValidationError("Ese horario no está disponible para este profesional.")
 
         _validar_sin_choque(profesional, fecha, hora)
+
+        if data.get("crear_cuenta"):
+            password = data.get("password")
+            if not password:
+                raise serializers.ValidationError(
+                    {"password": "Ingresa una contraseña para crear tu cuenta."}
+                )
+            validate_password(password)
+
         return data
 
     def create(self, validated_data):
@@ -121,6 +139,16 @@ class ReservaPublicaSerializer(serializers.Serializer):
                 "telefono": validated_data["telefono"],
             },
         )
+
+        self.cuenta_creada = False
+        if validated_data.get("crear_cuenta") and paciente.user_id is None:
+            usuario = User.objects.create_user(
+                username=paciente.rut, password=validated_data["password"]
+            )
+            paciente.user = usuario
+            paciente.save(update_fields=["user"])
+            self.cuenta_creada = True
+
         return Cita.objects.create(
             paciente=paciente,
             profesional=validated_data["profesional"],

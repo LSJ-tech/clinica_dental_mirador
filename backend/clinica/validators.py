@@ -24,3 +24,28 @@ def normalizar_telefono_cl(valor):
             "Ingresa un teléfono chileno válido, con o sin +56 (ej: +56 9 1234 5678)."
         )
     return f"+56{match.group(1)}"
+
+
+def normalizar_rut(valor):
+    """
+    Deja el RUT en formato "12345678-9" (sin puntos, un solo guion, K
+    mayúscula) y valida el dígito verificador (módulo 11). Se usa tanto
+    para el RUT del paciente -- evita duplicados por formato distinto,
+    ej. "11.111.111-1" vs "11111111-1" -- como para el username cuando
+    el paciente crea cuenta al reservar, así el mismo RUT normaliza
+    siempre igual al hacer login después.
+    """
+    limpio = re.sub(r"[.\s-]", "", (valor or "").upper())
+    if len(limpio) < 2 or not limpio[:-1].isdigit():
+        raise ValidationError("Ingresa un RUT válido.")
+    cuerpo, dv = limpio[:-1], limpio[-1]
+    suma = 0
+    multiplicador = 2
+    for digito in reversed(cuerpo):
+        suma += int(digito) * multiplicador
+        multiplicador = multiplicador + 1 if multiplicador < 7 else 2
+    resto = 11 - (suma % 11)
+    dv_esperado = {11: "0", 10: "K"}.get(resto, str(resto))
+    if dv != dv_esperado:
+        raise ValidationError("Ingresa un RUT válido.")
+    return f"{cuerpo}-{dv}"

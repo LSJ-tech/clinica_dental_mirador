@@ -24,10 +24,10 @@ function renderPage() {
 }
 
 describe("LoginPage", () => {
-  it("arranca en modo paciente, con el campo Telefono", () => {
+  it("arranca en modo paciente, con el campo RUT", () => {
     renderPage();
-    expect(screen.getByLabelText("Teléfono")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("+56 9 1234 5678")).toBeInTheDocument();
+    expect(screen.getByLabelText("RUT")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("11.111.111-1")).toBeInTheDocument();
   });
 
   it("el tab 'Staff' cambia el campo a Usuario", async () => {
@@ -35,15 +35,15 @@ describe("LoginPage", () => {
     renderPage();
     await user.click(screen.getByRole("button", { name: "Staff" }));
     expect(screen.getByLabelText("Usuario")).toBeInTheDocument();
-    expect(screen.queryByLabelText("Teléfono")).not.toBeInTheDocument();
-    expect(screen.queryByPlaceholderText("+56 9 1234 5678")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("RUT")).not.toBeInTheDocument();
+    expect(screen.queryByPlaceholderText("11.111.111-1")).not.toBeInTheDocument();
   });
 
   it("cambiar de tab limpia lo escrito y el error previo", async () => {
     const user = userEvent.setup();
     mockLogin.mockRejectedValueOnce(new Error("mal"));
     renderPage();
-    await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.type(screen.getByLabelText("RUT"), "11.111.111-1");
     await user.type(screen.getByLabelText("Contraseña"), "malaclave");
     await user.click(screen.getByRole("button", { name: "Ingresar" }));
     expect(await screen.findByRole("alert")).toBeInTheDocument();
@@ -54,18 +54,18 @@ describe("LoginPage", () => {
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
-  it("login exitoso de paciente (tab por defecto) navega a /citas", async () => {
+  it("login exitoso de paciente normaliza el RUT antes de enviarlo", async () => {
     const user = userEvent.setup();
     mockLogin.mockResolvedValueOnce({ is_staff: false });
     renderPage();
-    await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.type(screen.getByLabelText("RUT"), "11.111.111-1");
     await user.type(screen.getByLabelText("Contraseña"), "clave123");
     await user.click(screen.getByRole("button", { name: "Ingresar" }));
-    expect(mockLogin).toHaveBeenCalledWith("+56911111111", "clave123");
+    expect(mockLogin).toHaveBeenCalledWith("11111111-1", "clave123");
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/citas"));
   });
 
-  it("login exitoso de staff (tab Staff) navega a /staff", async () => {
+  it("login exitoso de staff (tab Staff) navega a /staff, sin tocar el usuario", async () => {
     const user = userEvent.setup();
     mockLogin.mockResolvedValueOnce({ is_staff: true });
     renderPage();
@@ -77,15 +77,15 @@ describe("LoginPage", () => {
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/staff"));
   });
 
-  it("login fallido en modo paciente muestra el mensaje de telefono", async () => {
+  it("login fallido en modo paciente muestra el mensaje de RUT", async () => {
     const user = userEvent.setup();
     mockLogin.mockRejectedValueOnce(new Error("credenciales invalidas"));
     renderPage();
-    await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.type(screen.getByLabelText("RUT"), "11.111.111-1");
     await user.type(screen.getByLabelText("Contraseña"), "malaclave");
     await user.click(screen.getByRole("button", { name: "Ingresar" }));
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Teléfono o contraseña incorrectos."
+      "RUT o contraseña incorrectos."
     );
     expect(mockNavigate).not.toHaveBeenCalled();
   });

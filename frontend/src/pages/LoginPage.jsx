@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import PublicNav from "./public/PublicNav";
+import { normalizarRutParaLogin } from "../utils/rut";
 import "./public/landing.css";
 
 export default function LoginPage() {
@@ -22,13 +23,15 @@ export default function LoginPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    const usuario =
+      modo === "paciente" ? normalizarRutParaLogin(identificador) : identificador;
     try {
-      const me = await login(identificador, password);
+      const me = await login(usuario, password);
       navigate(me.is_staff ? "/staff" : "/citas");
     } catch {
       setError(
         modo === "paciente"
-          ? "Teléfono o contraseña incorrectos."
+          ? "RUT o contraseña incorrectos."
           : "Usuario o contraseña incorrectos."
       );
     }
@@ -65,10 +68,10 @@ export default function LoginPage() {
 
           <form className="cs-reserva-paso cs-login-form" onSubmit={handleSubmit}>
             <label>
-              <span>{modo === "paciente" ? "Teléfono" : "Usuario"}</span>
+              <span>{modo === "paciente" ? "RUT" : "Usuario"}</span>
               <input
                 type="text"
-                placeholder={modo === "paciente" ? "+56 9 1234 5678" : undefined}
+                placeholder={modo === "paciente" ? "11.111.111-1" : undefined}
                 value={identificador}
                 onChange={(e) => setIdentificador(e.target.value)}
               />

@@ -17,6 +17,9 @@ export default function ReservarPage() {
   const [slots, setSlots] = useState(null);
   const [horaElegida, setHoraElegida] = useState(null);
   const [datos, setDatos] = useState(DATOS_VACIOS);
+  const [crearCuenta, setCrearCuenta] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passwordRepetir, setPasswordRepetir] = useState("");
   const [error, setError] = useState("");
   const [confirmada, setConfirmada] = useState(null);
   const [enviando, setEnviando] = useState(false);
@@ -38,6 +41,10 @@ export default function ReservarPage() {
   async function confirmarReserva(e) {
     e.preventDefault();
     setError("");
+    if (crearCuenta && password !== passwordRepetir) {
+      setError("Las contraseñas no coinciden.");
+      return;
+    }
     setEnviando(true);
     try {
       const respuesta = await reservasApi.create({
@@ -45,6 +52,8 @@ export default function ReservarPage() {
         profesional,
         fecha,
         hora: horaElegida,
+        crear_cuenta: crearCuenta,
+        password: crearCuenta ? password : undefined,
       });
       setConfirmada(respuesta.data);
     } catch (err) {
@@ -78,6 +87,12 @@ export default function ReservarPage() {
                 <strong>{confirmada.hora?.slice(0, 5)}</strong> quedó registrada como{" "}
                 <strong>pendiente</strong>. La clínica te va a contactar para confirmarla.
               </p>
+              {confirmada.cuenta_creada && (
+                <p className="cs-text">
+                  Tu cuenta quedó creada: ya puedes ingresar con tu RUT y tu contraseña para
+                  ver tus citas, tu ficha y tus pagos.
+                </p>
+              )}
               <Link to="/" className="cs-link">
                 Volver al inicio
               </Link>
@@ -175,6 +190,39 @@ export default function ReservarPage() {
                       onChange={(e) => setDatos({ ...datos, motivo: e.target.value })}
                     />
                   </label>
+
+                  <label className="cs-checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={crearCuenta}
+                      onChange={(e) => setCrearCuenta(e.target.checked)}
+                    />
+                    <span>Quiero crear una cuenta para ver mis citas, ficha y pagos</span>
+                  </label>
+
+                  {crearCuenta && (
+                    <>
+                      <label>
+                        <span>Contraseña</span>
+                        <input
+                          type="password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
+                        />
+                      </label>
+                      <label>
+                        <span>Repetir contraseña</span>
+                        <input
+                          type="password"
+                          value={passwordRepetir}
+                          onChange={(e) => setPasswordRepetir(e.target.value)}
+                          required
+                        />
+                      </label>
+                    </>
+                  )}
+
                   {error && <p role="alert">{error}</p>}
                   <button type="submit" className="cs-link" disabled={enviando}>
                     {enviando ? "Enviando..." : `Confirmar hora de las ${horaElegida}`}

@@ -197,7 +197,13 @@ class ReservaPublicaView(APIView):
         serializer.is_valid(raise_exception=True)
         cita = serializer.save()
         return Response(
-            {"id": cita.id, "fecha": cita.fecha, "hora": cita.hora, "estado": cita.estado},
+            {
+                "id": cita.id,
+                "fecha": cita.fecha,
+                "hora": cita.hora,
+                "estado": cita.estado,
+                "cuenta_creada": serializer.cuenta_creada,
+            },
             status=201,
         )
 

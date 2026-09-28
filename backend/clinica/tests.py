@@ -165,7 +165,7 @@ class DisponibilidadYReservaTest(APITestCase):
         })
         self.assertEqual(respuesta.status_code, 201)
         self.assertEqual(respuesta.data["estado"], "pendiente")
-        paciente = Paciente.objects.get(rut="11.111.111-1")
+        paciente = Paciente.objects.get(rut="11111111-1")
         self.assertEqual(paciente.telefono, "+56912345678")
         cita = Cita.objects.get(paciente=paciente)
         self.assertEqual(cita.motivo, "Limpieza")

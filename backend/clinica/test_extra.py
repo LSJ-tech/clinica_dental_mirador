@@ -6,6 +6,8 @@ from rest_framework.test import APIClient
 
 from .models import Cita, FichaClinica, HorarioProfesional, Pago, Paciente, Profesional, Tratamiento
 from .permissions import EsPacientePropioOStaff
+from .tests import proximo_lunes
+from .validators import normalizar_rut
 
 
 class _RequestFalso:
@@ -245,3 +247,92 @@ def test_str_de_los_modelos():
 
     pago = Pago.objects.create(paciente=paciente, monto=15000, fecha=date(2026, 1, 5))
     assert str(pago) == "$15000 · Ana Torres"
+
+
+def test_normalizar_rut_acepta_formatos_variados():
+    for valor in ["11.111.111-1", "11111111-1", "11.111.111 - 1", " 11111111-1 "]:
+        assert normalizar_rut(valor) == "11111111-1"
+
+
+def test_normalizar_rut_rechaza_digito_verificador_incorrecto():
+    from django.core.exceptions import ValidationError
+
+    with pytest.raises(ValidationError):
+        normalizar_rut("11.111.111-2")
+
+
+def test_normalizar_rut_rechaza_formato_no_numerico():
+    from django.core.exceptions import ValidationError
+
+    with pytest.raises(ValidationError):
+        normalizar_rut("no-es-un-rut")
+
+
+@pytest.mark.django_db
+class TestReservaPublicaConCuenta:
+    def setup_method(self):
+        self.client = APIClient()
+        self.profesional = Profesional.objects.create(nombre="Dra. Soto", especialidad="General")
+        self.lunes = proximo_lunes()
+
+    def _payload(self, **overrides):
+        payload = {
+            "nombre": "Ana Torres",
+            "rut": "11.111.111-1",
+            "telefono": "+56912345678",
+            "profesional": self.profesional.pk,
+            "fecha": str(self.lunes),
+            "hora": "10:00",
+        }
+        payload.update(overrides)
+        return payload
+
+    def test_sin_marcar_crear_cuenta_no_crea_usuario(self):
+        respuesta = self.client.post("/api/reservas/", self._payload())
+        assert respuesta.status_code == 201
+        assert respuesta.data["cuenta_creada"] is False
+        paciente = Paciente.objects.get(rut="11111111-1")
+        assert paciente.user_id is None
+
+    def test_crear_cuenta_sin_password_es_rechazado(self):
+        respuesta = self.client.post("/api/reservas/", self._payload(crear_cuenta=True))
+        assert respuesta.status_code == 400
+        assert "password" in respuesta.data
+
+    def test_crear_cuenta_con_password_crea_usuario_con_rut_normalizado(self):
+        respuesta = self.client.post(
+            "/api/reservas/",
+            self._payload(crear_cuenta=True, password="unaClaveSegura2026"),
+        )
+        assert respuesta.status_code == 201
+        assert respuesta.data["cuenta_creada"] is True
+
+        paciente = Paciente.objects.get(rut="11111111-1")
+        assert paciente.user is not None
+        assert paciente.user.username == "11111111-1"
+        assert paciente.user.check_password("unaClaveSegura2026")
+
+    def test_reservar_de_nuevo_no_duplica_la_cuenta(self):
+        self.client.post(
+            "/api/reservas/",
+            self._payload(crear_cuenta=True, password="unaClaveSegura2026"),
+        )
+        respuesta = self.client.post(
+            "/api/reservas/",
+            self._payload(crear_cuenta=True, password="otraClaveSegura2026", hora="10:30"),
+        )
+        assert respuesta.status_code == 201
+        assert respuesta.data["cuenta_creada"] is False
+        assert User.objects.filter(username="11111111-1").count() == 1
+
+    def test_dos_formatos_del_mismo_rut_no_duplican_el_paciente(self):
+        self.client.post("/api/reservas/", self._payload(rut="11.111.111-1"))
+        respuesta = self.client.post(
+            "/api/reservas/", self._payload(rut="11111111-1", hora="11:00")
+        )
+        assert respuesta.status_code == 201
+        assert Paciente.objects.filter(rut="11111111-1").count() == 1
+
+    def test_rut_con_digito_verificador_invalido_es_rechazado(self):
+        respuesta = self.client.post("/api/reservas/", self._payload(rut="11.111.111-2"))
+        assert respuesta.status_code == 400
