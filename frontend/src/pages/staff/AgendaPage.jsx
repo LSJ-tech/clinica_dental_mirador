@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { citasApi, pacientesApi, profesionalesApi } from "../../api/resources";
 import CampoProfesional from "../../components/CampoProfesional";
-import CampoHora from "../../components/CampoHora";
+import SelectorHorario from "../../components/SelectorHorario";
 import Badge from "../../components/Badge";
 
 function hoyISO() {
@@ -111,9 +111,11 @@ export default function AgendaPage() {
           onChange={(e) => setForm({ ...form, profesional: e.target.value })}
           profesionales={profesionales}
         />
-        <CampoHora
+        <SelectorHorario
+          profesional={form.profesional}
+          fecha={fecha}
           value={form.hora}
-          onChange={(e) => setForm({ ...form, hora: e.target.value })}
+          onChange={(hora) => setForm({ ...form, hora })}
         />
         <label>
           <span>Box</span>

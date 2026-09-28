@@ -402,6 +402,50 @@ button[type="submit"]:hover {
   color: #1e40af;
 }
 
+.selector-horario {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.selector-horario-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.selector-horario-cargando {
+  font-size: 13px;
+  color: var(--text);
+  margin: 0;
+}
+
+.slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 6px;
+  max-width: 420px;
+}
+
+.slot {
+  padding: 8px 6px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.slot:hover {
+  background: var(--accent-bg);
+}
+
+.slot-activo {
+  background: var(--accent);
+  color: #fff;
+}
+
 [role="alert"] {
   color: #d33;
 }

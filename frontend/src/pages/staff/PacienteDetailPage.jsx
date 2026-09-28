@@ -11,7 +11,7 @@ import {
 import TablaPagos from "../../components/TablaPagos";
 import TablaTratamientos from "../../components/TablaTratamientos";
 import CampoProfesional from "../../components/CampoProfesional";
-import CampoHora from "../../components/CampoHora";
+import SelectorHorario from "../../components/SelectorHorario";
 import Badge from "../../components/Badge";
 
 const TABS = ["Ficha", "Tratamientos", "Pagos", "Citas"];
@@ -326,9 +326,11 @@ function TabCitas({ pacienteId }) {
             required
           />
         </label>
-        <CampoHora
+        <SelectorHorario
+          profesional={form.profesional}
+          fecha={form.fecha}
           value={form.hora}
-          onChange={(e) => setForm({ ...form, hora: e.target.value })}
+          onChange={(hora) => setForm({ ...form, hora })}
         />
         <label>
           <span>Box</span>

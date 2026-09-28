@@ -2,12 +2,13 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import AgendaPage from "./AgendaPage";
-import { citasApi, pacientesApi, profesionalesApi } from "../../api/resources";
+import { citasApi, disponibilidadApi, pacientesApi, profesionalesApi } from "../../api/resources";
 
 vi.mock("../../api/resources", () => ({
   citasApi: { list: vi.fn(), create: vi.fn(), update: vi.fn() },
   pacientesApi: { list: vi.fn() },
   profesionalesApi: { list: vi.fn() },
+  disponibilidadApi: { get: vi.fn() },
 }));
 
 describe("AgendaPage", () => {
@@ -16,6 +17,7 @@ describe("AgendaPage", () => {
     pacientesApi.list.mockResolvedValue({ data: [{ id: 1, nombre: "Ana" }] });
     profesionalesApi.list.mockResolvedValue({ data: [{ id: 1, nombre: "Dra. Soto" }] });
     citasApi.list.mockResolvedValue({ data: [] });
+    disponibilidadApi.get.mockResolvedValue({ data: { slots: [] } });
   });
 
   it("carga citas del dia actual al montar", async () => {
@@ -65,6 +67,19 @@ describe("AgendaPage", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "No se pudo crear la cita (revisa que no choque con otra hora)."
     );
+  });
+
+  it("muestra el horario disponible del profesional al elegirlo y permite tocar una hora", async () => {
+    const user = userEvent.setup();
+    disponibilidadApi.get.mockResolvedValue({ data: { slots: ["09:00", "09:30"] } });
+    render(<AgendaPage />);
+    await waitFor(() =>
+      expect(screen.getByLabelText("Paciente").querySelectorAll("option").length).toBe(2)
+    );
+    await user.selectOptions(screen.getByLabelText("Profesional"), "1");
+    expect(await screen.findByText("09:00")).toBeInTheDocument();
+    await user.click(screen.getByText("09:30"));
+    expect(screen.getByLabelText("Hora")).toHaveValue("09:30");
   });
 
   it("cambia el estado de una cita con los botones de accion", async () => {

@@ -3,7 +3,8 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import PacienteDetailPage from "./PacienteDetailPage";
 import {
-  citasApi, fichasClinicasApi, pagosApi, pacientesApi, profesionalesApi, tratamientosApi,
+  citasApi, disponibilidadApi, fichasClinicasApi, pagosApi, pacientesApi, profesionalesApi,
+  tratamientosApi,
 } from "../../api/resources";
 
 vi.mock("react-router-dom", async (importOriginal) => {
@@ -18,6 +19,7 @@ vi.mock("../../api/resources", () => ({
   pacientesApi: { get: vi.fn(), update: vi.fn() },
   profesionalesApi: { list: vi.fn() },
   tratamientosApi: { list: vi.fn(), create: vi.fn() },
+  disponibilidadApi: { get: vi.fn() },
 }));
 
 function datosBase() {
@@ -34,6 +36,7 @@ function datosBase() {
   pagosApi.list.mockResolvedValue({ data: [] });
   profesionalesApi.list.mockResolvedValue({ data: [{ id: 1, nombre: "Dra. Soto" }] });
   citasApi.list.mockResolvedValue({ data: [] });
+  disponibilidadApi.get.mockResolvedValue({ data: { slots: [] } });
 }
 
 describe("PacienteDetailPage", () => {
@@ -136,9 +139,11 @@ describe("PacienteDetailPage", () => {
     await user.click(within(tabla).getByText("Confirmar"));
     expect(citasApi.update).toHaveBeenCalledWith(1, { estado: "confirmada" });
 
+    disponibilidadApi.get.mockResolvedValue({ data: { slots: ["11:00"] } });
     await user.selectOptions(screen.getByLabelText("Profesional"), "1");
     await user.type(screen.getByLabelText("Fecha"), "2026-02-01");
-    await user.type(screen.getByLabelText("Hora"), "11:00");
+    await user.click(await screen.findByText("11:00"));
+    expect(screen.getByLabelText("Hora")).toHaveValue("11:00");
     await user.click(screen.getByText("Agendar"));
     await waitFor(() => expect(citasApi.create).toHaveBeenCalled());
   });
