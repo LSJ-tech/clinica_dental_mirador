@@ -115,19 +115,21 @@
   font-size: 15px;
 }
 
-/* Placeholder de imagen -- reemplazar por fotos reales de la clínica */
+/* Fotos -- de stock por ahora (ver comentario en LandingPage.jsx),
+   reemplazar por fotos reales de la clínica cuando se consigan. */
 
-.cs-placeholder {
+.cs-landing img {
+  max-width: 100%;
+  display: block;
+}
+
+.cs-hero-image img,
+.cs-video-wrapper img,
+.cs-small-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 16px;
-  background: linear-gradient(135deg, var(--dental-bg-soft), #cfe0ee);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--dental-primary);
-  font-weight: 600;
-  min-height: 260px;
-  text-align: center;
-  padding: 24px;
 }
 
 /* Hero */
@@ -145,6 +147,7 @@
 
 .cs-hero .cs-hero-image {
   flex: 1 1 380px;
+  height: 340px;
 }
 
 /* Why choose us */
@@ -162,6 +165,7 @@
 
 #why-choose-2058 .cs-video-wrapper {
   flex: 1 1 320px;
+  height: 320px;
 }
 
 #why-choose-2058 .cs-flex2 {
@@ -174,6 +178,7 @@
 
 #why-choose-2058 .cs-small-picture {
   flex: 1 1 220px;
+  height: 220px;
 }
 
 #why-choose-2058 .cs-services {
@@ -229,34 +234,51 @@
 }
 
 #services-1354 .cs-item .cs-background {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Sesga el recorte hacia abajo: estas fotos de clínica suelen tener luz
+     de techo/pared blanca arriba, que con el degradado se ve como una
+     mancha redonda si queda dentro del recorte. */
+  object-position: center 75%;
 }
 
 #services-1354 .cs-item .cs-link {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 1;
   display: flex;
-  align-items: flex-end;
-  height: 100%;
-  padding: 20px;
-  background: linear-gradient(0deg, rgba(17, 63, 96, 0.85), rgba(17, 63, 96, 0));
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 16px;
+  /* Dos capas: un tinte parejo sobre toda la foto (evita zonas 100% blancas
+     de paredes/techo de clínica) + una franja mas oscura, acotada, solo
+     donde va el texto -- en vez de un degradado largo que atraviesa toda
+     la tarjeta y se percibe como una mancha difusa sobre la foto. */
+  background:
+    linear-gradient(0deg, rgba(17, 63, 96, 0.88) 0%, rgba(17, 63, 96, 0.88) 30%, transparent 30%),
+    rgba(17, 63, 96, 0.22);
   color: #fff;
-  border-radius: 0;
+  text-decoration: none;
 }
 
 #services-1354 .cs-item .cs-h3 {
   color: #fff;
-  font-size: 18px;
+  font-size: 17px;
+  line-height: 1.3;
   margin: 0;
 }
 
-#services-1354 .cs-item .cs-span {
+#services-1354 .cs-item .cs-span,
+#services-1354 .cs-item .cs-nombre {
   display: block;
-  font-size: 13px;
+}
+
+#services-1354 .cs-item .cs-span {
+  font-size: 12px;
   font-weight: 400;
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 /* Footer */

@@ -5,16 +5,27 @@ const WHATSAPP_DUDAS_URL =
   "https://wa.me/56956043960?text=" +
   encodeURIComponent("Hola! Tengo una duda sobre sus servicios dentales.");
 
+// Fotos de stock (Pexels, uso libre) como referencia visual mientras se
+// consiguen fotos reales de la clínica y su equipo.
+const FOTOS = {
+  hero: "https://images.pexels.com/photos/3845810/pexels-photo-3845810.jpeg?auto=compress&cs=tinysrgb&w=800",
+  equipo: "https://images.pexels.com/photos/6627466/pexels-photo-6627466.jpeg?auto=compress&cs=tinysrgb&w=800",
+  paciente: "https://images.pexels.com/photos/6627574/pexels-photo-6627574.jpeg?auto=compress&cs=tinysrgb&w=600",
+  clinica: "https://images.pexels.com/photos/3845748/pexels-photo-3845748.jpeg?auto=compress&cs=tinysrgb&w=600",
+  ninos: "https://images.pexels.com/photos/8224633/pexels-photo-8224633.jpeg?auto=compress&cs=tinysrgb&w=600",
+  retrato: "https://images.pexels.com/photos/5355867/pexels-photo-5355867.jpeg?auto=compress&cs=tinysrgb&w=600",
+};
+
 const SERVICIOS = [
-  { destacado: "Odontología", nombre: "General" },
-  { destacado: "Corrección", nombre: "Ortodoncia" },
-  { destacado: "Tratamiento de", nombre: "Endodoncia" },
-  { destacado: "Prótesis", nombre: "Fijas y Removibles" },
-  { destacado: "Servicio de", nombre: "Extracciones" },
-  { destacado: "Higiene y", nombre: "Limpieza Dental" },
-  { destacado: "Atención de", nombre: "Urgencias" },
-  { destacado: "Cuidado para", nombre: "Niños y Adultos" },
-  { destacado: "Servicios de", nombre: "Estética Facial" },
+  { destacado: "Odontología", nombre: "General", foto: FOTOS.clinica },
+  { destacado: "Corrección", nombre: "Ortodoncia", foto: FOTOS.retrato },
+  { destacado: "Tratamiento de", nombre: "Endodoncia", foto: FOTOS.equipo },
+  { destacado: "Prótesis", nombre: "Fijas y Removibles", foto: FOTOS.paciente },
+  { destacado: "Servicio de", nombre: "Extracciones", foto: FOTOS.hero },
+  { destacado: "Higiene y", nombre: "Limpieza Dental", foto: FOTOS.clinica },
+  { destacado: "Atención de", nombre: "Urgencias", foto: FOTOS.equipo },
+  { destacado: "Cuidado para", nombre: "Niños y Adultos", foto: FOTOS.ninos },
+  { destacado: "Servicios de", nombre: "Estética Facial", foto: FOTOS.paciente },
 ];
 
 export default function LandingPage() {
@@ -53,7 +64,7 @@ export default function LandingPage() {
             </a>
           </div>
           <div className="cs-hero-image">
-            <div className="cs-placeholder">Foto de la clínica</div>
+            <img src={FOTOS.hero} alt="Paciente sonriendo en la clínica" loading="lazy" />
           </div>
         </div>
       </section>
@@ -74,11 +85,11 @@ export default function LandingPage() {
               </a>
             </div>
             <div className="cs-video-wrapper">
-              <div className="cs-placeholder">Foto del equipo</div>
+              <img src={FOTOS.equipo} alt="Dentista atendiendo a un paciente" loading="lazy" />
             </div>
             <div className="cs-flex2">
               <div className="cs-small-picture">
-                <div className="cs-placeholder">Foto de atención</div>
+                <img src={FOTOS.paciente} alt="Paciente satisfecha con su tratamiento" loading="lazy" />
               </div>
               <ul className="cs-services">
                 <li className="cs-item">
@@ -110,11 +121,11 @@ export default function LandingPage() {
           <ul className="cs-card-group">
             {SERVICIOS.map((s) => (
               <li className="cs-item" key={s.nombre}>
-                <div className="cs-background cs-placeholder" aria-hidden="true"></div>
+                <img className="cs-background" src={s.foto} alt="" aria-hidden="true" loading="lazy" />
                 <a href="#" className="cs-link" onClick={(e) => e.preventDefault()}>
                   <h3 className="cs-h3">
                     <span className="cs-span">{s.destacado}</span>
-                    {s.nombre}
+                    <span className="cs-nombre">{s.nombre}</span>
                   </h3>
                 </a>
               </li>
