@@ -3,7 +3,7 @@ import { AuthProvider } from "./context/AuthContext";
 import RutaProtegida from "./components/RutaProtegida";
 import Layout from "./components/Layout";
 import LoginPage from "./pages/LoginPage";
-import InicioRedirect from "./pages/InicioRedirect";
+import LandingPage from "./pages/public/LandingPage";
 import CitasPage from "./pages/patient/CitasPage";
 import FichaClinicaPage from "./pages/patient/FichaClinicaPage";
 import PagosPage from "./pages/patient/PagosPage";
@@ -19,7 +19,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/" element={<InicioRedirect />} />
+          <Route path="/" element={<LandingPage />} />
 
           <Route
             path="/citas"

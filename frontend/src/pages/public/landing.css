@@ -1,0 +1,284 @@
+/* Landing pública de la clínica -- estilos propios de esta página, con la
+   convención de nombres "cs-" del template de referencia (CodeStitch), pero
+   escritos desde cero para no depender de sus assets (fotos/video eran de
+   otro rubro, no de una clínica dental). */
+
+.cs-landing {
+  --dental-primary: #1a7a6e;
+  --dental-primary-dark: #0f5951;
+  --dental-ink: #10221f;
+  --dental-muted: #5c6d6a;
+  --dental-bg-soft: #f2f8f7;
+  text-align: left;
+  color: var(--dental-ink);
+  font-size: 16px;
+}
+
+.cs-landing section {
+  padding: 64px 24px;
+}
+
+.cs-landing .cs-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.cs-landing .cs-topper {
+  display: inline-block;
+  color: var(--dental-primary);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.cs-landing .cs-title {
+  font-size: 34px;
+  line-height: 1.2;
+  margin: 0 0 16px;
+  color: var(--dental-ink);
+  max-width: 640px;
+}
+
+.cs-landing .cs-text {
+  color: var(--dental-muted);
+  line-height: 1.6;
+  max-width: 540px;
+  margin: 0 0 24px;
+}
+
+.cs-landing .cs-link,
+.cs-landing .cs-button-solid {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.cs-landing .cs-link {
+  background: var(--dental-primary);
+  color: #fff;
+}
+
+.cs-landing .cs-link:hover {
+  background: var(--dental-primary-dark);
+}
+
+.cs-landing .cs-button-outline {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 999px;
+  border: 1px solid var(--dental-primary);
+  color: var(--dental-primary);
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 12px;
+}
+
+/* Header / nav */
+
+.cs-landing-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e4ece9;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 10;
+}
+
+.cs-landing-nav .cs-logo {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--dental-ink);
+}
+
+.cs-landing-nav ul {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cs-landing-nav a {
+  color: var(--dental-ink);
+  text-decoration: none;
+  font-size: 15px;
+}
+
+/* Placeholder de imagen -- reemplazar por fotos reales de la clínica */
+
+.cs-placeholder {
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--dental-bg-soft), #dcefe9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dental-primary);
+  font-weight: 600;
+  min-height: 260px;
+  text-align: center;
+  padding: 24px;
+}
+
+/* Hero */
+
+.cs-hero .cs-container {
+  display: flex;
+  gap: 48px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cs-hero .cs-hero-content {
+  flex: 1 1 380px;
+}
+
+.cs-hero .cs-hero-image {
+  flex: 1 1 380px;
+}
+
+/* Why choose us */
+
+#why-choose-2058 .cs-flex1 {
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+#why-choose-2058 .cs-content {
+  flex: 1 1 380px;
+}
+
+#why-choose-2058 .cs-video-wrapper {
+  flex: 1 1 320px;
+}
+
+#why-choose-2058 .cs-flex2 {
+  flex: 1 1 100%;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+#why-choose-2058 .cs-small-picture {
+  flex: 1 1 220px;
+}
+
+#why-choose-2058 .cs-services {
+  flex: 2 1 320px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#why-choose-2058 .cs-h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  color: var(--dental-ink);
+}
+
+#why-choose-2058 .cs-item-text {
+  margin: 0;
+  color: var(--dental-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Services */
+
+#services-1354 .cs-content {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+#services-1354 .cs-content .cs-title {
+  max-width: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#services-1354 .cs-card-group {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+#services-1354 .cs-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 1;
+}
+
+#services-1354 .cs-item .cs-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+#services-1354 .cs-item .cs-link {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  padding: 20px;
+  background: linear-gradient(0deg, rgba(15, 89, 81, 0.85), rgba(15, 89, 81, 0));
+  color: #fff;
+  border-radius: 0;
+}
+
+#services-1354 .cs-item .cs-h3 {
+  color: #fff;
+  font-size: 18px;
+  margin: 0;
+}
+
+#services-1354 .cs-item .cs-span {
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  opacity: 0.85;
+}
+
+/* Footer */
+
+.cs-landing-footer {
+  background: var(--dental-ink);
+  color: #d7e6e3;
+  padding: 40px 24px;
+}
+
+.cs-landing-footer .cs-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.cs-landing-footer a {
+  color: #d7e6e3;
+}
+
+@media (max-width: 600px) {
+  .cs-landing .cs-title {
+    font-size: 26px;
+  }
+  .cs-landing-nav ul {
+    display: none;
+  }
+}
