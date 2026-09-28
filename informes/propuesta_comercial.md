@@ -2,6 +2,8 @@
 
 2026-09-27 · Preparado por Logan (DevQuad)
 
+**El sistema de gestión clínica que tu clínica necesita — ya construido, probado y listo para usar.**
+
 > **Pruébala en vivo:** [clinicadentalelmirador.devquad.cl](https://clinicadentalelmirador.devquad.cl) — ya puedes navegar la página pública, ver el equipo y hacer una reserva de prueba. Para ver el portal del paciente o el panel de administración, coordinamos el acceso por un canal aparte.
 
 ## Resumen del proyecto
@@ -50,6 +52,10 @@ El sistema base descrito arriba ya está implementado y en línea. Proponemos un
 | Adicional — Recordatorios por WhatsApp Business | Envío automático de recordatorios de hora por el WhatsApp que ya usa la clínica | $150.000 – $250.000 CLP | + $5.000 – $10.000 CLP/mes |
 | Adicional — Reportes avanzados de gestión | Indicadores de tratamientos más solicitados, ocupación de agenda y pacientes nuevos | $100.000 – $170.000 CLP | Sin costo adicional |
 
+> **Resumen de tu inversión**
+> - Solo el sistema base: **$395.000 – $610.000 CLP** el primer mes (puesta en producción + primera mensualidad)
+> - Con ambos adicionales (WhatsApp + reportes): **$650.000 – $1.040.000 CLP** el primer mes
+
 El rango de la puesta en producción depende de ajustes finos que pida la clínica antes de salir a producción (branding, contenidos, integraciones puntuales). La mensualidad incluye un ambiente de hosting dedicado (no compartido con otros clientes), lo que da mayor seguridad para datos de salud.
 
 El costo de envío por WhatsApp Business (cobrado por Meta, aproximadamente CLP $800 – $2.400 al mes según volumen) queda incluido en la mensualidad adicional de ese módulo, sin cobro extra ni sorpresas para la clínica.
@@ -79,10 +85,16 @@ El sistema base ya está completo y en producción (puedes probarlo en el link d
 - Acompañamiento de DevQuad post-lanzamiento, incluido en la mensualidad
 - Los adicionales (WhatsApp, reportes) se suman cuando la clínica lo decida, sin rehacer nada de lo ya construido
 
+## Sobre DevQuad
+
+Somos una agencia de desarrollo de software que diseña, construye y opera sistemas a medida de principio a fin, no solo los entrega y desaparece. Además de este proyecto, desarrollamos y mantenemos [PataAgenda](https://patagenda.devquad.cl), un sistema de gestión y reservas para peluquerías de mascotas con pagos en línea integrados, que hoy opera en producción. Usamos los mismos estándares de seguridad y la misma disciplina de trabajo en ambos productos.
+
 ## Próximos pasos
 
 1. Prueba el sistema en el link de arriba (página pública y reserva de hora)
 2. Reunión de 15-20 minutos para ver juntos el portal del paciente y el panel de administración, y resolver dudas
 3. Decides si sumas los adicionales (WhatsApp, reportes) y confirmamos la puesta en producción final
 
-**Contacto:** DevQuad — devquad.cl
+Estamos listos para avanzar cuando tú lo estés.
+
+**Contacto:** DevQuad — [devquad.cl](https://devquad.cl)
