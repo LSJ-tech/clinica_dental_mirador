@@ -29,3 +29,7 @@ export const disponibilidadApi = {
 export const reservasApi = {
   create: (data) => client.post("/reservas/", data),
 };
+
+export const cuentaApi = {
+  cambiarPassword: (data) => client.post("/cambiar-password/", data),
+};

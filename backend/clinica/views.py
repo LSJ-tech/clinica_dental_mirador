@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from .models import Cita, FichaClinica, HorarioProfesional, Pago, Paciente, Profesional, Tratamiento
 from .permissions import EsPacientePropioOStaff, SoloStaffEscribe
 from .serializers import (
+    CambiarPasswordSerializer,
     CitaSerializer,
     FichaClinicaSerializer,
     HorarioProfesionalSerializer,
@@ -199,3 +200,15 @@ class ReservaPublicaView(APIView):
             {"id": cita.id, "fecha": cita.fecha, "hora": cita.hora, "estado": cita.estado},
             status=201,
         )
+
+
+class CambiarPasswordView(APIView):
+    """Permite a cualquier usuario logueado (staff o paciente) cambiar su propia clave."""
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = CambiarPasswordSerializer(data=request.data, context={"request": request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"detail": "Contraseña actualizada."})

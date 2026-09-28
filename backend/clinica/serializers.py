@@ -1,3 +1,4 @@
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
 from .models import Cita, FichaClinica, HorarioProfesional, Pago, Paciente, Profesional, Tratamiento
@@ -128,3 +129,25 @@ class ReservaPublicaSerializer(serializers.Serializer):
             motivo=validated_data.get("motivo", ""),
             estado="pendiente",
         )
+
+
+class CambiarPasswordSerializer(serializers.Serializer):
+    """Cambio de clave propia, para cualquier usuario logueado (staff o paciente)."""
+
+    password_actual = serializers.CharField(write_only=True)
+    password_nueva = serializers.CharField(write_only=True)
+
+    def validate_password_actual(self, valor):
+        usuario = self.context["request"].user
+        if not usuario.check_password(valor):
+            raise serializers.ValidationError("La contraseña actual no es correcta.")
+        return valor
+
+    def validate_password_nueva(self, valor):
+        validate_password(valor, user=self.context["request"].user)
+        return valor
+
+    def save(self):
+        usuario = self.context["request"].user
+        usuario.set_password(self.validated_data["password_nueva"])
+        usuario.save(update_fields=["password"])

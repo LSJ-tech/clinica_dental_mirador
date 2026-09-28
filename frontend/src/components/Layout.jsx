@@ -21,6 +21,7 @@ export default function Layout({ children }) {
             <Link to="/mis-pagos">Mis pagos</Link>
           </>
         )}
+        <Link to="/cambiar-password">Cambiar contraseña</Link>
         <button onClick={logout}>Cerrar sesión</button>
       </nav>
       <main className="contenido">{children}</main>

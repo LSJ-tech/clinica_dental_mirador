@@ -14,6 +14,7 @@ import PacientesListPage from "./pages/staff/PacientesListPage";
 import PacienteDetailPage from "./pages/staff/PacienteDetailPage";
 import AgendaPage from "./pages/staff/AgendaPage";
 import ProfesionalesPage from "./pages/staff/ProfesionalesPage";
+import CambiarPasswordPage from "./pages/staff/CambiarPasswordPage";
 
 export default function App() {
   return (
@@ -102,6 +103,16 @@ export default function App() {
               <RutaProtegida staffOnly>
                 <Layout>
                   <ProfesionalesPage />
+                </Layout>
+              </RutaProtegida>
+            }
+          />
+          <Route
+            path="/cambiar-password"
+            element={
+              <RutaProtegida>
+                <Layout>
+                  <CambiarPasswordPage />
                 </Layout>
               </RutaProtegida>
             }

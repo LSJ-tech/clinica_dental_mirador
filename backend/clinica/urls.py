@@ -16,5 +16,6 @@ urlpatterns = [
     path("me/", views.MeView.as_view(), name="me"),
     path("disponibilidad/", views.DisponibilidadView.as_view(), name="disponibilidad"),
     path("reservas/", views.ReservaPublicaView.as_view(), name="reserva-publica"),
+    path("cambiar-password/", views.CambiarPasswordView.as_view(), name="cambiar-password"),
     path("", include(router.urls)),
 ]

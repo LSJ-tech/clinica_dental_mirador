@@ -116,10 +116,13 @@ class MeViewTest(APITestCase):
 
 class ProfesionalPublicoTest(APITestCase):
     def test_lista_profesionales_sin_autenticar(self):
+        # No se asume un total absoluto: la migración 0003 siembra el
+        # equipo real, así que otros Profesional ya existen en la BD.
+        antes = Profesional.objects.count()
         Profesional.objects.create(nombre="Dra. Soto", especialidad="General")
         respuesta = self.client.get("/api/profesionales/")
         self.assertEqual(respuesta.status_code, 200)
-        self.assertEqual(len(respuesta.data), 1)
+        self.assertEqual(len(respuesta.data), antes + 1)
 
     def test_crear_profesional_siembra_horario_lunes_a_sabado(self):
         profesional = Profesional.objects.create(nombre="Dr. Soto", especialidad="General")
@@ -200,3 +203,53 @@ class DisponibilidadYReservaTest(APITestCase):
             "fecha": str(self.lunes), "hora": "10:00",
         })
         self.assertEqual(respuesta.status_code, 400)
+
+
+class CambiarPasswordTest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="staff5", password="claveVieja123")
+        self.client.force_authenticate(user=self.user)
+
+    def test_cambia_password_con_clave_actual_correcta(self):
+        respuesta = self.client.post("/api/cambiar-password/", {
+            "password_actual": "claveVieja123",
+            "password_nueva": "unaClaveNuevaSegura2026",
+        })
+        self.assertEqual(respuesta.status_code, 200)
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password("unaClaveNuevaSegura2026"))
+
+    def test_rechaza_clave_actual_incorrecta(self):
+        respuesta = self.client.post("/api/cambiar-password/", {
+            "password_actual": "claveEquivocada",
+            "password_nueva": "unaClaveNuevaSegura2026",
+        })
+        self.assertEqual(respuesta.status_code, 400)
+
+    def test_rechaza_clave_nueva_demasiado_simple(self):
+        respuesta = self.client.post("/api/cambiar-password/", {
+            "password_actual": "claveVieja123",
+            "password_nueva": "123456",
+        })
+        self.assertEqual(respuesta.status_code, 400)
+
+    def test_anonimo_no_puede_cambiar_password(self):
+        self.client.force_authenticate(user=None)
+        respuesta = self.client.post("/api/cambiar-password/", {
+            "password_actual": "x", "password_nueva": "otraClaveSegura2026",
+        })
+        self.assertEqual(respuesta.status_code, 401)
+
+
+class SeedEquipoTest(TestCase):
+    def test_migracion_crea_usuarios_y_profesionales_del_equipo(self):
+        for username in ["mjauregui", "jgonzalez", "mlorca", "mreyes", "cguaico", "pgonzalez"]:
+            usuario = User.objects.get(username=username)
+            self.assertTrue(usuario.is_staff)
+            self.assertTrue(usuario.check_password("mirador2026"))
+
+        for nombre in ["Dra. Jenniffer González R.", "Dra. María José Lorca", "Dra. Muriel Reyes L."]:
+            profesional = Profesional.objects.get(nombre=nombre)
+            self.assertEqual(
+                HorarioProfesional.objects.filter(profesional=profesional).count(), 6
+            )
