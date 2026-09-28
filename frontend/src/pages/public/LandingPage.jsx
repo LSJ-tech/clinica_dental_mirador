@@ -66,7 +66,11 @@ export default function LandingPage() {
   return (
     <div className="cs-landing">
       <nav className="cs-landing-nav">
-        <span className="cs-logo">Clínica Dental El Mirador</span>
+        <img
+          className="cs-logo"
+          src="https://clinicadentalelmirador.cl/wp-content/uploads/2021/01/3-traansparente.png"
+          alt="Clínica Dental El Mirador"
+        />
         <ul>
           <li>
             <a href="#why-choose-2058">Por qué elegirnos</a>
@@ -170,8 +174,15 @@ export default function LandingPage() {
 
       <footer className="cs-landing-footer">
         <div className="cs-container">
-          <span>Clínica Dental El Mirador — El Mirador #459 (Sitio 17-E), Casablanca</span>
-          <span>+569 5604 3960 · clinicadentalelmirador2020@gmail.com</span>
+          <img
+            className="cs-logo-footer"
+            src="https://clinicadentalelmirador.cl/wp-content/uploads/2021/01/logo_pie.png"
+            alt="Clínica Dental El Mirador"
+          />
+          <div className="cs-footer-info">
+            <span>El Mirador #459 (Sitio 17-E), Casablanca</span>
+            <span>+569 5604 3960 · clinicadentalelmirador2020@gmail.com</span>
+          </div>
         </div>
       </footer>
     </div>

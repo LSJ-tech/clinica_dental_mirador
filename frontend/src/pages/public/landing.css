@@ -96,9 +96,8 @@
 }
 
 .cs-landing-nav .cs-logo {
-  font-weight: 700;
-  font-size: 18px;
-  color: var(--dental-ink);
+  height: 56px;
+  width: auto;
 }
 
 .cs-landing-nav ul {
@@ -296,8 +295,21 @@
 .cs-landing-footer .cs-container {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
   gap: 16px;
+}
+
+.cs-logo-footer {
+  height: 64px;
+  width: auto;
+}
+
+.cs-footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: right;
 }
 
 .cs-landing-footer a {
