@@ -4,6 +4,13 @@ import { meApi } from "../api/resources";
 
 const AuthContext = createContext(null);
 
+function sanitizarToken(valor) {
+  if (typeof valor !== "string" || !valor) {
+    throw new Error("Respuesta de login inválida.");
+  }
+  return valor;
+}
+
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem("access_token"));
   const [isStaff, setIsStaff] = useState(false);
@@ -32,13 +39,11 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (telefono, password) => {
     const respuesta = await client.post("/token/", { username: telefono, password });
-    const { access, refresh } = respuesta.data;
     // No guardar en localStorage lo que venga en la respuesta sin mirar:
     // solo strings no vacíos, nunca objetos/null/undefined por una
     // respuesta inesperada del backend.
-    if (typeof access !== "string" || !access || typeof refresh !== "string" || !refresh) {
-      throw new Error("Respuesta de login inválida.");
-    }
+    const access = sanitizarToken(respuesta.data.access);
+    const refresh = sanitizarToken(respuesta.data.refresh);
     localStorage.setItem("access_token", access);
     localStorage.setItem("refresh_token", refresh);
     setToken(access);

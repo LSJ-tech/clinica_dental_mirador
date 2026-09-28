@@ -10,10 +10,19 @@ function crudResource(path) {
   // realmente pega la request (path traversal / SSRF del lado cliente).
   return {
     list: (params) => client.get(`/${path}/`, { params }),
-    get: (id) => client.get(`/${path}/${encodeURIComponent(id)}/`),
+    get: (id) => {
+      const idSeguro = encodeURIComponent(id);
+      return client.get(`/${path}/${idSeguro}/`);
+    },
     create: (data) => client.post(`/${path}/`, data),
-    update: (id, data) => client.patch(`/${path}/${encodeURIComponent(id)}/`, data),
-    remove: (id) => client.delete(`/${path}/${encodeURIComponent(id)}/`),
+    update: (id, data) => {
+      const idSeguro = encodeURIComponent(id);
+      return client.patch(`/${path}/${idSeguro}/`, data);
+    },
+    remove: (id) => {
+      const idSeguro = encodeURIComponent(id);
+      return client.delete(`/${path}/${idSeguro}/`);
+    },
   };
 }
 
