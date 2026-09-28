@@ -43,7 +43,10 @@ jobs:
       - name: Tests frontend con cobertura
         working-directory: frontend
         run: |
-          npm ci
+          # --ignore-scripts: ningun paquete de esta dependencia usa scripts
+          # de instalacion (verificado), asi que se bloquean por si alguno
+          # comprometido intentara ejecutar codigo al instalar.
+          npm ci --ignore-scripts
           npm run test:coverage
 
       - name: Cache SonarQube packages

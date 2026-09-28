@@ -44,7 +44,7 @@ describe("ReservarPage", () => {
     renderPage();
     await screen.findByText("Dra. Soto — General");
     await user.selectOptions(screen.getByLabelText("Profesional"), "1");
-    await waitFor(() => expect(screen.getByText("09:00")).toBeInTheDocument());
+    expect(await screen.findByText("09:00")).toBeInTheDocument();
     expect(screen.getByText("09:30")).toBeInTheDocument();
   });
 
