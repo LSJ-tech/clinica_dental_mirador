@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import PublicNav from "./PublicNav";
+import SERVICIOS from "./servicios.json";
 import "./landing.css";
 
 const WHATSAPP_DUDAS_URL =
@@ -14,54 +15,6 @@ const FOTOS = {
   equipo: "https://images.pexels.com/photos/6627466/pexels-photo-6627466.jpeg?auto=compress&cs=tinysrgb&w=800",
   paciente: "https://images.pexels.com/photos/6627574/pexels-photo-6627574.jpeg?auto=compress&cs=tinysrgb&w=600",
 };
-
-const SERVICIOS = [
-  {
-    destacado: "Odontología",
-    nombre: "General",
-    foto: "https://images.pexels.com/photos/3845748/pexels-photo-3845748.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    destacado: "Corrección",
-    nombre: "Ortodoncia",
-    foto: "https://images.pexels.com/photos/5524021/pexels-photo-5524021.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    destacado: "Tratamiento de",
-    nombre: "Endodoncia",
-    foto: "https://images.pexels.com/photos/4971514/pexels-photo-4971514.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    destacado: "Prótesis",
-    nombre: "Fijas y Removibles",
-    foto: "https://images.pexels.com/photos/11768114/pexels-photo-11768114.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    destacado: "Servicio de",
-    nombre: "Extracciones",
-    foto: "https://images.pexels.com/photos/6627566/pexels-photo-6627566.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    destacado: "Higiene y",
-    nombre: "Limpieza Dental",
-    foto: "https://images.pexels.com/photos/3845735/pexels-photo-3845735.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    destacado: "Atención de",
-    nombre: "Urgencias",
-    foto: "https://images.pexels.com/photos/6193195/pexels-photo-6193195.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    destacado: "Cuidado para",
-    nombre: "Niños y Adultos",
-    foto: "https://images.pexels.com/photos/8224633/pexels-photo-8224633.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-  {
-    destacado: "Servicios de",
-    nombre: "Estética Facial",
-    foto: "https://images.pexels.com/photos/5069612/pexels-photo-5069612.jpeg?auto=compress&cs=tinysrgb&w=600",
-  },
-];
 
 export default function LandingPage() {
   return (

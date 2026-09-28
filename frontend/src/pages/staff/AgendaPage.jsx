@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { citasApi, pacientesApi, profesionalesApi } from "../../api/resources";
+import CampoProfesional from "../../components/CampoProfesional";
+import CampoHora from "../../components/CampoHora";
 
 function hoyISO() {
   return new Date().toISOString().slice(0, 10);
@@ -98,30 +100,15 @@ export default function AgendaPage() {
             ))}
           </select>
         </label>
-        <label>
-          <span>Profesional</span>
-          <select
-            value={form.profesional}
-            onChange={(e) => setForm({ ...form, profesional: e.target.value })}
-            required
-          >
-            <option value="">Seleccionar...</option>
-            {profesionales.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.nombre}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          <span>Hora</span>
-          <input
-            type="time"
-            value={form.hora}
-            onChange={(e) => setForm({ ...form, hora: e.target.value })}
-            required
-          />
-        </label>
+        <CampoProfesional
+          value={form.profesional}
+          onChange={(e) => setForm({ ...form, profesional: e.target.value })}
+          profesionales={profesionales}
+        />
+        <CampoHora
+          value={form.hora}
+          onChange={(e) => setForm({ ...form, hora: e.target.value })}
+        />
         <label>
           <span>Box</span>
           <input value={form.box} onChange={(e) => setForm({ ...form, box: e.target.value })} />

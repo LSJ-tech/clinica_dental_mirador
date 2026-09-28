@@ -8,6 +8,10 @@ import {
   profesionalesApi,
   tratamientosApi,
 } from "../../api/resources";
+import TablaPagos from "../../components/TablaPagos";
+import TablaTratamientos from "../../components/TablaTratamientos";
+import CampoProfesional from "../../components/CampoProfesional";
+import CampoHora from "../../components/CampoHora";
 
 const TABS = ["Ficha", "Tratamientos", "Pagos", "Citas"];
 
@@ -152,24 +156,7 @@ function TabTratamientos({ pacienteId }) {
 
   return (
     <div>
-      <table>
-        <thead>
-          <tr>
-            <th>Tipo</th>
-            <th>Costo</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tratamientos.map((t) => (
-            <tr key={t.id}>
-              <td>{t.tipo}</td>
-              <td>${t.costo}</td>
-              <td>{t.estado}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <TablaTratamientos tratamientos={tratamientos} />
       <form onSubmit={crear}>
         <label>
           <span>Tipo</span>
@@ -225,26 +212,7 @@ function TabPagos({ pacienteId }) {
 
   return (
     <div>
-      <table>
-        <thead>
-          <tr>
-            <th>Fecha</th>
-            <th>Monto</th>
-            <th>Medio</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          {pagos.map((p) => (
-            <tr key={p.id}>
-              <td>{p.fecha}</td>
-              <td>${p.monto}</td>
-              <td>{p.medio_pago}</td>
-              <td>{p.estado}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <TablaPagos pagos={pagos} />
       <form onSubmit={crear}>
         <label>
           <span>Fecha</span>
@@ -337,21 +305,11 @@ function TabCitas({ pacienteId }) {
         </tbody>
       </table>
       <form onSubmit={crear}>
-        <label>
-          <span>Profesional</span>
-          <select
-            value={form.profesional}
-            onChange={(e) => setForm({ ...form, profesional: e.target.value })}
-            required
-          >
-            <option value="">Seleccionar...</option>
-            {profesionales.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.nombre}
-              </option>
-            ))}
-          </select>
-        </label>
+        <CampoProfesional
+          value={form.profesional}
+          onChange={(e) => setForm({ ...form, profesional: e.target.value })}
+          profesionales={profesionales}
+        />
         <label>
           <span>Fecha</span>
           <input
@@ -361,15 +319,10 @@ function TabCitas({ pacienteId }) {
             required
           />
         </label>
-        <label>
-          <span>Hora</span>
-          <input
-            type="time"
-            value={form.hora}
-            onChange={(e) => setForm({ ...form, hora: e.target.value })}
-            required
-          />
-        </label>
+        <CampoHora
+          value={form.hora}
+          onChange={(e) => setForm({ ...form, hora: e.target.value })}
+        />
         <label>
           <span>Box</span>
           <input value={form.box} onChange={(e) => setForm({ ...form, box: e.target.value })} />

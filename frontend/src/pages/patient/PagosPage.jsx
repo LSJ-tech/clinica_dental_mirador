@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { pagosApi } from "../../api/resources";
+import TablaPagos from "../../components/TablaPagos";
 
 export default function PagosPage() {
   const [pagos, setPagos] = useState(null);
@@ -18,28 +19,7 @@ export default function PagosPage() {
       {error && <p role="alert">{error}</p>}
       {!error && pagos === null && <p>Cargando...</p>}
       {pagos?.length === 0 && <p>No tienes pagos registrados.</p>}
-      {pagos && pagos.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>Monto</th>
-              <th>Medio</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pagos.map((p) => (
-              <tr key={p.id}>
-                <td>{p.fecha}</td>
-                <td>${p.monto}</td>
-                <td>{p.medio_pago}</td>
-                <td>{p.estado}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      {pagos && pagos.length > 0 && <TablaPagos pagos={pagos} />}
     </div>
   );
 }

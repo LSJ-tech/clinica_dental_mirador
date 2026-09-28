@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fichasClinicasApi, tratamientosApi } from "../../api/resources";
+import TablaTratamientos from "../../components/TablaTratamientos";
 
 export default function FichaClinicaPage() {
   const [ficha, setFicha] = useState(null);
@@ -40,26 +41,7 @@ export default function FichaClinicaPage() {
       <section>
         <h2>Tratamientos</h2>
         {tratamientos.length === 0 && <p>No tienes tratamientos registrados.</p>}
-        {tratamientos.length > 0 && (
-          <table>
-            <thead>
-              <tr>
-                <th>Tipo</th>
-                <th>Costo</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tratamientos.map((t) => (
-                <tr key={t.id}>
-                  <td>{t.tipo}</td>
-                  <td>${t.costo}</td>
-                  <td>{t.estado}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        {tratamientos.length > 0 && <TablaTratamientos tratamientos={tratamientos} />}
       </section>
     </div>
   );
