@@ -4,8 +4,13 @@ import { meApi } from "../api/resources";
 
 const AuthContext = createContext(null);
 
+// Un JWT solo usa base64url (A-Z a-z 0-9 - _) y puntos como separador de
+// sus 3 partes. Se valida contra ese formato exacto (en vez de solo
+// comprobar que sea un string no vacio) porque viene de la respuesta
+// del backend: si ese backend se viera comprometido, cualquier otro
+// valor terminaria igual en localStorage.
 function sanitizarToken(valor) {
-  if (typeof valor !== "string" || !valor) {
+  if (typeof valor !== "string" || !/^[A-Za-z0-9._-]+$/.test(valor)) {
     throw new Error("Respuesta de login inválida.");
   }
   return valor;

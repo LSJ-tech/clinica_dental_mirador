@@ -4,23 +4,34 @@ export const meApi = {
   get: () => client.get("/me/"),
 };
 
+// Los ids de este backend son siempre PK enteras de Django. Se valida
+// contra ese formato exacto (en vez de solo escapar con
+// encodeURIComponent) porque el id viene de una respuesta del backend:
+// si ese backend se viera comprometido, un id con "/" o ".." podria
+// alterar la ruta a la que realmente pega la request (path traversal /
+// SSRF del lado cliente) -- encodear no lo evita, exigir el formato si.
+function idValidado(id) {
+  const valor = String(id);
+  if (!/^[0-9]+$/.test(valor)) {
+    throw new Error("Id inválido.");
+  }
+  return valor;
+}
+
 function crudResource(path) {
-  // encodeURIComponent en el id: viene de datos del propio backend hoy,
-  // pero sin esto un id con "/" o ".." podria alterar la ruta a la que
-  // realmente pega la request (path traversal / SSRF del lado cliente).
   return {
     list: (params) => client.get(`/${path}/`, { params }),
     get: (id) => {
-      const idSeguro = encodeURIComponent(id);
+      const idSeguro = idValidado(id);
       return client.get(`/${path}/${idSeguro}/`);
     },
     create: (data) => client.post(`/${path}/`, data),
     update: (id, data) => {
-      const idSeguro = encodeURIComponent(id);
+      const idSeguro = idValidado(id);
       return client.patch(`/${path}/${idSeguro}/`, data);
     },
     remove: (id) => {
-      const idSeguro = encodeURIComponent(id);
+      const idSeguro = idValidado(id);
       return client.delete(`/${path}/${idSeguro}/`);
     },
   };

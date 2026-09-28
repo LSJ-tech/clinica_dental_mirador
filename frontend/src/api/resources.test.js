@@ -59,15 +59,16 @@ describe("resources", () => {
     expect(client.delete).toHaveBeenCalledWith(`/${path}/5/`);
   });
 
-  it("escapa un id peligroso con encodeURIComponent antes de armar la url", () => {
-    pacientesApi.get("1/../2");
-    expect(client.get).toHaveBeenCalledWith("/pacientes/1%2F..%2F2/");
+  it("rechaza un id que no sea una PK entera antes de armar la url", () => {
+    expect(() => pacientesApi.get("1/../2")).toThrow("Id inválido.");
+    expect(() => pacientesApi.update("a b", {})).toThrow("Id inválido.");
+    expect(() => pacientesApi.remove("a?b")).toThrow("Id inválido.");
+    expect(client.get).not.toHaveBeenCalledWith(expect.stringContaining("/../"));
+  });
 
-    pacientesApi.update("a b", {});
-    expect(client.patch).toHaveBeenCalledWith("/pacientes/a%20b/", {});
-
-    pacientesApi.remove("a?b");
-    expect(client.delete).toHaveBeenCalledWith("/pacientes/a%3Fb/");
+  it("acepta un id que sea una PK entera (aunque venga como string)", () => {
+    pacientesApi.get("42");
+    expect(client.get).toHaveBeenCalledWith("/pacientes/42/");
   });
 
   it("disponibilidadApi.get pega a /disponibilidad/ con los params", () => {
