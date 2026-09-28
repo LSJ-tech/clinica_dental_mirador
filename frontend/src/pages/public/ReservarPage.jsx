@@ -133,6 +133,13 @@ export default function ReservarPage() {
                 </div>
               )}
 
+              {/* Fuera del bloque de horaElegida a proposito: si la reserva
+                  falla porque el horario ya se ocupo, horaElegida vuelve a
+                  null en el mismo render que fija este error -- si el
+                  mensaje viviera dentro del form condicionado a horaElegida,
+                  desapareceria junto con el form antes de que alguien lo viera. */}
+              {error && !horaElegida && <p role="alert">{error}</p>}
+
               {horaElegida && (
                 <form className="cs-reserva-paso" onSubmit={confirmarReserva}>
                   <label>

@@ -30,8 +30,21 @@ jobs:
           # para la misma version). --only-binary evita ademas ejecutar
           # setup.py de un paquete fuente.
           pip install --only-binary :all: --require-hashes -r requirements-ci.txt
-          coverage run manage.py test
+          coverage run -m pytest
           coverage xml -o coverage.xml
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Tests frontend con cobertura
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run test:coverage
 
       - name: Cache SonarQube packages
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0

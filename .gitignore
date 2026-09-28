@@ -11,3 +11,4 @@ coverage.xml
 # Node / React
 node_modules/
 frontend/dist/
+frontend/coverage/
