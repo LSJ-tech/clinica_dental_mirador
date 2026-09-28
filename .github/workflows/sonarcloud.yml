@@ -16,6 +16,18 @@ jobs:
           # para poder calcular qué es código "nuevo" en cada análisis.
           fetch-depth: 0
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Tests backend con cobertura
+        working-directory: backend
+        run: |
+          pip install -r requirements.txt coverage
+          coverage run manage.py test
+          coverage xml -o coverage.xml
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v4
         env:

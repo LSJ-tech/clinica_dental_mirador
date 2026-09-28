@@ -5,6 +5,8 @@ __pycache__/
 db.sqlite3
 staticfiles/
 .env
+.coverage
+coverage.xml
 
 # Node / React
 node_modules/
