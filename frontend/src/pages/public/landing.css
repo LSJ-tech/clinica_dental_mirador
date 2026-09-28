@@ -114,6 +114,20 @@
   font-size: 15px;
 }
 
+.cs-nav-toggle {
+  display: none;
+  border: 1px solid var(--dental-bg-soft);
+  border-radius: 8px;
+  background: #fff;
+  font-size: 20px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.cs-nav-solo-mobile {
+  display: none;
+}
+
 /* Fotos -- de stock por ahora (ver comentario en LandingPage.jsx),
    reemplazar por fotos reales de la clínica cuando se consigan. */
 
@@ -464,7 +478,45 @@
   .cs-landing .cs-title {
     font-size: 26px;
   }
+
+  .cs-nav-toggle {
+    display: block;
+  }
+
+  /* Más específico que ".cs-landing .cs-button-outline" (que fija
+     display:inline-block) para que el "Ingresar" de escritorio sí se
+     oculte -- si no, quedaba duplicado (uno arriba, otro en el menú). */
+  .cs-landing-nav .cs-nav-solo-desktop {
+    display: none;
+  }
+
+  .cs-nav-solo-mobile {
+    display: block;
+  }
+
+  /* El menú vive en el flujo normal (no absoluto) para no tapar el resto
+     de la página ni necesitar un cálculo de altura -- simplemente empuja
+     el contenido de abajo cuando está abierto. */
+  .cs-landing-nav {
+    flex-wrap: wrap;
+  }
+
   .cs-landing-nav ul {
     display: none;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    order: 3;
+    padding-top: 12px;
+  }
+
+  .cs-landing-nav ul.cs-nav-abierto {
+    display: flex;
+  }
+
+  .cs-landing-nav ul a {
+    display: block;
+    padding: 10px 0;
+    border-top: 1px solid var(--dental-bg-soft);
   }
 }

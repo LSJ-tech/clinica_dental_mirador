@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import PublicNav from "./PublicNav";
 import "./landing.css";
 
 const BASE = "https://clinicadentalelmirador.cl/wp-content/uploads/2023/09";
@@ -87,23 +87,7 @@ function iniciales(nombre) {
 export default function EquipoPage() {
   return (
     <div className="cs-landing">
-      <nav className="cs-landing-nav">
-        <Link to="/">
-          <img
-            className="cs-logo"
-            src="https://clinicadentalelmirador.cl/wp-content/uploads/2021/01/3-traansparente.png"
-            alt="Clínica Dental El Mirador"
-          />
-        </Link>
-        <ul>
-          <li>
-            <Link to="/">Inicio</Link>
-          </li>
-        </ul>
-        <Link to="/login" className="cs-button-outline">
-          Ingresar
-        </Link>
-      </nav>
+      <PublicNav />
 
       <section>
         <div className="cs-container">

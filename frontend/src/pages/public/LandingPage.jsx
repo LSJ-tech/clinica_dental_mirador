@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import PublicNav from "./PublicNav";
 import "./landing.css";
 
 const WHATSAPP_DUDAS_URL =
@@ -65,33 +66,7 @@ const SERVICIOS = [
 export default function LandingPage() {
   return (
     <div className="cs-landing">
-      <nav className="cs-landing-nav">
-        <img
-          className="cs-logo"
-          src="https://clinicadentalelmirador.cl/wp-content/uploads/2021/01/3-traansparente.png"
-          alt="Clínica Dental El Mirador"
-        />
-        <ul>
-          <li>
-            <a href="#why-choose-2058">Por qué elegirnos</a>
-          </li>
-          <li>
-            <a href="#services-1354">Servicios</a>
-          </li>
-          <li>
-            <Link to="/equipo">Nuestro equipo</Link>
-          </li>
-          <li>
-            <a href="#ubicacion">Ubicación</a>
-          </li>
-          <li>
-            <Link to="/reservar">Reservar hora</Link>
-          </li>
-        </ul>
-        <Link to="/login" className="cs-button-outline">
-          Ingresar
-        </Link>
-      </nav>
+      <PublicNav />
 
       <section className="cs-hero">
         <div className="cs-container">
