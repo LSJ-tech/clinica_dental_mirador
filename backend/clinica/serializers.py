@@ -22,10 +22,14 @@ class ProfesionalSerializer(serializers.ModelSerializer):
 
 
 class CitaSerializer(serializers.ModelSerializer):
+    paciente_nombre = serializers.CharField(source="paciente.nombre", read_only=True)
+    profesional_nombre = serializers.CharField(source="profesional.nombre", read_only=True)
+
     class Meta:
         model = Cita
         fields = [
-            "id", "paciente", "profesional", "fecha", "hora", "estado", "box",
+            "id", "paciente", "paciente_nombre", "profesional", "profesional_nombre",
+            "fecha", "hora", "estado", "box",
             "recordatorio_estado", "recordatorio_enviado_at", "whatsapp_message_id",
         ]
         read_only_fields = ["recordatorio_estado", "recordatorio_enviado_at", "whatsapp_message_id"]

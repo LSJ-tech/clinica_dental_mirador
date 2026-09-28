@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from rest_framework.test import APITestCase
 
-from .models import Cita, Paciente, Profesional
+from .models import Cita, FichaClinica, Paciente, Profesional
 from .validators import normalizar_telefono_cl
 
 
@@ -60,3 +60,50 @@ class CitaApiPermisosTest(APITestCase):
             "hora": "12:00",
         })
         self.assertEqual(respuesta.status_code, 403)
+
+    def test_filtro_por_fecha(self):
+        staff = User.objects.create_user(username="staff", password="x", is_staff=True)
+        Cita.objects.create(
+            paciente=self.paciente1, profesional=self.profesional,
+            fecha=date(2020, 1, 1), hora="09:00", estado="pendiente", box="1",
+        )
+        self.client.force_authenticate(user=staff)
+        respuesta = self.client.get(f"/api/citas/?fecha={date.today()}")
+        self.assertEqual(len(respuesta.data), 2)
+
+    def test_cita_incluye_nombres_anidados(self):
+        self.client.force_authenticate(user=self.user1)
+        respuesta = self.client.get("/api/citas/")
+        self.assertEqual(respuesta.data[0]["paciente_nombre"], "Ana")
+        self.assertEqual(respuesta.data[0]["profesional_nombre"], "Dra. Soto")
+
+
+class FichaClinicaAutoCreadaTest(TestCase):
+    def test_se_crea_ficha_al_crear_paciente(self):
+        paciente = Paciente.objects.create(nombre="Nueva", rut="3-5", telefono="+56933333333")
+        self.assertTrue(FichaClinica.objects.filter(paciente=paciente).exists())
+
+
+class MeViewTest(APITestCase):
+    def test_me_para_staff(self):
+        staff = User.objects.create_user(username="staff2", password="x", is_staff=True)
+        self.client.force_authenticate(user=staff)
+        respuesta = self.client.get("/api/me/")
+        self.assertEqual(respuesta.data, {"is_staff": True, "paciente": None})
+
+    def test_me_para_paciente(self):
+        user = User.objects.create_user(username="+56944444444", password="x")
+        Paciente.objects.create(nombre="Pedro", rut="4-3", telefono="+56944444444", user=user)
+        self.client.force_authenticate(user=user)
+        respuesta = self.client.get("/api/me/")
+        self.assertFalse(respuesta.data["is_staff"])
+        self.assertEqual(respuesta.data["paciente"]["nombre"], "Pedro")
+
+    def test_q_filtra_pacientes(self):
+        staff = User.objects.create_user(username="staff3", password="x", is_staff=True)
+        Paciente.objects.create(nombre="Zoe Rojas", rut="5-1", telefono="+56955555555")
+        Paciente.objects.create(nombre="Marco Diaz", rut="6-K", telefono="+56966666666")
+        self.client.force_authenticate(user=staff)
+        respuesta = self.client.get("/api/pacientes/?q=Zoe")
+        self.assertEqual(len(respuesta.data), 1)
+        self.assertEqual(respuesta.data[0]["nombre"], "Zoe Rojas")

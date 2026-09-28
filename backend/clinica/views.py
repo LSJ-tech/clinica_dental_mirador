@@ -1,4 +1,7 @@
-from rest_framework import generics, permissions, viewsets
+from django.db.models import Q
+from rest_framework import permissions, viewsets
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import Cita, FichaClinica, Pago, Paciente, Profesional, Tratamiento
 from .permissions import EsPacientePropioOStaff, SoloStaffEscribe
@@ -18,8 +21,13 @@ class PacienteViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            return Paciente.objects.all()
-        return Paciente.objects.filter(user=self.request.user)
+            qs = Paciente.objects.all()
+        else:
+            qs = Paciente.objects.filter(user=self.request.user)
+        q = self.request.query_params.get("q")
+        if q:
+            qs = qs.filter(Q(nombre__icontains=q) | Q(rut__icontains=q) | Q(telefono__icontains=q))
+        return qs
 
 
 class FichaClinicaViewSet(viewsets.ModelViewSet):
@@ -28,8 +36,13 @@ class FichaClinicaViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            return FichaClinica.objects.all()
-        return FichaClinica.objects.filter(paciente__user=self.request.user)
+            qs = FichaClinica.objects.all()
+        else:
+            qs = FichaClinica.objects.filter(paciente__user=self.request.user)
+        paciente_id = self.request.query_params.get("paciente")
+        if paciente_id:
+            qs = qs.filter(paciente_id=paciente_id)
+        return qs
 
 
 class ProfesionalViewSet(viewsets.ModelViewSet):
@@ -44,8 +57,19 @@ class CitaViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            return Cita.objects.all()
-        return Cita.objects.filter(paciente__user=self.request.user)
+            qs = Cita.objects.all()
+        else:
+            qs = Cita.objects.filter(paciente__user=self.request.user)
+        fecha = self.request.query_params.get("fecha")
+        if fecha:
+            qs = qs.filter(fecha=fecha)
+        estado = self.request.query_params.get("estado")
+        if estado:
+            qs = qs.filter(estado=estado)
+        paciente_id = self.request.query_params.get("paciente")
+        if paciente_id:
+            qs = qs.filter(paciente_id=paciente_id)
+        return qs
 
 
 class TratamientoViewSet(viewsets.ModelViewSet):
@@ -54,8 +78,13 @@ class TratamientoViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            return Tratamiento.objects.all()
-        return Tratamiento.objects.filter(ficha_clinica__paciente__user=self.request.user)
+            qs = Tratamiento.objects.all()
+        else:
+            qs = Tratamiento.objects.filter(ficha_clinica__paciente__user=self.request.user)
+        ficha_clinica_id = self.request.query_params.get("ficha_clinica")
+        if ficha_clinica_id:
+            qs = qs.filter(ficha_clinica_id=ficha_clinica_id)
+        return qs
 
 
 class PagoViewSet(viewsets.ModelViewSet):
@@ -64,14 +93,25 @@ class PagoViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            return Pago.objects.all()
-        return Pago.objects.filter(paciente__user=self.request.user)
+            qs = Pago.objects.all()
+        else:
+            qs = Pago.objects.filter(paciente__user=self.request.user)
+        paciente_id = self.request.query_params.get("paciente")
+        if paciente_id:
+            qs = qs.filter(paciente_id=paciente_id)
+        return qs
 
 
-class MeView(generics.RetrieveAPIView):
-    """Bootstrap para el SPA: el Paciente asociado al usuario logueado."""
+class MeView(APIView):
+    """
+    Bootstrap para el SPA: le dice al frontend si el usuario logueado es
+    staff o paciente (y sus datos de Paciente si corresponde), porque el JWT
+    en sí no trae esa distinción.
+    """
 
-    serializer_class = PacienteSerializer
-
-    def get_object(self):
-        return self.request.user.paciente
+    def get(self, request):
+        paciente = getattr(request.user, "paciente", None)
+        return Response({
+            "is_staff": request.user.is_staff,
+            "paciente": PacienteSerializer(paciente).data if paciente else None,
+        })

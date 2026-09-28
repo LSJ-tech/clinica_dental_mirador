@@ -13,8 +13,8 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
     try {
-      await login(telefono, password);
-      navigate("/citas");
+      const me = await login(telefono, password);
+      navigate(me.is_staff ? "/staff" : "/citas");
     } catch {
       setError("Teléfono o contraseña incorrectos.");
     }

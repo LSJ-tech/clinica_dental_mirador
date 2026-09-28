@@ -109,3 +109,127 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+/* Estilos de la app (paneles, tablas, formularios) -- por encima de los
+   estilos de landing de arriba, que vienen de la plantilla base de Vite. */
+
+#root {
+  text-align: left;
+}
+
+.nav {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav a {
+  color: var(--text-h);
+  text-decoration: none;
+}
+
+.nav button {
+  margin-left: auto;
+}
+
+.contenido {
+  padding: 24px;
+  text-align: left;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 15px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 420px;
+  margin: 12px 0;
+  text-align: left;
+}
+
+form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+}
+
+input,
+select,
+textarea,
+button {
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+button {
+  cursor: pointer;
+  width: fit-content;
+}
+
+button:hover {
+  border-color: var(--accent-border);
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.tabs button {
+  border: none;
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  padding: 8px 4px;
+}
+
+.tabs button.activo {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+}
+
+.tarjetas {
+  display: flex;
+  gap: 16px;
+}
+
+.tarjeta {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+}
+
+.tarjeta strong {
+  font-size: 32px;
+  color: var(--text-h);
+}
+
+[role="alert"] {
+  color: #d33;
+}

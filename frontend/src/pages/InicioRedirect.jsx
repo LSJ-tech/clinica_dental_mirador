@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-export default function RutaProtegida({ children, staffOnly = false }) {
+export default function InicioRedirect() {
   const { isAuthenticated, isStaff, loading } = useAuth();
 
   if (!isAuthenticated) {
@@ -10,8 +10,5 @@ export default function RutaProtegida({ children, staffOnly = false }) {
   if (loading) {
     return <p>Cargando...</p>;
   }
-  if (staffOnly && !isStaff) {
-    return <Navigate to="/citas" replace />;
-  }
-  return children;
+  return <Navigate to={isStaff ? "/staff" : "/citas"} replace />;
 }

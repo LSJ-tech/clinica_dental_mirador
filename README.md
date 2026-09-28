@@ -11,7 +11,13 @@ Es un desarrollo nuevo, no una extensión de [PataAgenda](https://patagenda.devq
 
 ## Estado
 
-Scaffold inicial funcionando en local: backend (Django + DRF, modelos, JWT, permisos por paciente/staff) y frontend (React + Vite, login + listado de citas) ya conectados entre sí. Todavía sin desplegar, sin integración real de WhatsApp Cloud API y sin la UI completa (agenda, ficha clínica, pagos).
+App funcional en local, completa salvo WhatsApp:
+
+- **Portal del paciente**: mis citas, mi ficha clínica (historial, notas, tratamientos) y mis pagos — todo de solo lectura para el paciente.
+- **Panel de staff**: pacientes (buscar/crear/editar, con pestañas de ficha/tratamientos/pagos/citas), agenda por día (crear citas, confirmar/completar/cancelar), y profesionales (CRUD).
+- Login único (`/login`) que redirige a `/citas` o `/staff` según el rol.
+
+Todavía sin desplegar, sin integración real de WhatsApp Cloud API, y sin editor de odontograma (el campo existe en el modelo pero no tiene UI propia todavía). La creación de la cuenta de acceso de un paciente (`Paciente.user`) sigue siendo manual por Django admin/shell.
 
 ## Cómo correr en local
 
