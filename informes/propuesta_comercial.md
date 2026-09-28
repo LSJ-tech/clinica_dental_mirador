@@ -10,6 +10,22 @@ Construimos y pusimos en línea un sistema de gestión clínica para Clínica De
 
 A diferencia de un sistema de reservas aislado (como el que la clínica usa hoy), este software integra la reserva pública, la operación diaria del equipo y los datos de cada paciente en un solo lugar, con un perfil de acceso propio para cada uno.
 
+## Tu sitio actual vs. nuestro sistema
+
+| Funcionalidad | Sitio actual (Reservo) | Nuestro sistema |
+| --- | --- | --- |
+| Reserva de hora online | Sí | Sí |
+| Ficha clínica digital | No | Sí |
+| Portal propio del paciente (RUT + clave) | No | Sí |
+| Agenda integrada con los datos clínicos | Externo / limitado | Sí |
+| Panel de administración propio de la clínica | No | Sí |
+| Registro de pagos y tratamientos | No | Sí |
+| Hosting dedicado (no compartido) | No | Sí |
+| Recordatorios automáticos por WhatsApp | No | Pendiente |
+| Reportes de gestión | No | Pendiente |
+
+Hoy la reserva online de la clínica corre en Reservo, una herramienta externa que no conoce la ficha clínica, los pagos ni la agenda real de cada dentista. Nuestro sistema reemplaza eso con una plataforma propia de la clínica, donde todo vive conectado.
+
 ## Prestaciones incluidas
 
 - Página web pública con la información real de la clínica, el equipo y la ubicación
