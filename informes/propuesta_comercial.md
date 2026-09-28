@@ -46,7 +46,7 @@ El sistema base descrito arriba ya está implementado y en línea. Proponemos un
 
 | Concepto | Incluye | Puesta en producción (pago único) | Mensualidad |
 | --- | --- | --- | --- |
-| Sistema de gestión (ya implementado) | Todo lo listado en Prestaciones incluidas | $600.000 – $900.000 CLP | $45.000 – $60.000 CLP/mes |
+| Sistema de gestión (ya implementado) | Todo lo listado en Prestaciones incluidas | $350.000 – $550.000 CLP | $45.000 – $60.000 CLP/mes |
 | Adicional — Recordatorios por WhatsApp Business | Envío automático de recordatorios de hora por el WhatsApp que ya usa la clínica | $250.000 – $400.000 CLP | + $10.000 – $20.000 CLP/mes |
 | Adicional — Reportes avanzados de gestión | Indicadores de tratamientos más solicitados, ocupación de agenda y pacientes nuevos | $300.000 – $500.000 CLP | Sin costo adicional |
 
