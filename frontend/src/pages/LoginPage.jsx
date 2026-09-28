@@ -24,7 +24,7 @@ export default function LoginPage() {
     <form onSubmit={handleSubmit}>
       <h1>Clínica Dental El Mirador</h1>
       <label>
-        Teléfono
+        <span>Teléfono</span>
         <input
           type="text"
           placeholder="+56 9 1234 5678"
@@ -33,7 +33,7 @@ export default function LoginPage() {
         />
       </label>
       <label>
-        Contraseña
+        <span>Contraseña</span>
         <input
           type="password"
           value={password}

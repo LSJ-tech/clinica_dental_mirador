@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import client from "../api/client";
 import { meApi } from "../api/resources";
 
@@ -30,7 +30,7 @@ export function AuthProvider({ children }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function login(telefono, password) {
+  const login = useCallback(async (telefono, password) => {
     const respuesta = await client.post("/token/", { username: telefono, password });
     localStorage.setItem("access_token", respuesta.data.access);
     localStorage.setItem("refresh_token", respuesta.data.refresh);
@@ -39,23 +39,25 @@ export function AuthProvider({ children }) {
     setIsStaff(me.data.is_staff);
     setPaciente(me.data.paciente);
     return me.data;
-  }
+  }, []);
 
-  function logout() {
+  const logout = useCallback(() => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     setToken(null);
     setIsStaff(false);
     setPaciente(null);
-  }
+  }, []);
 
-  return (
-    <AuthContext.Provider
-      value={{ token, isAuthenticated: !!token, isStaff, paciente, loading, login, logout }}
-    >
-      {children}
-    </AuthContext.Provider>
+  // Sin esto, cada render de AuthProvider crea un objeto value nuevo y
+  // vuelve a renderizar TODO lo que consume el contexto, aunque nada haya
+  // cambiado realmente.
+  const value = useMemo(
+    () => ({ token, isAuthenticated: !!token, isStaff, paciente, loading, login, logout }),
+    [token, isStaff, paciente, loading, login, logout]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

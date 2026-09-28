@@ -47,7 +47,7 @@ export default function AgendaPage() {
     <div>
       <h1>Agenda</h1>
       <label>
-        Fecha
+        <span>Fecha</span>
         <input type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} />
       </label>
 
@@ -84,7 +84,7 @@ export default function AgendaPage() {
       <h2>Agendar hora</h2>
       <form onSubmit={handleCrear}>
         <label>
-          Paciente
+          <span>Paciente</span>
           <select
             value={form.paciente}
             onChange={(e) => setForm({ ...form, paciente: e.target.value })}
@@ -99,7 +99,7 @@ export default function AgendaPage() {
           </select>
         </label>
         <label>
-          Profesional
+          <span>Profesional</span>
           <select
             value={form.profesional}
             onChange={(e) => setForm({ ...form, profesional: e.target.value })}
@@ -114,7 +114,7 @@ export default function AgendaPage() {
           </select>
         </label>
         <label>
-          Hora
+          <span>Hora</span>
           <input
             type="time"
             value={form.hora}
@@ -123,7 +123,7 @@ export default function AgendaPage() {
           />
         </label>
         <label>
-          Box
+          <span>Box</span>
           <input value={form.box} onChange={(e) => setForm({ ...form, box: e.target.value })} />
         </label>
         {error && <p role="alert">{error}</p>}

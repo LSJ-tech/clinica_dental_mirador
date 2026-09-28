@@ -39,7 +39,7 @@ export default function CambiarPasswordPage() {
       <h1>Cambiar contraseña</h1>
       <form onSubmit={handleSubmit}>
         <label>
-          Contraseña actual
+          <span>Contraseña actual</span>
           <input
             type="password"
             value={form.password_actual}
@@ -48,7 +48,7 @@ export default function CambiarPasswordPage() {
           />
         </label>
         <label>
-          Contraseña nueva
+          <span>Contraseña nueva</span>
           <input
             type="password"
             value={form.password_nueva}
@@ -57,7 +57,7 @@ export default function CambiarPasswordPage() {
           />
         </label>
         <label>
-          Repetir contraseña nueva
+          <span>Repetir contraseña nueva</span>
           <input
             type="password"
             value={form.password_nueva_repetir}

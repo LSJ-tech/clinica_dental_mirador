@@ -86,7 +86,7 @@ export default function ReservarPage() {
             <>
               <div className="cs-reserva-paso">
                 <label>
-                  Profesional
+                  <span>Profesional</span>
                   <select value={profesional} onChange={(e) => setProfesional(e.target.value)}>
                     <option value="">Seleccionar...</option>
                     {profesionales.map((p) => (
@@ -97,7 +97,7 @@ export default function ReservarPage() {
                   </select>
                 </label>
                 <label>
-                  Fecha
+                  <span>Fecha</span>
                   <input
                     type="date"
                     min={hoyISO()}
@@ -136,7 +136,7 @@ export default function ReservarPage() {
               {horaElegida && (
                 <form className="cs-reserva-paso" onSubmit={confirmarReserva}>
                   <label>
-                    Nombre completo
+                    <span>Nombre completo</span>
                     <input
                       value={datos.nombre}
                       onChange={(e) => setDatos({ ...datos, nombre: e.target.value })}
@@ -144,7 +144,7 @@ export default function ReservarPage() {
                     />
                   </label>
                   <label>
-                    RUT
+                    <span>RUT</span>
                     <input
                       value={datos.rut}
                       onChange={(e) => setDatos({ ...datos, rut: e.target.value })}
@@ -152,7 +152,7 @@ export default function ReservarPage() {
                     />
                   </label>
                   <label>
-                    Teléfono
+                    <span>Teléfono</span>
                     <input
                       placeholder="+56 9 1234 5678"
                       value={datos.telefono}
@@ -161,7 +161,7 @@ export default function ReservarPage() {
                     />
                   </label>
                   <label>
-                    Motivo (opcional)
+                    <span>Motivo (opcional)</span>
                     <input
                       placeholder="Ej: limpieza, dolor de muela..."
                       value={datos.motivo}

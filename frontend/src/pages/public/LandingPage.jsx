@@ -144,12 +144,14 @@ export default function LandingPage() {
             {SERVICIOS.map((s) => (
               <li className="cs-item" key={s.nombre}>
                 <img className="cs-background" src={s.foto} alt="" aria-hidden="true" loading="lazy" />
-                <a href="#" className="cs-link" onClick={(e) => e.preventDefault()}>
+                {/* Sin acción real todavía (no hay página de detalle por
+                    servicio) -- un div, no un <a>/<button> falso. */}
+                <div className="cs-link">
                   <h3 className="cs-h3">
                     <span className="cs-span">{s.destacado}</span>
                     <span className="cs-nombre">{s.nombre}</span>
                   </h3>
-                </a>
+                </div>
               </li>
             ))}
           </ul>

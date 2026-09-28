@@ -37,21 +37,21 @@ export default function PacienteDetailPage() {
       <h1>{paciente.nombre}</h1>
       <form onSubmit={guardarPaciente}>
         <label>
-          Nombre
+          <span>Nombre</span>
           <input
             value={paciente.nombre}
             onChange={(e) => setPaciente({ ...paciente, nombre: e.target.value })}
           />
         </label>
         <label>
-          Teléfono
+          <span>Teléfono</span>
           <input
             value={paciente.telefono}
             onChange={(e) => setPaciente({ ...paciente, telefono: e.target.value })}
           />
         </label>
         <label>
-          Fecha de nacimiento
+          <span>Fecha de nacimiento</span>
           <input
             type="date"
             value={paciente.fecha_nacimiento || ""}
@@ -106,14 +106,14 @@ function TabFicha({ pacienteId }) {
   return (
     <form onSubmit={guardar}>
       <label>
-        Historial
+        <span>Historial</span>
         <textarea
           value={ficha.historial}
           onChange={(e) => setFicha({ ...ficha, historial: e.target.value })}
         />
       </label>
       <label>
-        Notas clínicas
+        <span>Notas clínicas</span>
         <textarea
           value={ficha.notas_clinicas}
           onChange={(e) => setFicha({ ...ficha, notas_clinicas: e.target.value })}
@@ -172,7 +172,7 @@ function TabTratamientos({ pacienteId }) {
       </table>
       <form onSubmit={crear}>
         <label>
-          Tipo
+          <span>Tipo</span>
           <input
             value={form.tipo}
             onChange={(e) => setForm({ ...form, tipo: e.target.value })}
@@ -180,7 +180,7 @@ function TabTratamientos({ pacienteId }) {
           />
         </label>
         <label>
-          Costo
+          <span>Costo</span>
           <input
             type="number"
             value={form.costo}
@@ -189,7 +189,7 @@ function TabTratamientos({ pacienteId }) {
           />
         </label>
         <label>
-          Estado
+          <span>Estado</span>
           <select
             value={form.estado}
             onChange={(e) => setForm({ ...form, estado: e.target.value })}
@@ -247,7 +247,7 @@ function TabPagos({ pacienteId }) {
       </table>
       <form onSubmit={crear}>
         <label>
-          Fecha
+          <span>Fecha</span>
           <input
             type="date"
             value={form.fecha}
@@ -256,7 +256,7 @@ function TabPagos({ pacienteId }) {
           />
         </label>
         <label>
-          Monto
+          <span>Monto</span>
           <input
             type="number"
             value={form.monto}
@@ -265,7 +265,7 @@ function TabPagos({ pacienteId }) {
           />
         </label>
         <label>
-          Medio de pago
+          <span>Medio de pago</span>
           <select
             value={form.medio_pago}
             onChange={(e) => setForm({ ...form, medio_pago: e.target.value })}
@@ -338,7 +338,7 @@ function TabCitas({ pacienteId }) {
       </table>
       <form onSubmit={crear}>
         <label>
-          Profesional
+          <span>Profesional</span>
           <select
             value={form.profesional}
             onChange={(e) => setForm({ ...form, profesional: e.target.value })}
@@ -353,7 +353,7 @@ function TabCitas({ pacienteId }) {
           </select>
         </label>
         <label>
-          Fecha
+          <span>Fecha</span>
           <input
             type="date"
             value={form.fecha}
@@ -362,7 +362,7 @@ function TabCitas({ pacienteId }) {
           />
         </label>
         <label>
-          Hora
+          <span>Hora</span>
           <input
             type="time"
             value={form.hora}
@@ -371,7 +371,7 @@ function TabCitas({ pacienteId }) {
           />
         </label>
         <label>
-          Box
+          <span>Box</span>
           <input value={form.box} onChange={(e) => setForm({ ...form, box: e.target.value })} />
         </label>
         <button type="submit">Agendar</button>

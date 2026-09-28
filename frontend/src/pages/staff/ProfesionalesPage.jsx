@@ -101,7 +101,7 @@ export default function ProfesionalesPage() {
       <h2>{editandoId ? "Editar profesional" : "Nuevo profesional"}</h2>
       <form onSubmit={handleSubmit}>
         <label>
-          Nombre
+          <span>Nombre</span>
           <input
             value={form.nombre}
             onChange={(e) => setForm({ ...form, nombre: e.target.value })}
@@ -109,7 +109,7 @@ export default function ProfesionalesPage() {
           />
         </label>
         <label>
-          Especialidad
+          <span>Especialidad</span>
           <input
             value={form.especialidad}
             onChange={(e) => setForm({ ...form, especialidad: e.target.value })}
@@ -117,7 +117,7 @@ export default function ProfesionalesPage() {
           />
         </label>
         <label>
-          Box asignado
+          <span>Box asignado</span>
           <input
             value={form.box_asignado}
             onChange={(e) => setForm({ ...form, box_asignado: e.target.value })}

@@ -58,7 +58,7 @@ body {
   width: 1126px;
   max-width: 100%;
   margin: 0 auto;
-  text-align: center;
+  text-align: left;
   border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
@@ -112,10 +112,6 @@ code {
 
 /* Estilos de la app (paneles, tablas, formularios) -- por encima de los
    estilos de landing de arriba, que vienen de la plantilla base de Vite. */
-
-#root {
-  text-align: left;
-}
 
 .nav {
   display: flex;

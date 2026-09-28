@@ -74,7 +74,7 @@ export default function PacientesListPage() {
       {mostrarForm && (
         <form onSubmit={handleCrear}>
           <label>
-            Nombre
+            <span>Nombre</span>
             <input
               value={form.nombre}
               onChange={(e) => setForm({ ...form, nombre: e.target.value })}
@@ -82,7 +82,7 @@ export default function PacientesListPage() {
             />
           </label>
           <label>
-            RUT
+            <span>RUT</span>
             <input
               value={form.rut}
               onChange={(e) => setForm({ ...form, rut: e.target.value })}
@@ -90,7 +90,7 @@ export default function PacientesListPage() {
             />
           </label>
           <label>
-            Teléfono
+            <span>Teléfono</span>
             <input
               placeholder="+56 9 1234 5678"
               value={form.telefono}
@@ -99,7 +99,7 @@ export default function PacientesListPage() {
             />
           </label>
           <label>
-            Fecha de nacimiento
+            <span>Fecha de nacimiento</span>
             <input
               type="date"
               value={form.fecha_nacimiento}
