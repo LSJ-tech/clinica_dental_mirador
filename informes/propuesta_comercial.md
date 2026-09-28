@@ -58,7 +58,12 @@ El sistema base descrito arriba ya está implementado y en línea. Proponemos un
 > - Solo el sistema base: **$395.000 – $610.000 CLP** el primer mes (puesta en producción + primera mensualidad)
 > - Con los tres adicionales (WhatsApp + reportes + asistente virtual): **$750.000 – $1.190.000 CLP** el primer mes
 
-**Forma de pago:** la puesta en producción se puede pagar en **3 cuotas iguales** (aprox. $116.000 – $183.000 CLP cada una): al confirmar, a los 30 días y a los 60 días. La mensualidad se factura aparte, mes a mes.
+**Forma de pago:** el costo de implementación de todo el proyecto (sistema base y, si los sumas, los adicionales) se puede pagar en **3 cuotas iguales**: al confirmar, a los 30 días y a los 60 días.
+
+- Solo el sistema base: 3 cuotas de **$116.000 – $183.000 CLP** cada una
+- Con los tres adicionales: 3 cuotas de **$233.000 – $373.000 CLP** cada una
+
+La mensualidad se factura aparte, mes a mes.
 
 El rango de la puesta en producción depende de ajustes finos que pida la clínica antes de salir a producción (branding, contenidos, integraciones puntuales). La mensualidad incluye un ambiente de hosting dedicado (no compartido con otros clientes), lo que da mayor seguridad para datos de salud.
 
