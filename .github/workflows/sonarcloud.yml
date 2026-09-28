@@ -24,7 +24,9 @@ jobs:
       - name: Tests backend con cobertura
         working-directory: backend
         run: |
-          pip install -r requirements.txt coverage
+          # --only-binary evita ejecutar setup.py de paquetes fuente
+          # (supply-chain); coverage queda con version fija por el mismo motivo.
+          pip install --only-binary :all: -r requirements.txt coverage==7.16.2
           coverage run manage.py test
           coverage xml -o coverage.xml
 
