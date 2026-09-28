@@ -1,7 +1,10 @@
-# Blueprint de Render para el backend. Creado como referencia para el
-# despliegue real (todavía no ejecutado) -- ver informes/informe_tecnico.md.
-# El frontend (React/Vite) se agrega como Static Site aparte cuando llegue
-# el milestone de despliegue (schema distinto al de un servicio "web").
+# Blueprint de Render para el despliegue real (backend + frontend + DB).
+# Ver informes/informe_tecnico.md para el contexto de arquitectura.
+#
+# URLs *.onrender.com por ahora -- cuando el dominio propio
+# (elmirador.devquad.cl) tenga su DNS configurado, agregarlo a
+# DJANGO_ALLOWED_HOSTS / DJANGO_CSRF_TRUSTED_ORIGINS / DJANGO_CORS_ALLOWED_ORIGINS
+# del backend, y como custom domain del static site.
 services:
   - type: web
     name: clinica-mirador-backend
@@ -18,18 +21,34 @@ services:
       - key: DJANGO_DEBUG
         value: "False"
       - key: DJANGO_ALLOWED_HOSTS
-        value: clinica-mirador-backend.onrender.com,elmirador.devquad.cl
+        value: clinica-mirador-backend.onrender.com
       - key: DJANGO_CSRF_TRUSTED_ORIGINS
-        value: https://clinica-mirador-backend.onrender.com,https://elmirador.devquad.cl
+        value: https://clinica-mirador-backend.onrender.com
       - key: DJANGO_CORS_ALLOWED_ORIGINS
-        value: https://elmirador.devquad.cl
+        value: https://clinica-mirador-frontend.onrender.com
       - key: DATABASE_URL
         fromDatabase:
           name: clinica-mirador-db
           property: connectionString
-      # Configurar antes de aceptar pacientes reales:
-      # DJANGO_SUPERUSER_USERNAME/PASSWORD/EMAIL
+      # Configurar a mano en el dashboard antes de aceptar pacientes reales:
+      # DJANGO_SUPERUSER_USERNAME/PASSWORD/EMAIL (crea el primer staff)
       # WHATSAPP_CLOUD_API_TOKEN, WHATSAPP_PHONE_NUMBER_ID (milestone WhatsApp)
+
+  - type: web
+    name: clinica-mirador-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://clinica-mirador-backend.onrender.com/api
+    routes:
+      # SPA: cualquier ruta (ej. /staff/pacientes/5) sirve index.html y
+      # react-router resuelve el resto en el navegador.
+      - type: rewrite
+        source: /*
+        destination: /index.html
 
 databases:
   - name: clinica-mirador-db
