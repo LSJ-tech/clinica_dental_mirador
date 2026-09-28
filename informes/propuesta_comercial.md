@@ -25,6 +25,7 @@ A diferencia de un sistema de reservas aislado (como el que la clínica usa hoy)
 | Hosting dedicado (no compartido) | No | Sí |
 | Recordatorios automáticos por WhatsApp | No | Pendiente |
 | Reportes de gestión | No | Pendiente |
+| Asistente virtual (respuestas rápidas) | No | Pendiente |
 
 Hoy la reserva online de la clínica corre en Reservo, una herramienta externa que no conoce la ficha clínica, los pagos ni la agenda real de cada dentista. Nuestro sistema reemplaza eso con una plataforma propia de la clínica, donde todo vive conectado.
 
@@ -40,7 +41,7 @@ Hoy la reserva online de la clínica corre en Reservo, una herramienta externa q
 - Panel con indicadores básicos del día a día (citas de hoy, total de pacientes)
 - Soporte y ajustes durante la puesta en marcha
 
-**Pendiente, no incluido en el costo base (ver Costos):** recordatorios automáticos de hora por WhatsApp Business y reportes de gestión avanzados.
+**Pendiente, no incluido en el costo base (ver Costos):** recordatorios automáticos de hora por WhatsApp Business, reportes de gestión avanzados y un asistente virtual de respuestas rápidas.
 
 ## Costos
 
@@ -51,10 +52,11 @@ El sistema base descrito arriba ya está implementado y en línea. Proponemos un
 | Sistema de gestión (ya implementado) | Todo lo listado en Prestaciones incluidas | $350.000 – $550.000 CLP | $45.000 – $60.000 CLP/mes |
 | Adicional — Recordatorios por WhatsApp Business | Envío automático de recordatorios de hora por el WhatsApp que ya usa la clínica | $150.000 – $250.000 CLP | + $5.000 – $10.000 CLP/mes |
 | Adicional — Reportes avanzados de gestión | Indicadores de tratamientos más solicitados, ocupación de agenda y pacientes nuevos | $100.000 – $170.000 CLP | Sin costo adicional |
+| Adicional — Asistente virtual (respuestas rápidas) | Botón flotante en la página con respuestas rápidas a horarios, servicios, ubicación y reserva. Sin inteligencia artificial ni texto libre | $100.000 – $150.000 CLP | Sin costo adicional |
 
 > **Resumen de tu inversión**
 > - Solo el sistema base: **$395.000 – $610.000 CLP** el primer mes (puesta en producción + primera mensualidad)
-> - Con ambos adicionales (WhatsApp + reportes): **$650.000 – $1.040.000 CLP** el primer mes
+> - Con los tres adicionales (WhatsApp + reportes + asistente virtual): **$750.000 – $1.190.000 CLP** el primer mes
 
 El rango de la puesta en producción depende de ajustes finos que pida la clínica antes de salir a producción (branding, contenidos, integraciones puntuales). La mensualidad incluye un ambiente de hosting dedicado (no compartido con otros clientes), lo que da mayor seguridad para datos de salud.
 
@@ -66,8 +68,9 @@ El costo de envío por WhatsApp Business (cobrado por Meta, aproximadamente CLP 
 | --- | --- | --- |
 | Recordatorios automáticos por WhatsApp | 1 – 2 semanas | Plantillas aprobadas por Meta y envío automático funcionando |
 | Reportes avanzados de gestión | 1 semana | Panel de indicadores ampliado |
+| Asistente virtual (respuestas rápidas) | 3 – 5 días | Botón flotante funcionando en la página pública |
 
-El sistema base ya está completo y en producción (puedes probarlo en el link de arriba). Tiempo estimado para sumar **ambos adicionales**: **2 a 3 semanas**, solo si la clínica decide incorporarlos.
+El sistema base ya está completo y en producción (puedes probarlo en el link de arriba). Tiempo estimado para sumar **los tres adicionales**: **2 a 3 semanas**, solo si la clínica decide incorporarlos.
 
 ## Impacto en la clínica
 
