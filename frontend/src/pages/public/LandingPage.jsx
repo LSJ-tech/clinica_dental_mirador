@@ -81,6 +81,9 @@ export default function LandingPage() {
           <li>
             <Link to="/equipo">Nuestro equipo</Link>
           </li>
+          <li>
+            <a href="#ubicacion">Ubicación</a>
+          </li>
         </ul>
         <Link to="/login" className="cs-button-outline">
           Ingresar
@@ -172,6 +175,21 @@ export default function LandingPage() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      <section id="ubicacion">
+        <div className="cs-container">
+          <span className="cs-topper">Cómo llegar</span>
+          <h2 className="cs-title">Estamos en El Mirador, Casablanca</h2>
+          <p className="cs-text">El Mirador #459 (Sitio 17-E), a pocos minutos de la plaza de Casablanca.</p>
+          <iframe
+            className="cs-mapa"
+            title="Ubicación de Clínica Dental El Mirador"
+            src="https://maps.google.com/maps?q=33%C2%B019%2730.1%22S%2071%C2%B024%2724.5%22W&t=m&z=15&output=embed&iwloc=near"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </div>
       </section>
 

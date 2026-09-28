@@ -284,6 +284,16 @@
   opacity: 0.9;
 }
 
+/* Ubicación */
+
+.cs-mapa {
+  width: 100%;
+  height: 360px;
+  border: 0;
+  border-radius: 12px;
+  margin-top: 16px;
+}
+
 /* Footer */
 
 .cs-landing-footer {
