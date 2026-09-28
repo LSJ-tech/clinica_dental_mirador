@@ -6,26 +6,60 @@ const WHATSAPP_DUDAS_URL =
   encodeURIComponent("Hola! Tengo una duda sobre sus servicios dentales.");
 
 // Fotos de stock (Pexels, uso libre) como referencia visual mientras se
-// consiguen fotos reales de la clínica y su equipo.
+// consiguen fotos reales de la clínica y su equipo. Cada una es distinta
+// y elegida según el servicio/sección que ilustra -- ninguna se repite.
 const FOTOS = {
   hero: "https://images.pexels.com/photos/3845810/pexels-photo-3845810.jpeg?auto=compress&cs=tinysrgb&w=800",
   equipo: "https://images.pexels.com/photos/6627466/pexels-photo-6627466.jpeg?auto=compress&cs=tinysrgb&w=800",
   paciente: "https://images.pexels.com/photos/6627574/pexels-photo-6627574.jpeg?auto=compress&cs=tinysrgb&w=600",
-  clinica: "https://images.pexels.com/photos/3845748/pexels-photo-3845748.jpeg?auto=compress&cs=tinysrgb&w=600",
-  ninos: "https://images.pexels.com/photos/8224633/pexels-photo-8224633.jpeg?auto=compress&cs=tinysrgb&w=600",
-  retrato: "https://images.pexels.com/photos/5355867/pexels-photo-5355867.jpeg?auto=compress&cs=tinysrgb&w=600",
 };
 
 const SERVICIOS = [
-  { destacado: "Odontología", nombre: "General", foto: FOTOS.clinica },
-  { destacado: "Corrección", nombre: "Ortodoncia", foto: FOTOS.retrato },
-  { destacado: "Tratamiento de", nombre: "Endodoncia", foto: FOTOS.equipo },
-  { destacado: "Prótesis", nombre: "Fijas y Removibles", foto: FOTOS.paciente },
-  { destacado: "Servicio de", nombre: "Extracciones", foto: FOTOS.hero },
-  { destacado: "Higiene y", nombre: "Limpieza Dental", foto: FOTOS.clinica },
-  { destacado: "Atención de", nombre: "Urgencias", foto: FOTOS.equipo },
-  { destacado: "Cuidado para", nombre: "Niños y Adultos", foto: FOTOS.ninos },
-  { destacado: "Servicios de", nombre: "Estética Facial", foto: FOTOS.paciente },
+  {
+    destacado: "Odontología",
+    nombre: "General",
+    foto: "https://images.pexels.com/photos/3845748/pexels-photo-3845748.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
+  {
+    destacado: "Corrección",
+    nombre: "Ortodoncia",
+    foto: "https://images.pexels.com/photos/5524021/pexels-photo-5524021.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
+  {
+    destacado: "Tratamiento de",
+    nombre: "Endodoncia",
+    foto: "https://images.pexels.com/photos/4971514/pexels-photo-4971514.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
+  {
+    destacado: "Prótesis",
+    nombre: "Fijas y Removibles",
+    foto: "https://images.pexels.com/photos/11768114/pexels-photo-11768114.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
+  {
+    destacado: "Servicio de",
+    nombre: "Extracciones",
+    foto: "https://images.pexels.com/photos/6627566/pexels-photo-6627566.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
+  {
+    destacado: "Higiene y",
+    nombre: "Limpieza Dental",
+    foto: "https://images.pexels.com/photos/3845735/pexels-photo-3845735.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
+  {
+    destacado: "Atención de",
+    nombre: "Urgencias",
+    foto: "https://images.pexels.com/photos/6193195/pexels-photo-6193195.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
+  {
+    destacado: "Cuidado para",
+    nombre: "Niños y Adultos",
+    foto: "https://images.pexels.com/photos/8224633/pexels-photo-8224633.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
+  {
+    destacado: "Servicios de",
+    nombre: "Estética Facial",
+    foto: "https://images.pexels.com/photos/5069612/pexels-photo-5069612.jpeg?auto=compress&cs=tinysrgb&w=600",
+  },
 ];
 
 export default function LandingPage() {
