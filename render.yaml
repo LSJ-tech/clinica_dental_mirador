@@ -1,0 +1,36 @@
+# Blueprint de Render para el backend. Creado como referencia para el
+# despliegue real (todavía no ejecutado) -- ver informes/informe_tecnico.md.
+# El frontend (React/Vite) se agrega como Static Site aparte cuando llegue
+# el milestone de despliegue (schema distinto al de un servicio "web").
+services:
+  - type: web
+    name: clinica-mirador-backend
+    env: python
+    plan: starter
+    rootDir: backend
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn mirador.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: clinica-mirador-backend.onrender.com,elmirador.devquad.cl
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        value: https://clinica-mirador-backend.onrender.com,https://elmirador.devquad.cl
+      - key: DJANGO_CORS_ALLOWED_ORIGINS
+        value: https://elmirador.devquad.cl
+      - key: DATABASE_URL
+        fromDatabase:
+          name: clinica-mirador-db
+          property: connectionString
+      # Configurar antes de aceptar pacientes reales:
+      # DJANGO_SUPERUSER_USERNAME/PASSWORD/EMAIL
+      # WHATSAPP_CLOUD_API_TOKEN, WHATSAPP_PHONE_NUMBER_ID (milestone WhatsApp)
+
+databases:
+  - name: clinica-mirador-db
+    plan: free

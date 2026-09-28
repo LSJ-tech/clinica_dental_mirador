@@ -35,6 +35,8 @@ El frontend (React), el backend (Django/DRF) y la base de datos (PostgreSQL) cor
 
 La FichaClinica y sus Tratamientos quedan separados de los datos de cuenta (UsuarioPaciente) para poder aplicar permisos más estrictos sobre la información de salud.
 
+Nota de implementación: en el código, `UsuarioPaciente` se implementó como `Paciente.user` (OneToOneField a `auth.User`, username = teléfono normalizado), no como un modelo aparte — `auth.User` ya cumple ese rol, y es el mismo patrón que usa PataAgenda (`Cliente.user`). El objetivo de permisos más estrictos se logra igual, separando `FichaClinica` como modelo propio.
+
 ## Integración WhatsApp Business API
 
 1. Registrar el número de la clínica en Meta Business Manager, activando **coexistencia** app + Cloud API (mantienen la app para uso manual, la API queda disponible para el backend).
