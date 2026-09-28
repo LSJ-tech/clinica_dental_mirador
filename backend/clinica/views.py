@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Cita, FichaClinica, HorarioProfesional, Pago, Paciente, Profesional, Tratamiento
-from .permissions import EsPacientePropioOStaff, SoloStaffEscribe
+from .permissions import EsPacientePropioOStaff, EsSuperusuario, SoloStaffEscribe
 from .serializers import (
     CambiarPasswordSerializer,
     CitaSerializer,
@@ -26,6 +26,13 @@ DURACION_SLOT_MINUTOS = 30
 class PacienteViewSet(viewsets.ModelViewSet):
     serializer_class = PacienteSerializer
     permission_classes = [permissions.IsAuthenticated, SoloStaffEscribe, EsPacientePropioOStaff]
+
+    def get_permissions(self):
+        # Eliminar un paciente borra en cascada su ficha, citas y pagos --
+        # a diferencia de crear/editar, queda reservado al superusuario.
+        if self.action == "destroy":
+            return [permissions.IsAuthenticated(), EsSuperusuario()]
+        return super().get_permissions()
 
     def get_queryset(self):
         if self.request.user.is_staff:
@@ -136,6 +143,7 @@ class MeView(APIView):
         paciente = getattr(request.user, "paciente", None)
         return Response({
             "is_staff": request.user.is_staff,
+            "is_superuser": request.user.is_superuser,
             "paciente": PacienteSerializer(paciente).data if paciente else None,
         })
 

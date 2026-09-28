@@ -25,3 +25,14 @@ class SoloStaffEscribe(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         return bool(request.user and request.user.is_staff)
+
+
+class EsSuperusuario(permissions.BasePermission):
+    """
+    Reservado para acciones irreversibles: eliminar un Paciente borra en
+    cascada su ficha clínica, citas y pagos, así que queda restringido al
+    superusuario (no a cualquier cuenta de staff de la clínica).
+    """
+
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_superuser)

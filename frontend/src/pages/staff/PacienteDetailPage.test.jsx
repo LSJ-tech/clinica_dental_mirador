@@ -7,16 +7,22 @@ import {
   tratamientosApi,
 } from "../../api/resources";
 
+const mockNavigate = vi.fn();
 vi.mock("react-router-dom", async (importOriginal) => {
   const actual = await importOriginal();
-  return { ...actual, useParams: () => ({ id: "1" }) };
+  return { ...actual, useParams: () => ({ id: "1" }), useNavigate: () => mockNavigate };
 });
+
+const mockUseAuth = vi.fn();
+vi.mock("../../context/AuthContext", () => ({
+  useAuth: () => mockUseAuth(),
+}));
 
 vi.mock("../../api/resources", () => ({
   citasApi: { list: vi.fn(), create: vi.fn(), update: vi.fn() },
   fichasClinicasApi: { list: vi.fn(), update: vi.fn() },
   pagosApi: { list: vi.fn(), create: vi.fn() },
-  pacientesApi: { get: vi.fn(), update: vi.fn() },
+  pacientesApi: { get: vi.fn(), update: vi.fn(), remove: vi.fn() },
   profesionalesApi: { list: vi.fn() },
   tratamientosApi: { list: vi.fn(), create: vi.fn() },
   disponibilidadApi: { get: vi.fn() },
@@ -43,6 +49,7 @@ describe("PacienteDetailPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     datosBase();
+    mockUseAuth.mockReturnValue({ isSuperuser: false });
   });
 
   it("muestra el nombre del paciente y el formulario de datos", async () => {
@@ -146,5 +153,36 @@ describe("PacienteDetailPage", () => {
     expect(screen.getByLabelText("Hora")).toHaveValue("11:00");
     await user.click(screen.getByText("Agendar"));
     await waitFor(() => expect(citasApi.create).toHaveBeenCalled());
+  });
+
+  it("no muestra el botón eliminar paciente para staff normal", async () => {
+    render(<PacienteDetailPage />);
+    await screen.findByRole("heading", { name: "Ana Torres" });
+    expect(screen.queryByRole("button", { name: "Eliminar paciente" })).not.toBeInTheDocument();
+  });
+
+  it("superusuario puede eliminar el paciente tras confirmar", async () => {
+    mockUseAuth.mockReturnValue({ isSuperuser: true });
+    pacientesApi.remove.mockResolvedValue({});
+    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(true);
+    const user = userEvent.setup();
+    render(<PacienteDetailPage />);
+    await screen.findByRole("heading", { name: "Ana Torres" });
+    await user.click(screen.getByRole("button", { name: "Eliminar paciente" }));
+    expect(confirmSpy).toHaveBeenCalled();
+    await waitFor(() => expect(pacientesApi.remove).toHaveBeenCalledWith("1"));
+    expect(mockNavigate).toHaveBeenCalledWith("/staff/pacientes");
+    confirmSpy.mockRestore();
+  });
+
+  it("no elimina el paciente si el superusuario cancela la confirmación", async () => {
+    mockUseAuth.mockReturnValue({ isSuperuser: true });
+    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(false);
+    const user = userEvent.setup();
+    render(<PacienteDetailPage />);
+    await screen.findByRole("heading", { name: "Ana Torres" });
+    await user.click(screen.getByRole("button", { name: "Eliminar paciente" }));
+    expect(pacientesApi.remove).not.toHaveBeenCalled();
+    confirmSpy.mockRestore();
   });
 });

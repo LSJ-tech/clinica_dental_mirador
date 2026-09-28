@@ -22,6 +22,7 @@ function Consumidor() {
       <span data-testid="loading">{String(auth.loading)}</span>
       <span data-testid="autenticado">{String(auth.isAuthenticated)}</span>
       <span data-testid="staff">{String(auth.isStaff)}</span>
+      <span data-testid="superuser">{String(auth.isSuperuser)}</span>
       <span data-testid="paciente">{auth.paciente ? auth.paciente.nombre : "ninguno"}</span>
       <span data-testid="error">{error}</span>
       <button
@@ -54,7 +55,7 @@ describe("AuthContext", () => {
 
   it("con token guardado, consulta /me/ y actualiza isStaff/paciente", async () => {
     localStorage.setItem("access_token", "abc123");
-    meApi.get.mockResolvedValueOnce({ data: { is_staff: true, paciente: null } });
+    meApi.get.mockResolvedValueOnce({ data: { is_staff: true, is_superuser: false, paciente: null } });
 
     render(
       <AuthProvider>
@@ -65,6 +66,20 @@ describe("AuthContext", () => {
     expect(screen.getByTestId("loading")).toHaveTextContent("true");
     await waitFor(() => expect(screen.getByTestId("loading")).toHaveTextContent("false"));
     expect(screen.getByTestId("staff")).toHaveTextContent("true");
+  });
+
+  it("con token guardado de un superusuario, expone isSuperuser", async () => {
+    localStorage.setItem("access_token", "abc123");
+    meApi.get.mockResolvedValueOnce({ data: { is_staff: true, is_superuser: true, paciente: null } });
+
+    render(
+      <AuthProvider>
+        <Consumidor />
+      </AuthProvider>
+    );
+
+    await waitFor(() => expect(screen.getByTestId("loading")).toHaveTextContent("false"));
+    expect(screen.getByTestId("superuser")).toHaveTextContent("true");
   });
 
   it("si /me/ falla con el token guardado, cierra la sesion", async () => {

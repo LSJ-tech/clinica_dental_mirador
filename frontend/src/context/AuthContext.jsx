@@ -19,6 +19,7 @@ function sanitizarToken(valor) {
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem("access_token"));
   const [isStaff, setIsStaff] = useState(false);
+  const [isSuperuser, setIsSuperuser] = useState(false);
   const [paciente, setPaciente] = useState(null);
   const [loading, setLoading] = useState(!!token);
 
@@ -31,6 +32,7 @@ export function AuthProvider({ children }) {
       .get()
       .then((respuesta) => {
         setIsStaff(respuesta.data.is_staff);
+        setIsSuperuser(respuesta.data.is_superuser);
         setPaciente(respuesta.data.paciente);
       })
       .catch(() => {
@@ -54,6 +56,7 @@ export function AuthProvider({ children }) {
     setToken(access);
     const me = await meApi.get();
     setIsStaff(me.data.is_staff);
+    setIsSuperuser(me.data.is_superuser);
     setPaciente(me.data.paciente);
     return me.data;
   }, []);
@@ -63,6 +66,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("refresh_token");
     setToken(null);
     setIsStaff(false);
+    setIsSuperuser(false);
     setPaciente(null);
   }, []);
 
@@ -70,8 +74,17 @@ export function AuthProvider({ children }) {
   // vuelve a renderizar cada componente que consume el contexto, aunque
   // nada haya cambiado realmente.
   const value = useMemo(
-    () => ({ token, isAuthenticated: !!token, isStaff, paciente, loading, login, logout }),
-    [token, isStaff, paciente, loading, login, logout]
+    () => ({
+      token,
+      isAuthenticated: !!token,
+      isStaff,
+      isSuperuser,
+      paciente,
+      loading,
+      login,
+      logout,
+    }),
+    [token, isStaff, isSuperuser, paciente, loading, login, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

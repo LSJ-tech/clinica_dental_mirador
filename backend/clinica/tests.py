@@ -94,7 +94,7 @@ class MeViewTest(APITestCase):
         staff = User.objects.create_user(username="staff2", password="x", is_staff=True)
         self.client.force_authenticate(user=staff)
         respuesta = self.client.get("/api/me/")
-        self.assertEqual(respuesta.data, {"is_staff": True, "paciente": None})
+        self.assertEqual(respuesta.data, {"is_staff": True, "is_superuser": False, "paciente": None})
 
     def test_me_para_paciente(self):
         user = User.objects.create_user(username="+56944444444", password="x")
@@ -112,6 +112,62 @@ class MeViewTest(APITestCase):
         respuesta = self.client.get("/api/pacientes/?q=Zoe")
         self.assertEqual(len(respuesta.data), 1)
         self.assertEqual(respuesta.data[0]["nombre"], "Zoe Rojas")
+
+    def test_me_marca_superusuario(self):
+        admin = User.objects.create_superuser(username="admin1", password="x", email="a@a.com")
+        self.client.force_authenticate(user=admin)
+        respuesta = self.client.get("/api/me/")
+        self.assertTrue(respuesta.data["is_superuser"])
+
+
+class EliminarPacienteTest(APITestCase):
+    def setUp(self):
+        self.paciente = Paciente.objects.create(nombre="Rosa", rut="7-4", telefono="+56977777777")
+
+    def test_staff_normal_no_puede_eliminar_paciente(self):
+        staff = User.objects.create_user(username="staffh", password="x", is_staff=True)
+        self.client.force_authenticate(user=staff)
+        respuesta = self.client.delete(f"/api/pacientes/{self.paciente.id}/")
+        self.assertEqual(respuesta.status_code, 403)
+        self.assertTrue(Paciente.objects.filter(id=self.paciente.id).exists())
+
+    def test_paciente_no_puede_eliminar_paciente(self):
+        user = User.objects.create_user(username="+56988888888", password="x")
+        Paciente.objects.create(nombre="Cliente", rut="8-2", telefono="+56988888888", user=user)
+        self.client.force_authenticate(user=user)
+        respuesta = self.client.delete(f"/api/pacientes/{self.paciente.id}/")
+        self.assertEqual(respuesta.status_code, 403)
+        self.assertTrue(Paciente.objects.filter(id=self.paciente.id).exists())
+
+    def test_anonimo_no_puede_eliminar_paciente(self):
+        respuesta = self.client.delete(f"/api/pacientes/{self.paciente.id}/")
+        self.assertIn(respuesta.status_code, (401, 403))
+        self.assertTrue(Paciente.objects.filter(id=self.paciente.id).exists())
+
+    def test_superusuario_puede_eliminar_paciente(self):
+        admin = User.objects.create_superuser(username="admin2", password="x", email="a2@a.com")
+        self.client.force_authenticate(user=admin)
+        respuesta = self.client.delete(f"/api/pacientes/{self.paciente.id}/")
+        self.assertEqual(respuesta.status_code, 204)
+        self.assertFalse(Paciente.objects.filter(id=self.paciente.id).exists())
+
+    def test_superusuario_elimina_en_cascada_ficha_citas_pagos(self):
+        profesional = Profesional.objects.create(
+            nombre="Dra. Soto", especialidad="Odontología general", box_asignado="1"
+        )
+        Cita.objects.create(
+            paciente=self.paciente, profesional=profesional,
+            fecha=date.today(), hora="10:00", estado="pendiente", box="1",
+        )
+        ficha_id = self.paciente.ficha_clinica.id
+
+        admin = User.objects.create_superuser(username="admin3", password="x", email="a3@a.com")
+        self.client.force_authenticate(user=admin)
+        respuesta = self.client.delete(f"/api/pacientes/{self.paciente.id}/")
+
+        self.assertEqual(respuesta.status_code, 204)
+        self.assertFalse(FichaClinica.objects.filter(id=ficha_id).exists())
+        self.assertFalse(Cita.objects.filter(paciente_id=self.paciente.id).exists())
 
 
 class ProfesionalPublicoTest(APITestCase):

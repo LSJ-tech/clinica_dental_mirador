@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   citasApi,
   fichasClinicasApi,
@@ -8,6 +8,7 @@ import {
   profesionalesApi,
   tratamientosApi,
 } from "../../api/resources";
+import { useAuth } from "../../context/AuthContext";
 import TablaPagos from "../../components/TablaPagos";
 import TablaTratamientos from "../../components/TablaTratamientos";
 import CampoProfesional from "../../components/CampoProfesional";
@@ -18,6 +19,8 @@ const TABS = ["Ficha", "Tratamientos", "Pagos", "Citas"];
 
 export default function PacienteDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { isSuperuser } = useAuth();
   const [paciente, setPaciente] = useState(null);
   const [tab, setTab] = useState("Ficha");
 
@@ -33,6 +36,15 @@ export default function PacienteDetailPage() {
       fecha_nacimiento: paciente.fecha_nacimiento,
     });
     setPaciente(respuesta.data);
+  }
+
+  async function eliminarPaciente() {
+    const confirmado = window.confirm(
+      `¿Eliminar a ${paciente.nombre}? Esto borra también su ficha clínica, tratamientos, pagos y citas. Esta acción no se puede deshacer.`
+    );
+    if (!confirmado) return;
+    await pacientesApi.remove(id);
+    navigate("/staff/pacientes");
   }
 
   if (!paciente) return <p>Cargando...</p>;
@@ -67,6 +79,11 @@ export default function PacienteDetailPage() {
           <span className="rut-paciente">RUT: {paciente.rut}</span>
           <button type="submit">Guardar</button>
         </form>
+        {isSuperuser && (
+          <button type="button" className="boton-peligro" onClick={eliminarPaciente}>
+            Eliminar paciente
+          </button>
+        )}
       </section>
 
       <nav className="tabs">

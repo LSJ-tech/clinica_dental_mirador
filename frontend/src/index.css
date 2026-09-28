@@ -322,6 +322,19 @@ button[type="submit"]:hover {
   border-color: var(--accent-dark);
 }
 
+.boton-peligro {
+  margin-top: 12px;
+  color: #b91c1c;
+  border-color: #b91c1c;
+  background: #fff;
+}
+
+.boton-peligro:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+  color: #fff;
+}
+
 .tabs {
   display: flex;
   gap: 8px;
