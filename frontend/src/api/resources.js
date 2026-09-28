@@ -12,7 +12,7 @@ export const meApi = {
 // SSRF del lado cliente) -- encodear no lo evita, exigir el formato si.
 function idValidado(id) {
   const valor = String(id);
-  if (!/^[0-9]+$/.test(valor)) {
+  if (!/^\d+$/.test(valor)) {
     throw new Error("Id inválido.");
   }
   return valor;
