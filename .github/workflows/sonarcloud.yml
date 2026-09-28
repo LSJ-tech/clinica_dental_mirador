@@ -24,9 +24,12 @@ jobs:
       - name: Tests backend con cobertura
         working-directory: backend
         run: |
-          # --only-binary evita ejecutar setup.py de paquetes fuente
-          # (supply-chain); coverage queda con version fija por el mismo motivo.
-          pip install --only-binary :all: -r requirements.txt coverage==7.16.2
+          # --require-hashes obliga a que cada paquete instalado coincida
+          # byte a byte con el hash verificado en requirements-ci.txt
+          # (protege contra que se sirva un artefacto distinto al esperado
+          # para la misma version). --only-binary evita ademas ejecutar
+          # setup.py de un paquete fuente.
+          pip install --only-binary :all: --require-hashes -r requirements-ci.txt
           coverage run manage.py test
           coverage xml -o coverage.xml
 
