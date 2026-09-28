@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 import "./landing.css";
 
+const WHATSAPP_DUDAS_URL =
+  "https://wa.me/56956043960?text=" +
+  encodeURIComponent("Hola! Tengo una duda sobre sus servicios dentales.");
+
 const SERVICIOS = [
   { destacado: "Odontología", nombre: "General" },
   { destacado: "Corrección", nombre: "Ortodoncia" },
@@ -34,16 +38,16 @@ export default function LandingPage() {
             <span className="cs-topper">Casablanca, Chile</span>
             <h2 className="cs-title">Buen trato, atención personalizada y honestidad en tu tratamiento</h2>
             <p className="cs-text">
-              Somos una clínica dental familiar en Casablanca, con más de 10 años atendiendo a la
-              comunidad. Odontología general, ortodoncia, endodoncia, prótesis y urgencias, con
-              convenio para derivaciones de implantología y maxilofacial.
+              Somos una clínica dental familiar en Casablanca. Odontología general, ortodoncia,
+              endodoncia, prótesis y urgencias, con convenio para derivaciones de implantología y
+              maxilofacial.
             </p>
             <a href="#services-1354" className="cs-link">
               Ver servicios
             </a>
-            <Link to="/login" className="cs-button-outline">
-              Portal de pacientes
-            </Link>
+            <a href={WHATSAPP_DUDAS_URL} className="cs-button-outline" target="_blank" rel="noreferrer">
+              ¿Dudas? Escríbenos por WhatsApp
+            </a>
           </div>
           <div className="cs-hero-image">
             <div className="cs-placeholder">Foto de la clínica</div>
