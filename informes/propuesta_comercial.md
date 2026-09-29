@@ -47,25 +47,30 @@ Hoy la reserva online de la clínica corre en Reservo, una herramienta externa q
 
 El sistema base descrito arriba ya está implementado y en línea. Proponemos un modelo de **puesta en producción + mensualidad**: la mensualidad cubre hosting dedicado, soporte y actualizaciones continuas. Los recordatorios por WhatsApp y los reportes avanzados quedan como adicionales opcionales, con su propio costo aparte.
 
+La mensualidad incluye:
+
+- Hosting dedicado en un ambiente propio (no compartido con otros clientes), más seguro para datos de salud
+- Soporte técnico ante cualquier duda o problema
+- Actualizaciones y mejoras continuas del sistema
+- Acompañamiento de DevQuad después del lanzamiento
+
 | Concepto | Incluye | Puesta en producción (pago único) | Mensualidad |
 | --- | --- | --- | --- |
-| Sistema de gestión (ya implementado) | Todo lo listado en Prestaciones incluidas | $350.000 – $550.000 CLP | $45.000 – $60.000 CLP/mes |
-| Adicional — Recordatorios por WhatsApp Business | Envío automático de recordatorios de hora por el WhatsApp que ya usa la clínica | $150.000 – $250.000 CLP | + $5.000 – $10.000 CLP/mes |
-| Adicional — Reportes avanzados de gestión | Indicadores de tratamientos más solicitados, ocupación de agenda y pacientes nuevos | $100.000 – $170.000 CLP | Sin costo adicional |
-| Adicional — Asistente virtual (respuestas rápidas) | Botón flotante en la página con respuestas rápidas a horarios, servicios, ubicación y reserva. Sin inteligencia artificial ni texto libre | $100.000 – $150.000 CLP | Sin costo adicional |
+| Sistema de gestión (ya implementado) | Todo lo listado en Prestaciones incluidas | $351.000 CLP | $45.000 CLP/mes |
+| Adicional — Recordatorios por WhatsApp Business | Envío automático de recordatorios de hora por el WhatsApp que ya usa la clínica | $151.000 CLP | + $5.000 CLP/mes |
+| Adicional — Reportes avanzados de gestión | Indicadores de tratamientos más solicitados, ocupación de agenda y pacientes nuevos | $100.000 CLP | Sin costo adicional |
+| Adicional — Asistente virtual (respuestas rápidas) | Botón flotante en la página con respuestas rápidas a horarios, servicios, ubicación y reserva. Sin inteligencia artificial ni texto libre | $100.000 CLP | Sin costo adicional |
 
 > **Resumen de tu inversión**
-> - Solo el sistema base: **$395.000 – $610.000 CLP** el primer mes (puesta en producción + primera mensualidad)
-> - Con los tres adicionales (WhatsApp + reportes + asistente virtual): **$750.000 – $1.190.000 CLP** el primer mes
+> - Solo el sistema base: **$396.000 CLP** el primer mes (puesta en producción + primera mensualidad)
+> - Con los tres adicionales (WhatsApp + reportes + asistente virtual): **$752.000 CLP** el primer mes
 
 **Forma de pago:** el costo de implementación de todo el proyecto (sistema base y, si los sumas, los adicionales) se puede pagar en **3 cuotas iguales**: al confirmar, a los 30 días y a los 60 días.
 
-- Solo el sistema base: 3 cuotas de **$116.000 – $183.000 CLP** cada una
-- Con los tres adicionales: 3 cuotas de **$233.000 – $373.000 CLP** cada una
+- Solo el sistema base: 3 cuotas de **$117.000 CLP** cada una
+- Con los tres adicionales: 3 cuotas de **$234.000 CLP** cada una
 
-La mensualidad se factura aparte, mes a mes.
-
-El rango de la puesta en producción depende de ajustes finos que pida la clínica antes de salir a producción (branding, contenidos, integraciones puntuales). La mensualidad incluye un ambiente de hosting dedicado (no compartido con otros clientes), lo que da mayor seguridad para datos de salud.
+La mensualidad se factura aparte, mes a mes, y cada pago (cuotas y mensualidad) se documenta con boleta de honorarios.
 
 El costo de envío por WhatsApp Business (cobrado por Meta, aproximadamente CLP $800 – $2.400 al mes según volumen) queda incluido en la mensualidad adicional de ese módulo, sin cobro extra ni sorpresas para la clínica.
 
@@ -97,7 +102,7 @@ El sistema base ya está completo y en producción (puedes probarlo en el link d
 
 ## Sobre DevQuad
 
-Somos una agencia de desarrollo de software que diseña, construye y opera sistemas a medida de principio a fin, no solo los entrega y desaparece. Además de este proyecto, desarrollamos y mantenemos [PataAgenda](https://patagenda.devquad.cl), un sistema de gestión y reservas para peluquerías de mascotas con pagos en línea integrados, que hoy opera en producción. Usamos los mismos estándares de seguridad y la misma disciplina de trabajo en ambos productos.
+Somos una agencia de desarrollo de software que diseña, construye y opera sistemas a medida de principio a fin, no solo los entrega y desaparece: acompañamos el sistema ya en producción, con el mismo estándar de seguridad y la misma disciplina de trabajo en cada proyecto que tomamos.
 
 ## Próximos pasos
 
