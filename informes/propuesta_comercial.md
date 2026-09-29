@@ -57,15 +57,15 @@ La mensualidad incluye:
 
 | Concepto | Incluye | Puesta en producción (pago único) | Mensualidad |
 | --- | --- | --- | --- |
-| Sistema de gestión (ya implementado) | Todo lo listado en Prestaciones incluidas | $351.000 CLP | $45.000 CLP/mes |
+| Sistema de gestión (ya implementado) | Todo lo listado en Prestaciones incluidas | $351.000 CLP | $65.000 CLP/mes |
 | Adicional — Notificaciones por WhatsApp Business | Confirmación al reservar y recordatorio automático de hora por el WhatsApp que ya usa la clínica | $151.000 CLP | + $5.000 CLP/mes |
 | Adicional — Reportes avanzados de gestión | Indicadores de tratamientos más solicitados, ocupación de agenda y pacientes nuevos | $100.000 CLP | Sin costo adicional |
 | Adicional — Asistente virtual (respuestas rápidas) | Botón flotante en la página con respuestas rápidas a horarios, servicios, ubicación y reserva. Sin inteligencia artificial ni texto libre | $100.000 CLP | Sin costo adicional |
 | Adicional — Notificaciones por email | Correo de confirmación al reservar y recordatorio automático antes de la hora | $108.000 CLP | Sin costo adicional |
 
 > **Resumen de tu inversión**
-> - Solo el sistema base: **$396.000 CLP** el primer mes (puesta en producción + primera mensualidad)
-> - Con los cuatro adicionales (WhatsApp + reportes + asistente virtual + notificaciones por email): **$860.000 CLP** el primer mes
+> - Solo el sistema base: **$416.000 CLP** el primer mes (puesta en producción + primera mensualidad)
+> - Con los cuatro adicionales (WhatsApp + reportes + asistente virtual + notificaciones por email): **$880.000 CLP** el primer mes
 
 **Forma de pago:** el costo de implementación de todo el proyecto (sistema base y, si los sumas, los adicionales) se puede pagar en **3 cuotas iguales**: al confirmar, a los 30 días y a los 60 días.
 
