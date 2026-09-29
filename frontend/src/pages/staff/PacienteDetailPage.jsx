@@ -23,6 +23,7 @@ export default function PacienteDetailPage() {
   const { isSuperuser } = useAuth();
   const [paciente, setPaciente] = useState(null);
   const [tab, setTab] = useState("Ficha");
+  const [passwordTemporal, setPasswordTemporal] = useState(null);
 
   useEffect(() => {
     pacientesApi.get(id).then((r) => setPaciente(r.data));
@@ -36,6 +37,15 @@ export default function PacienteDetailPage() {
       fecha_nacimiento: paciente.fecha_nacimiento,
     });
     setPaciente(respuesta.data);
+  }
+
+  async function resetearPassword() {
+    const confirmado = window.confirm(
+      `¿Restablecer la contraseña de ${paciente.nombre}? Se generará una clave temporal que deberás comunicarle tú (por ejemplo, por teléfono, tras verificar su identidad).`
+    );
+    if (!confirmado) return;
+    const respuesta = await pacientesApi.resetearPassword(id);
+    setPasswordTemporal(respuesta.data.password_temporal);
   }
 
   async function eliminarPaciente() {
@@ -79,6 +89,22 @@ export default function PacienteDetailPage() {
           <span className="rut-paciente">RUT: {paciente.rut}</span>
           <button type="submit">Guardar</button>
         </form>
+        {paciente.tiene_cuenta && (
+          <button type="button" onClick={resetearPassword}>
+            Restablecer contraseña
+          </button>
+        )}
+        {passwordTemporal && (
+          <div className="aviso-password-temporal">
+            <p>
+              Clave temporal para {paciente.nombre}: <strong>{passwordTemporal}</strong>
+            </p>
+            <p>Comunícasela tú directamente. Podrá cambiarla luego desde su cuenta.</p>
+            <button type="button" onClick={() => setPasswordTemporal(null)}>
+              Cerrar
+            </button>
+          </div>
+        )}
         {isSuperuser && (
           <button type="button" className="boton-peligro" onClick={eliminarPaciente}>
             Eliminar paciente

@@ -22,7 +22,7 @@ vi.mock("../../api/resources", () => ({
   citasApi: { list: vi.fn(), create: vi.fn(), update: vi.fn() },
   fichasClinicasApi: { list: vi.fn(), update: vi.fn() },
   pagosApi: { list: vi.fn(), create: vi.fn() },
-  pacientesApi: { get: vi.fn(), update: vi.fn(), remove: vi.fn() },
+  pacientesApi: { get: vi.fn(), update: vi.fn(), remove: vi.fn(), resetearPassword: vi.fn() },
   profesionalesApi: { list: vi.fn() },
   tratamientosApi: { list: vi.fn(), create: vi.fn() },
   disponibilidadApi: { get: vi.fn() },
@@ -183,6 +183,49 @@ describe("PacienteDetailPage", () => {
     await screen.findByRole("heading", { name: "Ana Torres" });
     await user.click(screen.getByRole("button", { name: "Eliminar paciente" }));
     expect(pacientesApi.remove).not.toHaveBeenCalled();
+    confirmSpy.mockRestore();
+  });
+
+  it("no muestra el botón de restablecer contraseña si el paciente no tiene cuenta", async () => {
+    render(<PacienteDetailPage />);
+    await screen.findByRole("heading", { name: "Ana Torres" });
+    expect(
+      screen.queryByRole("button", { name: "Restablecer contraseña" })
+    ).not.toBeInTheDocument();
+  });
+
+  it("staff normal puede restablecer la contraseña de un paciente con cuenta", async () => {
+    pacientesApi.get.mockResolvedValue({
+      data: {
+        id: 1, nombre: "Ana Torres", telefono: "+56911111111",
+        fecha_nacimiento: "2000-01-01", rut: "1-9", tiene_cuenta: true,
+      },
+    });
+    pacientesApi.resetearPassword.mockResolvedValue({ data: { password_temporal: "aB3dE7fG9h" } });
+    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(true);
+    const user = userEvent.setup();
+    render(<PacienteDetailPage />);
+    await screen.findByRole("heading", { name: "Ana Torres" });
+    await user.click(screen.getByRole("button", { name: "Restablecer contraseña" }));
+    expect(confirmSpy).toHaveBeenCalled();
+    await waitFor(() => expect(pacientesApi.resetearPassword).toHaveBeenCalledWith("1"));
+    expect(await screen.findByText("aB3dE7fG9h")).toBeInTheDocument();
+    confirmSpy.mockRestore();
+  });
+
+  it("no restablece la contraseña si se cancela la confirmación", async () => {
+    pacientesApi.get.mockResolvedValue({
+      data: {
+        id: 1, nombre: "Ana Torres", telefono: "+56911111111",
+        fecha_nacimiento: "2000-01-01", rut: "1-9", tiene_cuenta: true,
+      },
+    });
+    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(false);
+    const user = userEvent.setup();
+    render(<PacienteDetailPage />);
+    await screen.findByRole("heading", { name: "Ana Torres" });
+    await user.click(screen.getByRole("button", { name: "Restablecer contraseña" }));
+    expect(pacientesApi.resetearPassword).not.toHaveBeenCalled();
     confirmSpy.mockRestore();
   });
 });

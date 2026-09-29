@@ -37,7 +37,13 @@ function crudResource(path) {
   };
 }
 
-export const pacientesApi = crudResource("pacientes");
+export const pacientesApi = {
+  ...crudResource("pacientes"),
+  resetearPassword: (id) => {
+    const idSeguro = idValidado(id);
+    return client.post(`/pacientes/${idSeguro}/resetear_password/`);
+  },
+};
 export const fichasClinicasApi = crudResource("fichas-clinicas");
 export const profesionalesApi = crudResource("profesionales");
 export const citasApi = crudResource("citas");

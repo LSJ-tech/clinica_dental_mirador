@@ -7,9 +7,14 @@ from .validators import normalizar_rut, normalizar_telefono_cl
 
 
 class PacienteSerializer(serializers.ModelSerializer):
+    tiene_cuenta = serializers.SerializerMethodField()
+
     class Meta:
         model = Paciente
-        fields = ["id", "nombre", "rut", "telefono", "fecha_nacimiento"]
+        fields = ["id", "nombre", "rut", "telefono", "fecha_nacimiento", "tiene_cuenta"]
+
+    def get_tiene_cuenta(self, obj):
+        return obj.user_id is not None
 
 
 class FichaClinicaSerializer(serializers.ModelSerializer):

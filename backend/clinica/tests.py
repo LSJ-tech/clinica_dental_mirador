@@ -170,6 +170,54 @@ class EliminarPacienteTest(APITestCase):
         self.assertFalse(Cita.objects.filter(paciente_id=self.paciente.id).exists())
 
 
+class ResetearPasswordPacienteTest(APITestCase):
+    def setUp(self):
+        self.user_paciente = User.objects.create_user(username="9-8", password="claveVieja123")
+        self.paciente = Paciente.objects.create(
+            nombre="Rosa", rut="9-8", telefono="+56977777788", user=self.user_paciente
+        )
+        self.paciente_sin_cuenta = Paciente.objects.create(
+            nombre="Sin Cuenta", rut="10-6", telefono="+56977777799"
+        )
+
+    def test_staff_normal_puede_resetear_password_de_paciente(self):
+        staff = User.objects.create_user(username="staffreset", password="x", is_staff=True)
+        self.client.force_authenticate(user=staff)
+        respuesta = self.client.post(f"/api/pacientes/{self.paciente.id}/resetear_password/")
+        self.assertEqual(respuesta.status_code, 200)
+        password_temporal = respuesta.data["password_temporal"]
+        self.assertTrue(len(password_temporal) >= 8)
+
+        self.user_paciente.refresh_from_db()
+        self.assertTrue(self.user_paciente.check_password(password_temporal))
+        self.assertFalse(self.user_paciente.check_password("claveVieja123"))
+
+    def test_paciente_no_puede_resetear_password(self):
+        self.client.force_authenticate(user=self.user_paciente)
+        respuesta = self.client.post(f"/api/pacientes/{self.paciente.id}/resetear_password/")
+        self.assertEqual(respuesta.status_code, 403)
+
+    def test_anonimo_no_puede_resetear_password(self):
+        respuesta = self.client.post(f"/api/pacientes/{self.paciente.id}/resetear_password/")
+        self.assertIn(respuesta.status_code, (401, 403))
+
+    def test_resetear_password_sin_cuenta_da_error(self):
+        staff = User.objects.create_user(username="staffreset2", password="x", is_staff=True)
+        self.client.force_authenticate(user=staff)
+        respuesta = self.client.post(
+            f"/api/pacientes/{self.paciente_sin_cuenta.id}/resetear_password/"
+        )
+        self.assertEqual(respuesta.status_code, 400)
+
+    def test_serializer_expone_tiene_cuenta(self):
+        staff = User.objects.create_user(username="staffreset3", password="x", is_staff=True)
+        self.client.force_authenticate(user=staff)
+        respuesta = self.client.get(f"/api/pacientes/{self.paciente.id}/")
+        self.assertTrue(respuesta.data["tiene_cuenta"])
+        respuesta_sin = self.client.get(f"/api/pacientes/{self.paciente_sin_cuenta.id}/")
+        self.assertFalse(respuesta_sin.data["tiene_cuenta"])
+
+
 class ProfesionalPublicoTest(APITestCase):
     def test_lista_profesionales_sin_autenticar(self):
         # No se asume un total absoluto: la migración 0003 siembra el

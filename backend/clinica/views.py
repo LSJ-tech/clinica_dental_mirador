@@ -1,8 +1,11 @@
 import datetime
+import secrets
+import string
 
 from django.db.models import Q
 from django.utils import timezone
 from rest_framework import permissions, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -21,6 +24,16 @@ from .serializers import (
 )
 
 DURACION_SLOT_MINUTOS = 30
+
+# Sin 0/O/1/l/I: el staff lee esta clave en voz alta por teléfono al
+# paciente, y esos caracteres se confunden fácil al dictarlos.
+_ALFABETO_PASSWORD_TEMPORAL = "".join(
+    c for c in string.ascii_letters + string.digits if c not in "0O1lI"
+)
+
+
+def _generar_password_temporal():
+    return "".join(secrets.choice(_ALFABETO_PASSWORD_TEMPORAL) for _ in range(10))
 
 
 class PacienteViewSet(viewsets.ModelViewSet):
@@ -43,6 +56,21 @@ class PacienteViewSet(viewsets.ModelViewSet):
         if q:
             qs = qs.filter(Q(nombre__icontains=q) | Q(rut__icontains=q) | Q(telefono__icontains=q))
         return qs
+
+    @action(detail=True, methods=["post"])
+    def resetear_password(self, request, pk=None):
+        # Reset manual mientras no exista un canal propio (email/WhatsApp)
+        # para que el paciente lo haga solo: cualquier staff genera una
+        # clave temporal y se la comunica por teléfono tras verificar
+        # identidad. No requiere superusuario porque no es destructivo,
+        # a diferencia de eliminar un paciente.
+        paciente = self.get_object()
+        if paciente.user_id is None:
+            return Response({"detail": "Este paciente no tiene una cuenta creada."}, status=400)
+        password_temporal = _generar_password_temporal()
+        paciente.user.set_password(password_temporal)
+        paciente.user.save(update_fields=["password"])
+        return Response({"password_temporal": password_temporal})
 
 
 class FichaClinicaViewSet(viewsets.ModelViewSet):
