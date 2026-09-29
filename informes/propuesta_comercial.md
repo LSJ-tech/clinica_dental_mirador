@@ -24,7 +24,7 @@ A diferencia de un sistema de reservas aislado (como el que la clínica usa hoy)
 | Registro de pagos y tratamientos | No | Sí |
 | Hosting dedicado (no compartido) | No | Sí |
 | Recordatorios automáticos por WhatsApp | No | Pendiente |
-| Recordatorios automáticos por email | No | Pendiente |
+| Notificaciones por email (confirmación y recordatorio) | No | Pendiente |
 | Reportes de gestión | No | Pendiente |
 | Asistente virtual (respuestas rápidas) | No | Pendiente |
 
@@ -61,16 +61,16 @@ La mensualidad incluye:
 | Adicional — Recordatorios por WhatsApp Business | Envío automático de recordatorios de hora por el WhatsApp que ya usa la clínica | $151.000 CLP | + $5.000 CLP/mes |
 | Adicional — Reportes avanzados de gestión | Indicadores de tratamientos más solicitados, ocupación de agenda y pacientes nuevos | $100.000 CLP | Sin costo adicional |
 | Adicional — Asistente virtual (respuestas rápidas) | Botón flotante en la página con respuestas rápidas a horarios, servicios, ubicación y reserva. Sin inteligencia artificial ni texto libre | $100.000 CLP | Sin costo adicional |
-| Adicional — Recordatorios por email | Envío automático de recordatorio de hora por correo electrónico | $90.000 CLP | Sin costo adicional |
+| Adicional — Notificaciones por email | Correo de confirmación al reservar y recordatorio automático antes de la hora | $108.000 CLP | Sin costo adicional |
 
 > **Resumen de tu inversión**
 > - Solo el sistema base: **$396.000 CLP** el primer mes (puesta en producción + primera mensualidad)
-> - Con los cuatro adicionales (WhatsApp + reportes + asistente virtual + recordatorios por email): **$842.000 CLP** el primer mes
+> - Con los cuatro adicionales (WhatsApp + reportes + asistente virtual + notificaciones por email): **$860.000 CLP** el primer mes
 
 **Forma de pago:** el costo de implementación de todo el proyecto (sistema base y, si los sumas, los adicionales) se puede pagar en **3 cuotas iguales**: al confirmar, a los 30 días y a los 60 días.
 
 - Solo el sistema base: 3 cuotas de **$117.000 CLP** cada una
-- Con los cuatro adicionales: 3 cuotas de **$264.000 CLP** cada una
+- Con los cuatro adicionales: 3 cuotas de **$270.000 CLP** cada una
 
 La mensualidad se factura aparte, mes a mes, y cada pago (cuotas y mensualidad) se documenta con boleta de honorarios.
 
@@ -83,7 +83,7 @@ El costo de envío por WhatsApp Business (cobrado por Meta, aproximadamente CLP 
 | Recordatorios automáticos por WhatsApp | 1 – 2 semanas | Plantillas aprobadas por Meta y envío automático funcionando |
 | Reportes avanzados de gestión | 1 semana | Panel de indicadores ampliado |
 | Asistente virtual (respuestas rápidas) | 3 – 5 días | Botón flotante funcionando en la página pública |
-| Recordatorios automáticos por email | 2 – 3 días | Cron diario que revisa las citas del día siguiente y envía el recordatorio por correo |
+| Notificaciones por email | 2 – 4 días | Correo de confirmación automático al reservar y recordatorio programado antes de la hora, funcionando |
 
 El sistema base ya está completo y en producción (puedes probarlo en el link de arriba). Tiempo estimado para sumar **los cuatro adicionales**: **2 a 3 semanas**, solo si la clínica decide incorporarlos.
 
