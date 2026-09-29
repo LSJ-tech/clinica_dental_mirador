@@ -45,7 +45,7 @@ export default function PoliticaPrivacidadPage() {
             </li>
             <li>
               <strong>Cuenta de acceso:</strong> si creas una cuenta para el portal del paciente,
-              tu nombre de usuario (tu teléfono) y tu contraseña, almacenada siempre cifrada.
+              tu nombre de usuario (tu RUT) y tu contraseña, almacenada siempre cifrada.
             </li>
           </ul>
 
