@@ -24,7 +24,7 @@ A diferencia de un sistema de reservas aislado (como el que la clínica usa hoy)
 | Registro de pagos y tratamientos | No | Sí |
 | Hosting dedicado (no compartido) | No | Sí |
 | Notificaciones por WhatsApp (confirmación y recordatorio) | No | Pendiente |
-| Notificaciones por email (confirmación y recordatorio) | No | Pendiente |
+| Notificaciones por email (confirmación y recordatorio) | No | Sí |
 | Reportes de gestión | No | Pendiente |
 | Asistente virtual (respuestas rápidas) | No | Pendiente |
 
@@ -33,16 +33,18 @@ Hoy la reserva online de la clínica corre en Reservo, una herramienta externa q
 ## Prestaciones incluidas
 
 - Página web pública con la información real de la clínica, el equipo y la ubicación
-- Reserva de hora pública en línea (evaluación inicial), sin llamar, con validación de horario por dentista y sin choques de agenda
+- Reserva de hora pública en línea (evaluación inicial), sin llamar, con validación de horario por dentista, sin choques de agenda y confirmación inmediata
 - Cuenta propia para cada paciente usando su RUT (se puede crear al momento de reservar): ve sus citas, su ficha clínica y sus pagos
 - Ficha clínica digital por paciente (historial, notas clínicas, tratamientos)
 - Agenda por dentista, con horario semanal propio configurable y prevención de doble reserva
 - Registro de tratamientos y pagos por paciente (registro manual del staff; no es pasarela de pago online)
 - Panel de administración para el equipo, con cuenta propia para cada integrante y cambio de clave
 - Panel con indicadores básicos del día a día (citas de hoy, total de pacientes)
+- Confirmación automática por email al reservar, con recordatorio y reconfirmación de un clic antes de la hora (y aviso interno al equipo por cada reserva nueva)
+- Páginas de Política de Privacidad, Términos y Condiciones y Política de Cookies
 - Soporte y ajustes durante la puesta en marcha
 
-**Pendiente, no incluido en el costo base (ver Costos):** confirmación y recordatorio automático de hora por WhatsApp Business o por correo electrónico, reportes de gestión avanzados y un asistente virtual de respuestas rápidas.
+**Pendiente, no incluido en el costo base (ver Costos):** confirmación y recordatorio automático de hora por WhatsApp Business, reportes de gestión avanzados y un asistente virtual de respuestas rápidas.
 
 ## Costos
 
@@ -61,16 +63,15 @@ La mensualidad incluye:
 | Adicional — Notificaciones por WhatsApp Business | Confirmación al reservar y recordatorio automático de hora por el WhatsApp que ya usa la clínica | $151.000 CLP | + $5.000 CLP/mes |
 | Adicional — Reportes avanzados de gestión | Indicadores de tratamientos más solicitados, ocupación de agenda y pacientes nuevos | $100.000 CLP | Sin costo adicional |
 | Adicional — Asistente virtual (respuestas rápidas) | Botón flotante en la página con respuestas rápidas a horarios, servicios, ubicación y reserva. Sin inteligencia artificial ni texto libre | $100.000 CLP | Sin costo adicional |
-| Adicional — Notificaciones por email | Correo de confirmación al reservar y recordatorio automático antes de la hora | $108.000 CLP | Sin costo adicional |
 
 > **Resumen de tu inversión**
 > - Solo el sistema base: **$416.000 CLP** el primer mes (puesta en producción + primera mensualidad)
-> - Con los cuatro adicionales (WhatsApp + reportes + asistente virtual + notificaciones por email): **$880.000 CLP** el primer mes
+> - Con los tres adicionales (WhatsApp + reportes + asistente virtual): **$772.000 CLP** el primer mes
 
 **Forma de pago:** el costo de implementación de todo el proyecto (sistema base y, si los sumas, los adicionales) se puede pagar en **3 cuotas iguales**: al confirmar, a los 30 días y a los 60 días.
 
 - Solo el sistema base: 3 cuotas de **$117.000 CLP** cada una
-- Con los cuatro adicionales: 3 cuotas de **$270.000 CLP** cada una
+- Con los tres adicionales: 3 cuotas de **$234.000 CLP** cada una
 
 La mensualidad se factura aparte, mes a mes, y cada pago (cuotas y mensualidad) se documenta con boleta de honorarios.
 
@@ -83,16 +84,15 @@ El costo de envío por WhatsApp Business (cobrado por Meta, aproximadamente CLP 
 | Notificaciones por WhatsApp | 1 – 2 semanas | Plantillas de confirmación y recordatorio aprobadas por Meta, envío automático funcionando |
 | Reportes avanzados de gestión | 1 semana | Panel de indicadores ampliado |
 | Asistente virtual (respuestas rápidas) | 3 – 5 días | Botón flotante funcionando en la página pública |
-| Notificaciones por email | 2 – 4 días | Correo de confirmación automático al reservar y recordatorio programado antes de la hora, funcionando |
 
-El sistema base ya está completo y en producción (puedes probarlo en el link de arriba). Tiempo estimado para sumar **los cuatro adicionales**: **2 a 3 semanas**, solo si la clínica decide incorporarlos.
+El sistema base ya está completo y en producción (puedes probarlo en el link de arriba). Tiempo estimado para sumar **los tres adicionales**: **2 a 3 semanas**, solo si la clínica decide incorporarlos.
 
 ## Impacto en la clínica
 
 - Menos tiempo administrativo para secretaria y dentistas al reemplazar planillas y registros en papel por un solo sistema
 - Mejor trazabilidad clínica y legal de cada paciente, con historial siempre disponible
 - Experiencia más moderna para el paciente: reserva en línea y acceso directo a su propia información
-- Menos inasistencias y mejor información de gestión una vez sumados los adicionales de WhatsApp, email y reportes
+- Menos inasistencias gracias al recordatorio automático por email (ya activo), y mejor información de gestión una vez sumados los adicionales de WhatsApp y reportes
 
 ## Beneficios clave
 
@@ -101,7 +101,7 @@ El sistema base ya está completo y en producción (puedes probarlo en el link d
 - Datos alojados en un ambiente propio y siempre disponible, con la seguridad que corresponde a información de salud
 - Sistema escalable a medida que crece la clínica
 - Acompañamiento de DevQuad post-lanzamiento, incluido en la mensualidad
-- Los adicionales (WhatsApp, email, reportes) se suman cuando la clínica lo decida, sin rehacer nada de lo ya construido
+- Los adicionales (WhatsApp, reportes) se suman cuando la clínica lo decida, sin rehacer nada de lo ya construido
 
 ## Sobre DevQuad
 
@@ -111,7 +111,7 @@ Somos una agencia de desarrollo de software que diseña, construye y opera siste
 
 1. Prueba el sistema en el link de arriba (página pública y reserva de hora)
 2. Reunión de 15-20 minutos para ver juntos el portal del paciente y el panel de administración, y resolver dudas
-3. Decides si sumas los adicionales (WhatsApp, email, reportes) y confirmamos la puesta en producción final
+3. Decides si sumas los adicionales (WhatsApp, reportes) y confirmamos la puesta en producción final
 
 Estamos listos para avanzar cuando tú lo estés.
 
