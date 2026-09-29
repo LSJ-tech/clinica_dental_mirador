@@ -6,6 +6,9 @@ import LoginPage from "./pages/LoginPage";
 import LandingPage from "./pages/public/LandingPage";
 import EquipoPage from "./pages/public/EquipoPage";
 import ReservarPage from "./pages/public/ReservarPage";
+import PoliticaPrivacidadPage from "./pages/public/PoliticaPrivacidadPage";
+import TerminosCondicionesPage from "./pages/public/TerminosCondicionesPage";
+import PoliticaCookiesPage from "./pages/public/PoliticaCookiesPage";
 import CitasPage from "./pages/patient/CitasPage";
 import FichaClinicaPage from "./pages/patient/FichaClinicaPage";
 import PagosPage from "./pages/patient/PagosPage";
@@ -25,6 +28,9 @@ export default function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/equipo" element={<EquipoPage />} />
           <Route path="/reservar" element={<ReservarPage />} />
+          <Route path="/politica-de-privacidad" element={<PoliticaPrivacidadPage />} />
+          <Route path="/terminos-y-condiciones" element={<TerminosCondicionesPage />} />
+          <Route path="/politica-de-cookies" element={<PoliticaCookiesPage />} />
 
           <Route
             path="/citas"

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { disponibilidadApi, profesionalesApi, reservasApi } from "../../api/resources";
 import PublicNav from "./PublicNav";
+import PublicFooter from "./PublicFooter";
 import "./landing.css";
 
 function hoyISO() {
@@ -246,19 +247,7 @@ export default function ReservarPage() {
         </div>
       </section>
 
-      <footer className="cs-landing-footer">
-        <div className="cs-container">
-          <img
-            className="cs-logo-footer"
-            src="https://clinicadentalelmirador.cl/wp-content/uploads/2021/01/logo_pie.png"
-            alt="Clínica Dental El Mirador"
-          />
-          <div className="cs-footer-info">
-            <span>El Mirador #459 (Sitio 17-E), Casablanca</span>
-            <span>+569 5604 3960 · clinicadentalelmirador2020@gmail.com</span>
-          </div>
-        </div>
-      </footer>
+      <PublicFooter />
     </div>
   );
 }

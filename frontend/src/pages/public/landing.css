@@ -340,6 +340,62 @@
   color: #cfe0ee;
 }
 
+.cs-footer-legal {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.cs-footer-legal a {
+  font-size: 13px;
+  text-decoration: underline;
+}
+
+/* Páginas legales (privacidad, términos, cookies) */
+
+.cs-legal-body {
+  max-width: 760px;
+}
+
+.cs-legal-body .cs-actualizado {
+  color: var(--dental-muted);
+  font-size: 14px;
+  margin: 0 0 32px;
+}
+
+.cs-legal-body h3 {
+  color: var(--dental-ink);
+  font-size: 20px;
+  margin: 32px 0 12px;
+}
+
+.cs-legal-body p {
+  color: var(--dental-ink);
+  line-height: 1.7;
+  margin: 0 0 16px;
+}
+
+.cs-legal-body ul {
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.cs-legal-body ul li {
+  color: var(--dental-ink);
+  line-height: 1.6;
+  padding-left: 16px;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.cs-legal-body ul li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--dental-accent);
+}
+
 /* Reservar hora */
 
 .cs-reserva-paso {
