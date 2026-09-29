@@ -68,9 +68,22 @@ describe("ReservarPage", () => {
     await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
     await user.type(screen.getByLabelText("RUT"), "1-9");
     await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.type(screen.getByLabelText("Email"), "ana@example.com");
     await user.click(screen.getByText("Confirmar hora de las 09:00"));
     await waitFor(() => expect(reservasApi.create).toHaveBeenCalled());
     expect(await screen.findByText(/quedó confirmada/)).toBeInTheDocument();
+  });
+
+  it("no envia la reserva si no se completa el email obligatorio", async () => {
+    const user = userEvent.setup();
+    disponibilidadApi.get.mockResolvedValue({ data: { slots: ["09:00"] } });
+    renderPage();
+    await completarHastaElegirHora(user);
+    await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
+    await user.type(screen.getByLabelText("RUT"), "1-9");
+    await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.click(screen.getByText("Confirmar hora de las 09:00"));
+    expect(reservasApi.create).not.toHaveBeenCalled();
   });
 
   it("si el horario ya no esta disponible, muestra error y recarga los slots", async () => {
@@ -84,6 +97,7 @@ describe("ReservarPage", () => {
     await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
     await user.type(screen.getByLabelText("RUT"), "1-9");
     await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.type(screen.getByLabelText("Email"), "ana@example.com");
     await user.click(screen.getByText(/Confirmar hora/));
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Ese horario ya no está disponible. Elige otro por favor."
@@ -104,6 +118,7 @@ describe("ReservarPage", () => {
     await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
     await user.type(screen.getByLabelText("RUT"), "1-9");
     await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.type(screen.getByLabelText("Email"), "ana@example.com");
     await user.click(screen.getByText(/Confirmar hora/));
     const alerta = await screen.findByRole("alert");
     expect(alerta).toHaveTextContent("Esta contraseña es demasiado corta.");
@@ -121,6 +136,7 @@ describe("ReservarPage", () => {
     await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
     await user.type(screen.getByLabelText("RUT"), "1-9");
     await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.type(screen.getByLabelText("Email"), "ana@example.com");
     await user.click(screen.getByText(/Confirmar hora/));
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "No se pudo completar la reserva. Intenta nuevamente."
@@ -147,6 +163,7 @@ describe("ReservarPage", () => {
     await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
     await user.type(screen.getByLabelText("RUT"), "1-9");
     await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.type(screen.getByLabelText("Email"), "ana@example.com");
     await user.click(
       screen.getByLabelText("Quiero crear una cuenta para ver mis citas, ficha y pagos")
     );
@@ -171,6 +188,7 @@ describe("ReservarPage", () => {
     await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
     await user.type(screen.getByLabelText("RUT"), "11.111.111-1");
     await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.type(screen.getByLabelText("Email"), "ana@example.com");
     await user.click(
       screen.getByLabelText("Quiero crear una cuenta para ver mis citas, ficha y pagos")
     );
@@ -197,7 +215,7 @@ describe("ReservarPage", () => {
     await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
     await user.type(screen.getByLabelText("RUT"), "1-9");
     await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
-    await user.type(screen.getByLabelText("Email (opcional)"), "ana@example.com");
+    await user.type(screen.getByLabelText("Email"), "ana@example.com");
     await user.click(screen.getByText(/Confirmar hora/));
 
     await waitFor(() =>
@@ -219,6 +237,7 @@ describe("ReservarPage", () => {
     await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
     await user.type(screen.getByLabelText("RUT"), "1-9");
     await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.type(screen.getByLabelText("Email"), "ana@example.com");
     await user.click(screen.getByText(/Confirmar hora/));
 
     await waitFor(() =>

@@ -105,12 +105,10 @@ export default function ReservarPage() {
                   ver tus citas, tu ficha y tus pagos.
                 </p>
               )}
-              {datos.email && (
-                <p className="cs-text">
-                  Te enviamos la confirmación a {datos.email}. Antes de la fecha te llegará un
-                  recordatorio para reconfirmar tu hora.
-                </p>
-              )}
+              <p className="cs-text">
+                Te enviamos la confirmación a {datos.email}. Antes de la fecha te llegará un
+                recordatorio para reconfirmar tu hora.
+              </p>
               <Link to="/" className="cs-link">
                 Volver al inicio
               </Link>
@@ -201,17 +199,18 @@ export default function ReservarPage() {
                     />
                   </label>
                   <label>
-                    <span>Email (opcional)</span>
+                    <span>Email</span>
                     <input
                       type="email"
                       placeholder="tu@email.com"
                       value={datos.email}
                       onChange={(e) => setDatos({ ...datos, email: e.target.value })}
+                      required
                     />
                   </label>
                   <p className="cs-text" style={{ fontSize: 13, marginTop: -8 }}>
-                    Si nos dejas tu email te enviamos la confirmación de la hora y un recordatorio
-                    antes de que llegue la fecha.
+                    Te enviamos ahí la confirmación de la hora y un recordatorio antes de que
+                    llegue la fecha.
                   </p>
                   <label>
                     <span>Cuéntanos brevemente qué te pasa (opcional)</span>

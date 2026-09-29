@@ -94,17 +94,15 @@ class PagoSerializer(serializers.ModelSerializer):
 class ReservaPublicaSerializer(serializers.Serializer):
     """
     Reserva pública sin login: encuentra o crea el Paciente por RUT y crea
-    la Cita en estado "pendiente" (el staff la confirma después desde la
-    Agenda, mismo criterio que PataAgenda para su reserva pública).
+    la Cita en estado "confirmada" de inmediato.
     """
 
     nombre = serializers.CharField(max_length=150)
     rut = serializers.CharField(max_length=12)
     telefono = serializers.CharField(max_length=20)
-    # Opcional: sin email no hay correo de confirmación ni de recordatorio,
-    # pero la reserva igual se puede hacer (mismo criterio que hoy con la
-    # cuenta del portal, que también es opcional).
-    email = serializers.EmailField(required=False, allow_blank=True)
+    # Obligatorio: es el único canal hoy para la confirmación de la hora y
+    # el recordatorio/reconfirmación antes de la fecha.
+    email = serializers.EmailField()
     profesional = serializers.PrimaryKeyRelatedField(queryset=Profesional.objects.all())
     fecha = serializers.DateField()
     hora = serializers.TimeField()
@@ -145,14 +143,21 @@ class ReservaPublicaSerializer(serializers.Serializer):
         return data
 
     def create(self, validated_data):
-        paciente, _ = Paciente.objects.get_or_create(
+        paciente, creado = Paciente.objects.get_or_create(
             rut=validated_data["rut"],
             defaults={
                 "nombre": validated_data["nombre"],
                 "telefono": validated_data["telefono"],
-                "email": validated_data.get("email", ""),
+                "email": validated_data["email"],
             },
         )
+        # Si el paciente ya existía (ej. lo creó el staff antes, sin email) y
+        # no tenía email guardado, el que acaba de escribir aquí -- ahora
+        # obligatorio -- se guarda igual. Si no, la confirmación y el
+        # recordatorio quedarían sin cómo llegarle pese a haberlo pedido.
+        if not creado and not paciente.email:
+            paciente.email = validated_data["email"]
+            paciente.save(update_fields=["email"])
 
         self.cuenta_creada = False
         if validated_data.get("crear_cuenta") and paciente.user_id is None:

@@ -267,6 +267,7 @@ class DisponibilidadYReservaTest(APITestCase):
             "nombre": "Ana Torres",
             "rut": "11.111.111-1",
             "telefono": "+56 9 1234 5678",
+            "email": "ana@example.com",
             "profesional": self.profesional.pk,
             "fecha": str(self.lunes),
             "hora": "10:00",
@@ -281,6 +282,25 @@ class DisponibilidadYReservaTest(APITestCase):
         cita = Cita.objects.get(paciente=paciente)
         self.assertEqual(cita.motivo, "Limpieza")
 
+    def test_reserva_publica_sin_email_es_rechazada(self):
+        respuesta = self.client.post("/api/reservas/", {
+            "nombre": "Ana Torres", "rut": "11.111.111-1", "telefono": "+56912345678",
+            "profesional": self.profesional.pk, "fecha": str(self.lunes), "hora": "10:00",
+        })
+        self.assertEqual(respuesta.status_code, 400)
+        self.assertIn("email", respuesta.data)
+
+    def test_reserva_publica_actualiza_email_de_paciente_existente_sin_email(self):
+        Paciente.objects.create(nombre="Ana Torres", rut="11111111-1", telefono="+56912345678")
+        respuesta = self.client.post("/api/reservas/", {
+            "nombre": "Ana Torres", "rut": "11.111.111-1", "telefono": "+56912345678",
+            "email": "ana@example.com",
+            "profesional": self.profesional.pk, "fecha": str(self.lunes), "hora": "10:00",
+        })
+        self.assertEqual(respuesta.status_code, 201)
+        paciente = Paciente.objects.get(rut="11111111-1")
+        self.assertEqual(paciente.email, "ana@example.com")
+
     def test_reserva_publica_rechaza_horario_ocupado(self):
         paciente = Paciente.objects.create(nombre="Luis", rut="2-7", telefono="+56922222222")
         Cita.objects.create(
@@ -289,6 +309,7 @@ class DisponibilidadYReservaTest(APITestCase):
         )
         respuesta = self.client.post("/api/reservas/", {
             "nombre": "Ana Torres", "rut": "11.111.111-1", "telefono": "+56912345678",
+            "email": "ana@example.com",
             "profesional": self.profesional.pk, "fecha": str(self.lunes), "hora": "10:00",
         })
         self.assertEqual(respuesta.status_code, 400)
@@ -296,6 +317,7 @@ class DisponibilidadYReservaTest(APITestCase):
     def test_reserva_publica_rechaza_fuera_de_horario(self):
         respuesta = self.client.post("/api/reservas/", {
             "nombre": "Ana Torres", "rut": "11.111.111-1", "telefono": "+56912345678",
+            "email": "ana@example.com",
             "profesional": self.profesional.pk, "fecha": str(self.lunes), "hora": "20:00",
         })
         self.assertEqual(respuesta.status_code, 400)
@@ -328,15 +350,6 @@ class DisponibilidadYReservaTest(APITestCase):
         self.assertIn("contacto@devquad.cl", destinatarios)
         paciente = Paciente.objects.get(rut="11111111-1")
         self.assertEqual(paciente.email, "ana@example.com")
-
-    def test_reserva_publica_sin_email_solo_notifica_a_la_clinica(self):
-        respuesta = self.client.post("/api/reservas/", {
-            "nombre": "Ana Torres", "rut": "11.111.111-1", "telefono": "+56912345678",
-            "profesional": self.profesional.pk, "fecha": str(self.lunes), "hora": "10:00",
-        })
-        self.assertEqual(respuesta.status_code, 201)
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].to, ["contacto@devquad.cl"])
 
 
 class ConfirmarCitaTest(APITestCase):

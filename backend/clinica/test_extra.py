@@ -280,6 +280,7 @@ class TestReservaPublicaConCuenta:
             "nombre": "Ana Torres",
             "rut": "11.111.111-1",
             "telefono": "+56912345678",
+            "email": "ana@example.com",
             "profesional": self.profesional.pk,
             "fecha": str(self.lunes),
             "hora": "10:00",
