@@ -36,9 +36,51 @@ services:
         fromDatabase:
           name: clinica-mirador-db
           property: connectionString
+      - key: FRONTEND_URL
+        value: https://clinicadentalelmirador.devquad.cl
       # Configurar a mano en el dashboard antes de aceptar pacientes reales:
       # DJANGO_SUPERUSER_USERNAME/PASSWORD/EMAIL (crea el primer staff)
       # WHATSAPP_CLOUD_API_TOKEN, WHATSAPP_PHONE_NUMBER_ID (milestone WhatsApp)
+      # EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD,
+      # EMAIL_USE_TLS, DEFAULT_FROM_EMAIL (proveedor de correo real -- ej.
+      # Resend, SendGrid, o SMTP de Gmail; sin esto, los correos de
+      # confirmación/recordatorio solo se imprimen en los logs)
+
+  # Recordatorio/reconfirmación de cita: corre una vez al día y manda el
+  # correo a las citas de mañana (ver clinica/management/commands/
+  # enviar_recordatorios.py). Los cron jobs de Render no tienen plan free,
+  # así que esto no se activa solo -- hay que crearlo a mano en el
+  # dashboard (o correr "render blueprint launch" de nuevo) una vez que se
+  # acepte el costo (~US$1/mes en plan starter).
+  - type: cron
+    name: clinica-mirador-recordatorios
+    env: python
+    plan: starter
+    rootDir: backend
+    schedule: "0 13 * * *" # 13:00 UTC ~= 9-10am Chile (según horario de verano)
+    buildCommand: "./build.sh"
+    startCommand: "python manage.py enviar_recordatorios"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      # Debe ser la MISMA que el servicio web (no generateValue acá): los
+      # links de confirmación se firman con esta clave, y hay que poder
+      # validarlos sin importar cuál de los dos servicios generó el token.
+      - key: DJANGO_SECRET_KEY
+        fromService:
+          type: web
+          name: clinica-mirador-backend
+          envVarKey: DJANGO_SECRET_KEY
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: clinica-mirador-db
+          property: connectionString
+      - key: FRONTEND_URL
+        value: https://clinicadentalelmirador.devquad.cl
+      # Mismas variables EMAIL_* que el servicio web -- deben configurarse
+      # igual acá para que el cron pueda mandar los correos.
 
   - type: web
     name: clinica-mirador-frontend

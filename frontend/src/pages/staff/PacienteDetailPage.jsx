@@ -34,6 +34,7 @@ export default function PacienteDetailPage() {
     const respuesta = await pacientesApi.update(id, {
       nombre: paciente.nombre,
       telefono: paciente.telefono,
+      email: paciente.email,
       fecha_nacimiento: paciente.fecha_nacimiento,
     });
     setPaciente(respuesta.data);
@@ -76,6 +77,14 @@ export default function PacienteDetailPage() {
             <input
               value={paciente.telefono}
               onChange={(e) => setPaciente({ ...paciente, telefono: e.target.value })}
+            />
+          </label>
+          <label>
+            <span>Email</span>
+            <input
+              type="email"
+              value={paciente.email || ""}
+              onChange={(e) => setPaciente({ ...paciente, email: e.target.value })}
             />
           </label>
           <label>

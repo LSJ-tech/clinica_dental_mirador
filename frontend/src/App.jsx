@@ -6,6 +6,7 @@ import LoginPage from "./pages/LoginPage";
 import LandingPage from "./pages/public/LandingPage";
 import EquipoPage from "./pages/public/EquipoPage";
 import ReservarPage from "./pages/public/ReservarPage";
+import ConfirmarCitaPage from "./pages/public/ConfirmarCitaPage";
 import PoliticaPrivacidadPage from "./pages/public/PoliticaPrivacidadPage";
 import TerminosCondicionesPage from "./pages/public/TerminosCondicionesPage";
 import PoliticaCookiesPage from "./pages/public/PoliticaCookiesPage";
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/equipo" element={<EquipoPage />} />
           <Route path="/reservar" element={<ReservarPage />} />
+          <Route path="/confirmar-cita/:token" element={<ConfirmarCitaPage />} />
           <Route path="/politica-de-privacidad" element={<PoliticaPrivacidadPage />} />
           <Route path="/terminos-y-condiciones" element={<TerminosCondicionesPage />} />
           <Route path="/politica-de-cookies" element={<PoliticaCookiesPage />} />

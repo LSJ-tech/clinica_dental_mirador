@@ -8,6 +8,7 @@ class Paciente(models.Model):
     nombre = models.CharField(max_length=150)
     rut = models.CharField(max_length=12, unique=True)
     telefono = models.CharField(max_length=20, validators=[telefono_validator])
+    email = models.EmailField(blank=True)
     fecha_nacimiento = models.DateField(null=True, blank=True)
     # Cuenta de acceso al portal del paciente. Puede ser null: un paciente
     # puede existir en el sistema (agendado por el staff) sin tener todavía
@@ -110,9 +111,10 @@ class Cita(models.Model):
     # creadas por staff.
     motivo = models.CharField(max_length=200, blank=True)
 
-    # Campos para la integración con WhatsApp Cloud API (milestone futuro):
-    # dejan lista la trazabilidad de cada recordatorio sin necesitar una
-    # migración nueva cuando se implemente el envío real.
+    # recordatorio_estado/recordatorio_enviado_at son de cualquier canal de
+    # recordatorio (hoy: email, vía el comando enviar_recordatorios).
+    # whatsapp_message_id queda reservado para cuando se integre WhatsApp
+    # Cloud API (milestone futuro), sin necesitar otra migración.
     recordatorio_estado = models.CharField(
         max_length=20, choices=RECORDATORIO_ESTADO_CHOICES, default="no_enviado"
     )

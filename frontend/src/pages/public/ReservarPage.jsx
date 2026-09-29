@@ -9,7 +9,7 @@ function hoyISO() {
   return new Date().toISOString().slice(0, 10);
 }
 
-const DATOS_VACIOS = { nombre: "", rut: "", telefono: "", motivo: "" };
+const DATOS_VACIOS = { nombre: "", rut: "", telefono: "", email: "", motivo: "" };
 
 export default function ReservarPage() {
   const [profesionales, setProfesionales] = useState([]);
@@ -106,6 +106,12 @@ export default function ReservarPage() {
                   ver tus citas, tu ficha y tus pagos.
                 </p>
               )}
+              {datos.email && (
+                <p className="cs-text">
+                  Te enviamos la confirmación a {datos.email}. Antes de la fecha te llegará un
+                  recordatorio para reconfirmar tu hora.
+                </p>
+              )}
               <Link to="/" className="cs-link">
                 Volver al inicio
               </Link>
@@ -195,6 +201,19 @@ export default function ReservarPage() {
                       required
                     />
                   </label>
+                  <label>
+                    <span>Email (opcional)</span>
+                    <input
+                      type="email"
+                      placeholder="tu@email.com"
+                      value={datos.email}
+                      onChange={(e) => setDatos({ ...datos, email: e.target.value })}
+                    />
+                  </label>
+                  <p className="cs-text" style={{ fontSize: 13, marginTop: -8 }}>
+                    Si nos dejas tu email te enviamos la confirmación de la hora y un recordatorio
+                    antes de que llegue la fecha.
+                  </p>
                   <label>
                     <span>Cuéntanos brevemente qué te pasa (opcional)</span>
                     <input

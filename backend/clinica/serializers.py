@@ -11,7 +11,7 @@ class PacienteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Paciente
-        fields = ["id", "nombre", "rut", "telefono", "fecha_nacimiento", "tiene_cuenta"]
+        fields = ["id", "nombre", "rut", "telefono", "email", "fecha_nacimiento", "tiene_cuenta"]
 
     def get_tiene_cuenta(self, obj):
         return obj.user_id is not None
@@ -101,6 +101,10 @@ class ReservaPublicaSerializer(serializers.Serializer):
     nombre = serializers.CharField(max_length=150)
     rut = serializers.CharField(max_length=12)
     telefono = serializers.CharField(max_length=20)
+    # Opcional: sin email no hay correo de confirmación ni de recordatorio,
+    # pero la reserva igual se puede hacer (mismo criterio que hoy con la
+    # cuenta del portal, que también es opcional).
+    email = serializers.EmailField(required=False, allow_blank=True)
     profesional = serializers.PrimaryKeyRelatedField(queryset=Profesional.objects.all())
     fecha = serializers.DateField()
     hora = serializers.TimeField()
@@ -146,6 +150,7 @@ class ReservaPublicaSerializer(serializers.Serializer):
             defaults={
                 "nombre": validated_data["nombre"],
                 "telefono": validated_data["telefono"],
+                "email": validated_data.get("email", ""),
             },
         )
 

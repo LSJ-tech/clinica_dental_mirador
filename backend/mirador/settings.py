@@ -182,6 +182,32 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 
+# Email (confirmación de reserva y recordatorio de cita).
+# Sin EMAIL_HOST (desarrollo, o producción mientras no se configure un
+# proveedor real), se usa el backend de consola: los correos se imprimen
+# en los logs en vez de enviarse, así el flujo se puede probar entero sin
+# credenciales reales y sin que una reserva falle por esto.
+
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173' if DEBUG else '')
+
+if os.environ.get('EMAIL_HOST'):
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = os.environ['EMAIL_HOST']
+    EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
+    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+    EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+DEFAULT_FROM_EMAIL = os.environ.get(
+    # Provisorio: hasta que la clínica configure su propio correo de envío
+    # (o se elija un proveedor real, ej. Resend/SendGrid), se usa el de
+    # DevQuad para no mandar nada desde la cuenta real de la clínica todavía.
+    'DEFAULT_FROM_EMAIL', 'Clínica Dental El Mirador <contacto@devquad.cl>'
+)
+
+
 # Seguridad en producción (Render termina TLS en su proxy y reenvía por HTTP interno).
 
 if not DEBUG:

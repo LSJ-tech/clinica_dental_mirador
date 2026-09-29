@@ -188,6 +188,26 @@ describe("ReservarPage", () => {
     ).toBeInTheDocument();
   });
 
+  it("envia el email si se ingresa y lo muestra en la confirmacion", async () => {
+    const user = userEvent.setup();
+    disponibilidadApi.get.mockResolvedValue({ data: { slots: ["09:00"] } });
+    reservasApi.create.mockResolvedValue({ data: { fecha: "2026-02-01", hora: "09:00:00" } });
+    renderPage();
+    await completarHastaElegirHora(user);
+    await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
+    await user.type(screen.getByLabelText("RUT"), "1-9");
+    await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.type(screen.getByLabelText("Email (opcional)"), "ana@example.com");
+    await user.click(screen.getByText(/Confirmar hora/));
+
+    await waitFor(() =>
+      expect(reservasApi.create).toHaveBeenCalledWith(
+        expect.objectContaining({ email: "ana@example.com" })
+      )
+    );
+    expect(await screen.findByText(/Te enviamos la confirmación a ana@example.com/)).toBeInTheDocument();
+  });
+
   it("no marca cuenta_creada en la confirmacion si no se pidio crear cuenta", async () => {
     const user = userEvent.setup();
     disponibilidadApi.get.mockResolvedValue({ data: { slots: ["09:00"] } });

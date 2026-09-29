@@ -5,8 +5,8 @@ from .models import Cita, FichaClinica, HorarioProfesional, Pago, Paciente, Prof
 
 @admin.register(Paciente)
 class PacienteAdmin(admin.ModelAdmin):
-    list_display = ["nombre", "rut", "telefono", "user"]
-    search_fields = ["nombre", "rut", "telefono"]
+    list_display = ["nombre", "rut", "telefono", "email", "user"]
+    search_fields = ["nombre", "rut", "telefono", "email"]
 
 
 @admin.register(FichaClinica)

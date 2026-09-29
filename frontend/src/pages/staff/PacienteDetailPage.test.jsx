@@ -31,7 +31,7 @@ vi.mock("../../api/resources", () => ({
 function datosBase() {
   pacientesApi.get.mockResolvedValue({
     data: {
-      id: 1, nombre: "Ana Torres", telefono: "+56911111111",
+      id: 1, nombre: "Ana Torres", telefono: "+56911111111", email: "ana@example.com",
       fecha_nacimiento: "2000-01-01", rut: "1-9",
     },
   });
@@ -74,6 +74,28 @@ describe("PacienteDetailPage", () => {
     await user.type(screen.getByLabelText("Nombre"), "Ana T.");
     await user.click(screen.getByRole("button", { name: "Guardar" }));
     await waitFor(() => expect(pacientesApi.update).toHaveBeenCalled());
+  });
+
+  it("muestra y permite editar el email del paciente", async () => {
+    const user = userEvent.setup();
+    pacientesApi.update.mockResolvedValue({
+      data: {
+        id: 1, nombre: "Ana Torres", telefono: "+56911111111", email: "nuevo@example.com",
+        fecha_nacimiento: "2000-01-01", rut: "1-9",
+      },
+    });
+    render(<PacienteDetailPage />);
+    await screen.findByRole("heading", { name: "Ana Torres" });
+    expect(screen.getByLabelText("Email")).toHaveValue("ana@example.com");
+    await user.clear(screen.getByLabelText("Email"));
+    await user.type(screen.getByLabelText("Email"), "nuevo@example.com");
+    await user.click(screen.getAllByRole("button", { name: "Guardar" })[0]);
+    await waitFor(() =>
+      expect(pacientesApi.update).toHaveBeenCalledWith(
+        "1",
+        expect.objectContaining({ email: "nuevo@example.com" })
+      )
+    );
   });
 
   it("tab Ficha: muestra historial/notas y permite guardarlos", async () => {

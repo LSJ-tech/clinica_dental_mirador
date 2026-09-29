@@ -1,11 +1,16 @@
 from datetime import date, timedelta
+from unittest.mock import patch
 
 from django.contrib.auth.models import User
+from django.core import mail
 from django.core.exceptions import ValidationError
+from django.core.management import call_command
 from django.test import TestCase
+from django.utils import timezone
 from rest_framework.test import APITestCase
 
 from .models import Cita, FichaClinica, HorarioProfesional, Paciente, Profesional
+from .tokens import generar_token_confirmacion
 from .validators import normalizar_telefono_cl
 
 
@@ -307,6 +312,135 @@ class DisponibilidadYReservaTest(APITestCase):
             "fecha": str(self.lunes), "hora": "10:00",
         })
         self.assertEqual(respuesta.status_code, 400)
+
+    def test_reserva_publica_con_email_envia_confirmacion(self):
+        respuesta = self.client.post("/api/reservas/", {
+            "nombre": "Ana Torres", "rut": "11.111.111-1", "telefono": "+56912345678",
+            "email": "ana@example.com",
+            "profesional": self.profesional.pk, "fecha": str(self.lunes), "hora": "10:00",
+        })
+        self.assertEqual(respuesta.status_code, 201)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ["ana@example.com"])
+        paciente = Paciente.objects.get(rut="11111111-1")
+        self.assertEqual(paciente.email, "ana@example.com")
+
+    def test_reserva_publica_sin_email_no_envia_nada(self):
+        respuesta = self.client.post("/api/reservas/", {
+            "nombre": "Ana Torres", "rut": "11.111.111-1", "telefono": "+56912345678",
+            "profesional": self.profesional.pk, "fecha": str(self.lunes), "hora": "10:00",
+        })
+        self.assertEqual(respuesta.status_code, 201)
+        self.assertEqual(len(mail.outbox), 0)
+
+
+class ConfirmarCitaTest(APITestCase):
+    def setUp(self):
+        self.paciente = Paciente.objects.create(
+            nombre="Ana", rut="1-9", telefono="+56911111111", email="ana@example.com"
+        )
+        self.profesional = Profesional.objects.create(nombre="Dra. Soto", especialidad="General")
+        self.cita = Cita.objects.create(
+            paciente=self.paciente, profesional=self.profesional,
+            fecha=date.today() + timedelta(days=1), hora="10:00", estado="pendiente",
+        )
+
+    def test_token_valido_confirma_cita_pendiente(self):
+        token = generar_token_confirmacion(self.cita.id)
+        respuesta = self.client.get(f"/api/confirmar-cita/{token}/")
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertEqual(respuesta.data["estado"], "confirmada")
+        self.cita.refresh_from_db()
+        self.assertEqual(self.cita.estado, "confirmada")
+
+    def test_token_invalido_rechazado(self):
+        respuesta = self.client.get("/api/confirmar-cita/token-basura/")
+        self.assertEqual(respuesta.status_code, 400)
+
+    def test_token_de_cita_inexistente(self):
+        token = generar_token_confirmacion(999999)
+        respuesta = self.client.get(f"/api/confirmar-cita/{token}/")
+        self.assertEqual(respuesta.status_code, 404)
+
+    def test_no_reabre_cita_cancelada(self):
+        self.cita.estado = "cancelada"
+        self.cita.save(update_fields=["estado"])
+        token = generar_token_confirmacion(self.cita.id)
+        respuesta = self.client.get(f"/api/confirmar-cita/{token}/")
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertEqual(respuesta.data["estado"], "cancelada")
+        self.cita.refresh_from_db()
+        self.assertEqual(self.cita.estado, "cancelada")
+
+
+class EnviarRecordatoriosCommandTest(TestCase):
+    def setUp(self):
+        self.profesional = Profesional.objects.create(nombre="Dra. Soto", especialidad="General")
+        self.manana = timezone.localdate() + timedelta(days=1)
+
+    def test_envia_solo_a_citas_de_manana_con_email_y_pendientes_de_recordatorio(self):
+        con_email = Paciente.objects.create(
+            nombre="Con Email", rut="1-9", telefono="+56911111111", email="con@example.com"
+        )
+        sin_email = Paciente.objects.create(
+            nombre="Sin Email", rut="2-7", telefono="+56922222222"
+        )
+        cita_manana = Cita.objects.create(
+            paciente=con_email, profesional=self.profesional,
+            fecha=self.manana, hora="10:00", estado="pendiente",
+        )
+        Cita.objects.create(
+            paciente=sin_email, profesional=self.profesional,
+            fecha=self.manana, hora="11:00", estado="pendiente",
+        )
+        Cita.objects.create(
+            paciente=con_email, profesional=self.profesional,
+            fecha=self.manana + timedelta(days=1), hora="10:00", estado="pendiente",
+        )
+
+        call_command("enviar_recordatorios")
+
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ["con@example.com"])
+        cita_manana.refresh_from_db()
+        self.assertEqual(cita_manana.recordatorio_estado, "enviado")
+        self.assertIsNotNone(cita_manana.recordatorio_enviado_at)
+
+    def test_no_reenvia_si_ya_fue_enviado(self):
+        paciente = Paciente.objects.create(
+            nombre="Con Email", rut="1-9", telefono="+56911111111", email="con@example.com"
+        )
+        Cita.objects.create(
+            paciente=paciente, profesional=self.profesional,
+            fecha=self.manana, hora="10:00", estado="pendiente",
+            recordatorio_estado="enviado",
+        )
+        call_command("enviar_recordatorios")
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_no_envia_a_cita_cancelada(self):
+        paciente = Paciente.objects.create(
+            nombre="Con Email", rut="1-9", telefono="+56911111111", email="con@example.com"
+        )
+        Cita.objects.create(
+            paciente=paciente, profesional=self.profesional,
+            fecha=self.manana, hora="10:00", estado="cancelada",
+        )
+        call_command("enviar_recordatorios")
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_marca_fallido_si_el_envio_lanza_una_excepcion(self):
+        paciente = Paciente.objects.create(
+            nombre="Con Email", rut="1-9", telefono="+56911111111", email="con@example.com"
+        )
+        cita = Cita.objects.create(
+            paciente=paciente, profesional=self.profesional,
+            fecha=self.manana, hora="10:00", estado="pendiente",
+        )
+        with patch("clinica.emails.send_mail", side_effect=Exception("smtp caído")):
+            call_command("enviar_recordatorios")
+        cita.refresh_from_db()
+        self.assertEqual(cita.recordatorio_estado, "fallido")
 
 
 class CambiarPasswordTest(APITestCase):

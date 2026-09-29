@@ -22,6 +22,7 @@ import {
   disponibilidadApi,
   reservasApi,
   cuentaApi,
+  confirmarCitaApi,
 } from "./resources.js";
 
 describe("resources", () => {
@@ -89,5 +90,22 @@ describe("resources", () => {
       password_actual: "a",
       password_nueva: "b",
     });
+  });
+
+  it("pacientesApi.resetearPassword pega a /pacientes/:id/resetear_password/", () => {
+    pacientesApi.resetearPassword(5);
+    expect(client.post).toHaveBeenCalledWith("/pacientes/5/resetear_password/");
+  });
+
+  it("confirmarCitaApi.get pega a /confirmar-cita/:token/", () => {
+    confirmarCitaApi.get("abc:def:ghi");
+    expect(client.get).toHaveBeenCalledWith("/confirmar-cita/abc:def:ghi/");
+  });
+
+  it("confirmarCitaApi.get rechaza un token con formato inválido", () => {
+    expect(() => confirmarCitaApi.get("../../etc/passwd")).toThrow(
+      "Enlace de confirmación inválido."
+    );
+    expect(client.get).not.toHaveBeenCalledWith(expect.stringContaining(".."));
   });
 });

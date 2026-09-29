@@ -9,6 +9,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .emails import enviar_confirmacion_reserva
 from .models import Cita, FichaClinica, HorarioProfesional, Pago, Paciente, Profesional, Tratamiento
 from .permissions import EsPacientePropioOStaff, EsSuperusuario, SoloStaffEscribe
 from .serializers import (
@@ -22,6 +23,7 @@ from .serializers import (
     ReservaPublicaSerializer,
     TratamientoSerializer,
 )
+from .tokens import leer_token_confirmacion
 
 DURACION_SLOT_MINUTOS = 30
 
@@ -232,6 +234,7 @@ class ReservaPublicaView(APIView):
         serializer = ReservaPublicaSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         cita = serializer.save()
+        enviar_confirmacion_reserva(cita)
         return Response(
             {
                 "id": cita.id,
@@ -242,6 +245,36 @@ class ReservaPublicaView(APIView):
             },
             status=201,
         )
+
+
+class ConfirmarCitaView(APIView):
+    """
+    Reconfirmación de una cita desde el link del correo de recordatorio, sin
+    login (igual que la reserva pública: el token firmado es la única
+    credencial, no expone datos del paciente en la URL).
+    """
+
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, token):
+        cita_id = leer_token_confirmacion(token)
+        if cita_id is None:
+            return Response({"detail": "Este enlace no es válido o ya expiró."}, status=400)
+        try:
+            cita = Cita.objects.select_related("profesional").get(pk=cita_id)
+        except Cita.DoesNotExist:
+            return Response({"detail": "No encontramos esa cita."}, status=404)
+
+        if cita.estado == "pendiente":
+            cita.estado = "confirmada"
+            cita.save(update_fields=["estado"])
+
+        return Response({
+            "estado": cita.estado,
+            "fecha": cita.fecha,
+            "hora": cita.hora,
+            "profesional_nombre": cita.profesional.nombre,
+        })
 
 
 class CambiarPasswordView(APIView):

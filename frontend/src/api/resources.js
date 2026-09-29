@@ -62,3 +62,18 @@ export const reservasApi = {
 export const cuentaApi = {
   cambiarPassword: (data) => client.post("/cambiar-password/", data),
 };
+
+// El token no es un id de recurso propio (lo genera django.core.signing,
+// no idValidado): puede traer "-", "_" y ":" en base64url, formato
+// distinto al de los ids numéricos del resto de la API.
+function tokenValidado(token) {
+  const valor = String(token);
+  if (!/^[A-Za-z0-9_-]+:[A-Za-z0-9_-]+:[A-Za-z0-9_-]+$/.test(valor)) {
+    throw new Error("Enlace de confirmación inválido.");
+  }
+  return valor;
+}
+
+export const confirmarCitaApi = {
+  get: (token) => client.get(`/confirmar-cita/${tokenValidado(token)}/`),
+};
