@@ -1,0 +1,40 @@
+{% extends "clinica/emails/base_email.html" %}
+{% block titulo %}Nueva reserva{% endblock %}
+{% block color_banner %}#0c2e46{% endblock %}
+{% block banner_titulo %}NUEVA RESERVA WEB{% endblock %}
+{% block contenido %}
+  <p style="margin: 0 0 20px; font-size: 15px; color: #333333; line-height: 1.6;">
+    Un paciente reservó hora desde la página pública.
+  </p>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #eff0eb; border-radius: 8px; margin: 0 0 20px;">
+    <tr>
+      <td style="padding: 20px 24px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="padding: 6px 12px 6px 0; font-size: 13px; color: #7a7a7a; white-space: nowrap;">Paciente</td>
+            <td style="padding: 6px 0; font-size: 15px; color: #000000; font-weight: bold;">{{ paciente_nombre }}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 12px 6px 0; font-size: 13px; color: #7a7a7a; white-space: nowrap;">RUT</td>
+            <td style="padding: 6px 0; font-size: 15px; color: #000000;">{{ paciente_rut }}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 12px 6px 0; font-size: 13px; color: #7a7a7a; white-space: nowrap;">Teléfono</td>
+            <td style="padding: 6px 0; font-size: 15px; color: #000000;">{{ paciente_telefono }}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 12px 6px 0; font-size: 13px; color: #7a7a7a; white-space: nowrap;">Email</td>
+            <td style="padding: 6px 0; font-size: 15px; color: #000000;">{{ paciente_email }}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  {% include "clinica/emails/_tabla_cita.html" %}
+
+  <p style="margin: 0; font-size: 14px; color: #7a7a7a; line-height: 1.6;">
+    Motivo: {{ motivo }}
+  </p>
+{% endblock %}

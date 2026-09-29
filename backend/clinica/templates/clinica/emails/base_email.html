@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block titulo %}Clínica Dental El Mirador{% endblock %}</title>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #eff0eb; font-family: Arial, Helvetica, sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #eff0eb; padding: 24px 12px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; max-width: 600px; width: 100%;">
+            <tr>
+              <td style="padding: 28px 32px 12px; text-align: center;">
+                <img
+                  src="https://clinicadentalelmirador.cl/wp-content/uploads/2021/01/3-traansparente.png"
+                  alt="Clínica Dental El Mirador"
+                  height="52"
+                  style="height: 52px; width: auto;"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: {% block color_banner %}#113f60{% endblock %}; padding: 18px 32px; text-align: center;">
+                <p style="margin: 0; color: #ffffff; font-size: 19px; font-weight: bold; letter-spacing: 0.5px;">
+                  {% block banner_titulo %}{% endblock %}
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 32px;">
+                {% block contenido %}{% endblock %}
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: #113f60; padding: 24px 32px; text-align: center;">
+                <img
+                  src="https://clinicadentalelmirador.cl/wp-content/uploads/2021/01/logo_pie.png"
+                  alt="Clínica Dental El Mirador"
+                  height="44"
+                  style="height: 44px; width: auto; margin-bottom: 12px;"
+                />
+                <p style="margin: 0; color: #cfe0ee; font-size: 13px; line-height: 1.6;">
+                  El Mirador #459 (Sitio 17-E), Casablanca<br />
+                  +569 5604 3960 · clinicadentalelmirador2020@gmail.com
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

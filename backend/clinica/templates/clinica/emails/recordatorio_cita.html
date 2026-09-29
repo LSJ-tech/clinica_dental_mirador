@@ -1,0 +1,34 @@
+{% extends "clinica/emails/base_email.html" %}
+{% block titulo %}Confirma tu hora{% endblock %}
+{% block color_banner %}#113f60{% endblock %}
+{% block banner_titulo %}RECORDATORIO DE HORA{% endblock %}
+{% block contenido %}
+  <p style="margin: 0 0 16px; font-size: 16px; color: #000000;">Hola {{ paciente_nombre }},</p>
+  <p style="margin: 0 0 24px; font-size: 15px; color: #333333; line-height: 1.6;">
+    Te recordamos tu próxima hora en Clínica Dental El Mirador. Por favor confirma tu asistencia.
+  </p>
+
+  {% include "clinica/emails/_tabla_cita.html" %}
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center" style="padding: 4px 0 20px;">
+        <a
+          href="{{ link_confirmar }}"
+          style="display: inline-block; background-color: #0264ad; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 15px; padding: 14px 36px; border-radius: 999px;"
+        >
+          Confirmar mi hora
+        </a>
+      </td>
+    </tr>
+  </table>
+
+  <p style="margin: 0 0 20px; font-size: 12px; color: #7a7a7a; text-align: center; word-break: break-all;">
+    Si el botón no funciona, copia este link:<br />
+    <a href="{{ link_confirmar }}" style="color: #0264ad;">{{ link_confirmar }}</a>
+  </p>
+
+  <p style="margin: 0; font-size: 14px; color: #7a7a7a; line-height: 1.6;">
+    Si no puedes asistir, avísanos al +569 5604 3960 para dar tu hora a otro paciente.
+  </p>
+{% endblock %}

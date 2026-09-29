@@ -1,0 +1,17 @@
+{% extends "clinica/emails/base_email.html" %}
+{% block titulo %}Tu hora quedó confirmada{% endblock %}
+{% block color_banner %}#0264ad{% endblock %}
+{% block banner_titulo %}HORA CONFIRMADA{% endblock %}
+{% block contenido %}
+  <p style="margin: 0 0 16px; font-size: 16px; color: #000000;">Hola {{ paciente_nombre }},</p>
+  <p style="margin: 0 0 24px; font-size: 15px; color: #333333; line-height: 1.6;">
+    Tu hora en Clínica Dental El Mirador quedó confirmada. Antes de la fecha te enviaremos un
+    recordatorio para que la reconfirmes.
+  </p>
+
+  {% include "clinica/emails/_tabla_cita.html" %}
+
+  <p style="margin: 0; font-size: 14px; color: #7a7a7a; line-height: 1.6;">
+    Si necesitas reagendar o cancelar, contáctanos al +569 5604 3960.
+  </p>
+{% endblock %}

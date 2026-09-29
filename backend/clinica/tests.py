@@ -351,6 +351,20 @@ class DisponibilidadYReservaTest(APITestCase):
         paciente = Paciente.objects.get(rut="11111111-1")
         self.assertEqual(paciente.email, "ana@example.com")
 
+    def test_correo_de_confirmacion_incluye_version_html_con_los_datos_de_la_cita(self):
+        self.client.post("/api/reservas/", {
+            "nombre": "Ana Torres", "rut": "11.111.111-1", "telefono": "+56912345678",
+            "email": "ana@example.com",
+            "profesional": self.profesional.pk, "fecha": str(self.lunes), "hora": "10:00",
+        })
+        correo_paciente = next(c for c in mail.outbox if c.to == ["ana@example.com"])
+        self.assertEqual(len(correo_paciente.alternatives), 1)
+        html, tipo = correo_paciente.alternatives[0]
+        self.assertEqual(tipo, "text/html")
+        self.assertIn("HORA CONFIRMADA", html)
+        self.assertIn("Ana Torres", html)
+        self.assertIn(self.profesional.nombre, html)
+
 
 class ConfirmarCitaTest(APITestCase):
     def setUp(self):
@@ -424,6 +438,11 @@ class EnviarRecordatoriosCommandTest(TestCase):
         self.assertEqual(cita_manana.recordatorio_estado, "enviado")
         self.assertIsNotNone(cita_manana.recordatorio_enviado_at)
 
+        html, tipo = mail.outbox[0].alternatives[0]
+        self.assertEqual(tipo, "text/html")
+        self.assertIn("RECORDATORIO DE HORA", html)
+        self.assertIn("/confirmar-cita/", html)
+
     def test_no_reenvia_si_ya_fue_enviado(self):
         paciente = Paciente.objects.create(
             nombre="Con Email", rut="1-9", telefono="+56911111111", email="con@example.com"
@@ -455,7 +474,9 @@ class EnviarRecordatoriosCommandTest(TestCase):
             paciente=paciente, profesional=self.profesional,
             fecha=self.manana, hora="10:00", estado="pendiente",
         )
-        with patch("clinica.emails.send_mail", side_effect=Exception("smtp caído")):
+        with patch(
+            "django.core.mail.EmailMultiAlternatives.send", side_effect=Exception("smtp caído")
+        ):
             call_command("enviar_recordatorios")
         cita.refresh_from_db()
         self.assertEqual(cita.recordatorio_estado, "fallido")
