@@ -4,6 +4,8 @@
 
 **El sistema de gestión clínica que tu clínica necesita — ya construido, probado y listo para usar.**
 
+Este sistema no fue un encargo tuyo: lo construimos por iniciativa propia para que pudieras ver, en un caso real y funcionando (no una maqueta ni un PDF), cómo se vería una versión moderna de la gestión de tu clínica. Pruébalo sin compromiso — si te sirve, seguimos; si no, no pierdes nada por haberlo visto.
+
 > **Pruébala en vivo:** [clinicadentalelmirador.devquad.cl](https://clinicadentalelmirador.devquad.cl) — ya puedes navegar la página pública, ver el equipo y hacer una reserva de prueba. Para ver el portal del paciente o el panel de administración, coordinamos el acceso por un canal aparte.
 
 ## Resumen del proyecto
