@@ -27,17 +27,36 @@ def enviar_confirmacion_reserva(cita):
         return False
     cuerpo = (
         f"Hola {paciente.nombre},\n\n"
-        f"Tu hora en Clínica Dental El Mirador quedó registrada:\n\n"
+        f"Tu hora en Clínica Dental El Mirador quedó confirmada:\n\n"
         f"Fecha: {cita.fecha.strftime('%d-%m-%Y')}\n"
         f"Hora: {cita.hora.strftime('%H:%M')}\n"
         f"Profesional: {cita.profesional.nombre}\n\n"
-        f"Tu hora queda pendiente de confirmación por nuestro equipo. Antes de la fecha te "
-        f"enviaremos un recordatorio para reconfirmarla.\n\n"
+        f"Antes de la fecha te enviaremos un recordatorio para que la reconfirmes.\n\n"
         f"{_DIRECCION_CLINICA}\n"
         f"Si necesitas reagendar o cancelar, contáctanos al +569 5604 3960.\n\n"
         f"Clínica Dental El Mirador"
     )
-    return _enviar(paciente.email, "Tu hora quedó reservada - Clínica Dental El Mirador", cuerpo)
+    return _enviar(paciente.email, "Tu hora quedó confirmada - Clínica Dental El Mirador", cuerpo)
+
+
+def enviar_notificacion_nueva_reserva_a_clinica(cita):
+    paciente = cita.paciente
+    cuerpo = (
+        f"Nueva reserva desde la web pública:\n\n"
+        f"Paciente: {paciente.nombre}\n"
+        f"RUT: {paciente.rut}\n"
+        f"Teléfono: {paciente.telefono}\n"
+        f"Email: {paciente.email or '(no dejó email)'}\n\n"
+        f"Fecha: {cita.fecha.strftime('%d-%m-%Y')}\n"
+        f"Hora: {cita.hora.strftime('%H:%M')}\n"
+        f"Profesional: {cita.profesional.nombre}\n"
+        f"Motivo: {cita.motivo}\n"
+    )
+    return _enviar(
+        settings.CLINICA_EMAIL_NOTIFICACIONES,
+        f"Nueva reserva: {paciente.nombre} - {cita.fecha.strftime('%d-%m-%Y')} {cita.hora.strftime('%H:%M')}",
+        cuerpo,
+    )
 
 
 def enviar_recordatorio_cita(cita):

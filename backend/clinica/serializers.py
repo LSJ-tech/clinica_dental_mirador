@@ -168,13 +168,20 @@ class ReservaPublicaSerializer(serializers.Serializer):
         # eligen tratamientos específicos online, esos los agenda el staff
         # después de evaluar). Si el paciente no escribió nada en "motivo",
         # que quede explícito para quien vea la Agenda.
+        #
+        # estado="confirmada" (no "pendiente"): la hora queda bloqueada de
+        # inmediato para cualquier otro paciente que reserve ese mismo bloque
+        # (la disponibilidad y el chequeo de choque ya excluyen solo las
+        # citas "cancelada", así que dejarla "pendiente" no la protegía
+        # mejor -- pero sí comunicaba al paciente que faltaba un paso que en
+        # realidad no existe).
         return Cita.objects.create(
             paciente=paciente,
             profesional=validated_data["profesional"],
             fecha=validated_data["fecha"],
             hora=validated_data["hora"],
             motivo=validated_data.get("motivo") or "Evaluación / presupuesto inicial",
-            estado="pendiente",
+            estado="confirmada",
         )
 
 

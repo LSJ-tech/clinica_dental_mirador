@@ -70,7 +70,7 @@ describe("ReservarPage", () => {
     await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
     await user.click(screen.getByText("Confirmar hora de las 09:00"));
     await waitFor(() => expect(reservasApi.create).toHaveBeenCalled());
-    expect(await screen.findByText(/quedó registrada como/)).toBeInTheDocument();
+    expect(await screen.findByText(/quedó confirmada/)).toBeInTheDocument();
   });
 
   it("si el horario ya no esta disponible, muestra error y recarga los slots", async () => {

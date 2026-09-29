@@ -97,8 +97,7 @@ export default function ReservarPage() {
             <div className="cs-reserva-confirmacion">
               <p className="cs-text">
                 ¡Listo! Tu hora para el <strong>{confirmada.fecha}</strong> a las{" "}
-                <strong>{confirmada.hora?.slice(0, 5)}</strong> quedó registrada como{" "}
-                <strong>pendiente</strong>. La clínica te va a contactar para confirmarla.
+                <strong>{confirmada.hora?.slice(0, 5)}</strong> quedó confirmada.
               </p>
               {confirmada.cuenta_creada && (
                 <p className="cs-text">

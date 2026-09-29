@@ -262,7 +262,7 @@ class DisponibilidadYReservaTest(APITestCase):
         )
         self.assertEqual(respuesta.data["slots"], [])
 
-    def test_reserva_publica_crea_paciente_y_cita_pendiente(self):
+    def test_reserva_publica_crea_paciente_y_cita_confirmada(self):
         respuesta = self.client.post("/api/reservas/", {
             "nombre": "Ana Torres",
             "rut": "11.111.111-1",
@@ -273,7 +273,9 @@ class DisponibilidadYReservaTest(APITestCase):
             "motivo": "Limpieza",
         })
         self.assertEqual(respuesta.status_code, 201)
-        self.assertEqual(respuesta.data["estado"], "pendiente")
+        # Confirmada de inmediato (no "pendiente"): bloquea la hora para
+        # cualquier otro paciente apenas se crea.
+        self.assertEqual(respuesta.data["estado"], "confirmada")
         paciente = Paciente.objects.get(rut="11111111-1")
         self.assertEqual(paciente.telefono, "+56912345678")
         cita = Cita.objects.get(paciente=paciente)
@@ -313,25 +315,28 @@ class DisponibilidadYReservaTest(APITestCase):
         })
         self.assertEqual(respuesta.status_code, 400)
 
-    def test_reserva_publica_con_email_envia_confirmacion(self):
+    def test_reserva_publica_con_email_envia_confirmacion_y_notifica_a_la_clinica(self):
         respuesta = self.client.post("/api/reservas/", {
             "nombre": "Ana Torres", "rut": "11.111.111-1", "telefono": "+56912345678",
             "email": "ana@example.com",
             "profesional": self.profesional.pk, "fecha": str(self.lunes), "hora": "10:00",
         })
         self.assertEqual(respuesta.status_code, 201)
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].to, ["ana@example.com"])
+        self.assertEqual(len(mail.outbox), 2)
+        destinatarios = [correo.to[0] for correo in mail.outbox]
+        self.assertIn("ana@example.com", destinatarios)
+        self.assertIn("contacto@devquad.cl", destinatarios)
         paciente = Paciente.objects.get(rut="11111111-1")
         self.assertEqual(paciente.email, "ana@example.com")
 
-    def test_reserva_publica_sin_email_no_envia_nada(self):
+    def test_reserva_publica_sin_email_solo_notifica_a_la_clinica(self):
         respuesta = self.client.post("/api/reservas/", {
             "nombre": "Ana Torres", "rut": "11.111.111-1", "telefono": "+56912345678",
             "profesional": self.profesional.pk, "fecha": str(self.lunes), "hora": "10:00",
         })
         self.assertEqual(respuesta.status_code, 201)
-        self.assertEqual(len(mail.outbox), 0)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ["contacto@devquad.cl"])
 
 
 class ConfirmarCitaTest(APITestCase):

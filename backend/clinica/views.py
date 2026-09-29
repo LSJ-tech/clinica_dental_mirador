@@ -9,7 +9,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .emails import enviar_confirmacion_reserva
+from .emails import enviar_confirmacion_reserva, enviar_notificacion_nueva_reserva_a_clinica
 from .models import Cita, FichaClinica, HorarioProfesional, Pago, Paciente, Profesional, Tratamiento
 from .permissions import EsPacientePropioOStaff, EsSuperusuario, SoloStaffEscribe
 from .serializers import (
@@ -235,6 +235,7 @@ class ReservaPublicaView(APIView):
         serializer.is_valid(raise_exception=True)
         cita = serializer.save()
         enviar_confirmacion_reserva(cita)
+        enviar_notificacion_nueva_reserva_a_clinica(cita)
         return Response(
             {
                 "id": cita.id,

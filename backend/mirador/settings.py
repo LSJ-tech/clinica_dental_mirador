@@ -207,6 +207,12 @@ DEFAULT_FROM_EMAIL = os.environ.get(
     'DEFAULT_FROM_EMAIL', 'Clínica Dental El Mirador <contacto@devquad.cl>'
 )
 
+# A dónde llega el aviso de "nueva reserva" para el staff. Provisorio (etapa
+# de pruebas): un correo de DevQuad, NO el correo real de la clínica, para
+# que ninguna reserva de prueba le llegue a la clínica todavía. Cambiar a la
+# casilla real de la clínica cuando el sistema entre en producción de verdad.
+CLINICA_EMAIL_NOTIFICACIONES = os.environ.get('CLINICA_EMAIL_NOTIFICACIONES', 'contacto@devquad.cl')
+
 
 # Seguridad en producción (Render termina TLS en su proxy y reenvía por HTTP interno).
 
