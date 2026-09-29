@@ -23,7 +23,7 @@ A diferencia de un sistema de reservas aislado (como el que la clínica usa hoy)
 | Panel de administración propio de la clínica | No | Sí |
 | Registro de pagos y tratamientos | No | Sí |
 | Hosting dedicado (no compartido) | No | Sí |
-| Recordatorios automáticos por WhatsApp | No | Pendiente |
+| Notificaciones por WhatsApp (confirmación y recordatorio) | No | Pendiente |
 | Notificaciones por email (confirmación y recordatorio) | No | Pendiente |
 | Reportes de gestión | No | Pendiente |
 | Asistente virtual (respuestas rápidas) | No | Pendiente |
@@ -42,7 +42,7 @@ Hoy la reserva online de la clínica corre en Reservo, una herramienta externa q
 - Panel con indicadores básicos del día a día (citas de hoy, total de pacientes)
 - Soporte y ajustes durante la puesta en marcha
 
-**Pendiente, no incluido en el costo base (ver Costos):** recordatorios automáticos de hora por WhatsApp Business o por correo electrónico, reportes de gestión avanzados y un asistente virtual de respuestas rápidas.
+**Pendiente, no incluido en el costo base (ver Costos):** confirmación y recordatorio automático de hora por WhatsApp Business o por correo electrónico, reportes de gestión avanzados y un asistente virtual de respuestas rápidas.
 
 ## Costos
 
@@ -58,7 +58,7 @@ La mensualidad incluye:
 | Concepto | Incluye | Puesta en producción (pago único) | Mensualidad |
 | --- | --- | --- | --- |
 | Sistema de gestión (ya implementado) | Todo lo listado en Prestaciones incluidas | $351.000 CLP | $45.000 CLP/mes |
-| Adicional — Recordatorios por WhatsApp Business | Envío automático de recordatorios de hora por el WhatsApp que ya usa la clínica | $151.000 CLP | + $5.000 CLP/mes |
+| Adicional — Notificaciones por WhatsApp Business | Confirmación al reservar y recordatorio automático de hora por el WhatsApp que ya usa la clínica | $151.000 CLP | + $5.000 CLP/mes |
 | Adicional — Reportes avanzados de gestión | Indicadores de tratamientos más solicitados, ocupación de agenda y pacientes nuevos | $100.000 CLP | Sin costo adicional |
 | Adicional — Asistente virtual (respuestas rápidas) | Botón flotante en la página con respuestas rápidas a horarios, servicios, ubicación y reserva. Sin inteligencia artificial ni texto libre | $100.000 CLP | Sin costo adicional |
 | Adicional — Notificaciones por email | Correo de confirmación al reservar y recordatorio automático antes de la hora | $108.000 CLP | Sin costo adicional |
@@ -80,7 +80,7 @@ El costo de envío por WhatsApp Business (cobrado por Meta, aproximadamente CLP 
 
 | Adicional | Duración estimada | Entregable |
 | --- | --- | --- |
-| Recordatorios automáticos por WhatsApp | 1 – 2 semanas | Plantillas aprobadas por Meta y envío automático funcionando |
+| Notificaciones por WhatsApp | 1 – 2 semanas | Plantillas de confirmación y recordatorio aprobadas por Meta, envío automático funcionando |
 | Reportes avanzados de gestión | 1 semana | Panel de indicadores ampliado |
 | Asistente virtual (respuestas rápidas) | 3 – 5 días | Botón flotante funcionando en la página pública |
 | Notificaciones por email | 2 – 4 días | Correo de confirmación automático al reservar y recordatorio programado antes de la hora, funcionando |
