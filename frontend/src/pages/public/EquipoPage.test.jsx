@@ -18,9 +18,12 @@ describe("EquipoPage", () => {
     expect(screen.getAllByText("Dentista")).toHaveLength(3);
   });
 
-  it("muestra iniciales cuando no hay foto", () => {
+  it("muestra la foto real de cada integrante (sin iniciales de respaldo)", () => {
     renderPage();
-    expect(screen.getByText("MJ")).toBeInTheDocument();
+    const lorca = screen.getByAltText("Dra. María José Lorca");
+    expect(lorca.tagName).toBe("IMG");
+    const pamela = screen.getByAltText("Pamela González Ríos");
+    expect(pamela.tagName).toBe("IMG");
   });
 
   it("no muestra lista de credenciales cuando esta vacia", () => {

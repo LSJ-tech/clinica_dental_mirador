@@ -39,7 +39,7 @@ const EQUIPO = [
   {
     nombre: "Dra. María José Lorca",
     cargo: "Dentista",
-    foto: null,
+    foto: "https://clinicadentalelmirador.cl/wp-content/uploads/2024/04/Beige-blue-motion-blur-flowers-instagram-Post-3-1024x1024.png",
     credenciales: [
       "Especialista en Endodoncia, Universidad Andrés Bello",
       "Cirujano Dentista, Universidad de Valparaíso",
@@ -68,7 +68,7 @@ const EQUIPO = [
   {
     nombre: "Pamela González Ríos",
     cargo: "Secretaria",
-    foto: null,
+    foto: "https://clinicadentalelmirador.cl/wp-content/uploads/2023/09/Beige-blue-motion-blur-flowers-instagram-Post-1024x1024.png",
     credenciales: [],
   },
 ];
