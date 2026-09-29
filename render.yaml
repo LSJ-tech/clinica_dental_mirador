@@ -38,13 +38,22 @@ services:
           property: connectionString
       - key: FRONTEND_URL
         value: https://clinicadentalelmirador.devquad.cl
+      - key: EMAIL_HOST
+        value: smtp.resend.com
+      - key: EMAIL_PORT
+        value: "587"
+      - key: EMAIL_HOST_USER
+        value: resend
+      - key: EMAIL_USE_TLS
+        value: "True"
       # Configurar a mano en el dashboard antes de aceptar pacientes reales:
       # DJANGO_SUPERUSER_USERNAME/PASSWORD/EMAIL (crea el primer staff)
       # WHATSAPP_CLOUD_API_TOKEN, WHATSAPP_PHONE_NUMBER_ID (milestone WhatsApp)
-      # EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD,
-      # EMAIL_USE_TLS, DEFAULT_FROM_EMAIL (proveedor de correo real -- ej.
-      # Resend, SendGrid, o SMTP de Gmail; sin esto, los correos de
-      # confirmación/recordatorio solo se imprimen en los logs)
+      # EMAIL_HOST_PASSWORD -- la API key de Resend (cuenta de sending_access,
+      # ver backend/.env local para el valor; nunca va commiteada ni en este
+      # archivo). DEFAULT_FROM_EMAIL usa por ahora contacto@devquad.cl (ver
+      # DEFAULT_FROM_EMAIL en settings.py) hasta que la clínica tenga su
+      # propio envío configurado -- devquad.cl ya está verificado en Resend.
 
   # Recordatorio/reconfirmación de cita: corre una vez al día y manda el
   # correo a las citas de mañana (ver clinica/management/commands/
@@ -79,8 +88,16 @@ services:
           property: connectionString
       - key: FRONTEND_URL
         value: https://clinicadentalelmirador.devquad.cl
-      # Mismas variables EMAIL_* que el servicio web -- deben configurarse
-      # igual acá para que el cron pueda mandar los correos.
+      - key: EMAIL_HOST
+        value: smtp.resend.com
+      - key: EMAIL_PORT
+        value: "587"
+      - key: EMAIL_HOST_USER
+        value: resend
+      - key: EMAIL_USE_TLS
+        value: "True"
+      # EMAIL_HOST_PASSWORD (la misma API key de Resend que el servicio web)
+      # se configura a mano acá también en el dashboard.
 
   - type: web
     name: clinica-mirador-frontend
