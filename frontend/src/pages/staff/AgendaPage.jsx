@@ -19,12 +19,21 @@ export default function AgendaPage() {
   const [error, setError] = useState("");
 
   function cargarCitas() {
-    citasApi.list({ fecha }).then((r) => setCitas(r.data));
+    citasApi
+      .list({ fecha })
+      .then((r) => setCitas(r.data))
+      .catch(() => setError("No se pudieron cargar las citas."));
   }
 
   useEffect(() => {
-    pacientesApi.list().then((r) => setPacientes(r.data));
-    profesionalesApi.list().then((r) => setProfesionales(r.data));
+    pacientesApi
+      .list()
+      .then((r) => setPacientes(r.data))
+      .catch(() => setError("No se pudieron cargar los pacientes."));
+    profesionalesApi
+      .list()
+      .then((r) => setProfesionales(r.data))
+      .catch(() => setError("No se pudieron cargar los profesionales."));
   }, []);
 
   useEffect(cargarCitas, [fecha]);

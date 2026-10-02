@@ -27,7 +27,7 @@ export default function LoginPage() {
       modo === "paciente" ? normalizarRutParaLogin(identificador) : identificador;
     try {
       const me = await login(usuario, password);
-      navigate(me.is_staff ? "/staff" : "/citas");
+      void navigate(me.is_staff ? "/staff" : "/citas");
     } catch {
       setError(
         modo === "paciente"

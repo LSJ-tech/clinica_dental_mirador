@@ -13,7 +13,10 @@ export default function PacientesListPage() {
   const navigate = useNavigate();
 
   function buscar(query) {
-    pacientesApi.list(query ? { q: query } : undefined).then((r) => setPacientes(r.data));
+    pacientesApi
+      .list(query ? { q: query } : undefined)
+      .then((r) => setPacientes(r.data))
+      .catch(() => setError("No se pudieron cargar los pacientes."));
   }
 
   useEffect(() => buscar(""), []);

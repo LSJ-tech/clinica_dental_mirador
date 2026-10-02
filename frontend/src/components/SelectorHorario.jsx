@@ -8,17 +8,22 @@ import CampoHora from "./CampoHora";
 // al guardar si choca con otra cita o cae fuera de su horario.
 export default function SelectorHorario({ profesional, fecha, value, onChange }) {
   const [slots, setSlots] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     setSlots(null);
     if (!profesional || !fecha) return;
-    disponibilidadApi.get({ profesional, fecha }).then((r) => setSlots(r.data.slots));
+    disponibilidadApi
+      .get({ profesional, fecha })
+      .then((r) => setSlots(r.data.slots))
+      .catch(() => setError("No se pudo cargar la disponibilidad."));
   }, [profesional, fecha]);
 
   return (
     <div className="selector-horario">
       {profesional && fecha && (
         <div>
+          {error && <p role="alert">{error}</p>}
           <span className="selector-horario-label">Horario disponible ese día</span>
           {slots === null && <p className="selector-horario-cargando">Cargando disponibilidad...</p>}
           {slots?.length === 0 && (

@@ -21,7 +21,10 @@ export default function ProfesionalesPage() {
   const [error, setError] = useState("");
 
   function cargar() {
-    profesionalesApi.list().then((r) => setProfesionales(r.data));
+    profesionalesApi
+      .list()
+      .then((r) => setProfesionales(r.data))
+      .catch(() => setError("No se pudieron cargar los profesionales."));
   }
 
   useEffect(cargar, []);
@@ -147,9 +150,13 @@ export default function ProfesionalesPage() {
 
 function EditorHorario({ profesionalId }) {
   const [horarios, setHorarios] = useState(null);
+  const [error, setError] = useState("");
 
   function cargar() {
-    horariosProfesionalApi.list({ profesional: profesionalId }).then((r) => setHorarios(r.data));
+    horariosProfesionalApi
+      .list({ profesional: profesionalId })
+      .then((r) => setHorarios(r.data))
+      .catch(() => setError("No se pudo cargar el horario."));
   }
 
   useEffect(cargar, [profesionalId]);
@@ -178,6 +185,7 @@ function EditorHorario({ profesionalId }) {
     cargar();
   }
 
+  if (error) return <p role="alert">{error}</p>;
   if (!horarios) return <p>Cargando horario...</p>;
 
   return (

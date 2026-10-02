@@ -26,7 +26,10 @@ export default function ReservarPage() {
   const [enviando, setEnviando] = useState(false);
 
   useEffect(() => {
-    profesionalesApi.list().then((r) => setProfesionales(r.data));
+    profesionalesApi
+      .list()
+      .then((r) => setProfesionales(r.data))
+      .catch(() => setError("No se pudieron cargar los profesionales."));
   }, []);
 
   useEffect(() => {
@@ -65,7 +68,10 @@ export default function ReservarPage() {
         // motivo real del rechazo.
         setError("Ese horario ya no está disponible. Elige otro por favor.");
         setHoraElegida(null);
-        disponibilidadApi.get({ profesional, fecha }).then((r) => setSlots(r.data.slots));
+        disponibilidadApi
+          .get({ profesional, fecha })
+          .then((r) => setSlots(r.data.slots))
+          .catch(() => setError("No se pudo actualizar la disponibilidad."));
       } else if (err.response?.status === 400 && err.response.data) {
         const mensaje = Object.values(err.response.data).flat().join(" ");
         setError(mensaje || "No se pudo completar la reserva. Intenta nuevamente.");

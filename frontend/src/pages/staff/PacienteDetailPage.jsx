@@ -24,9 +24,13 @@ export default function PacienteDetailPage() {
   const [paciente, setPaciente] = useState(null);
   const [tab, setTab] = useState("Ficha");
   const [passwordTemporal, setPasswordTemporal] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    pacientesApi.get(id).then((r) => setPaciente(r.data));
+    pacientesApi
+      .get(id)
+      .then((r) => setPaciente(r.data))
+      .catch(() => setError("No se pudo cargar el paciente."));
   }, [id]);
 
   async function guardarPaciente(e) {
@@ -63,6 +67,7 @@ export default function PacienteDetailPage() {
   return (
     <div>
       <h1>{paciente.nombre}</h1>
+      {error && <p role="alert">{error}</p>}
       <section className="panel-card">
         <form onSubmit={guardarPaciente}>
           <label>
@@ -146,9 +151,13 @@ export default function PacienteDetailPage() {
 
 function TabFicha({ pacienteId }) {
   const [ficha, setFicha] = useState(null);
+  const [error, setError] = useState("");
 
   function cargar() {
-    fichasClinicasApi.list({ paciente: pacienteId }).then((r) => setFicha(r.data[0] ?? null));
+    fichasClinicasApi
+      .list({ paciente: pacienteId })
+      .then((r) => setFicha(r.data[0] ?? null))
+      .catch(() => setError("No se pudo cargar la ficha clínica."));
   }
 
   useEffect(cargar, [pacienteId]);
@@ -162,6 +171,7 @@ function TabFicha({ pacienteId }) {
     setFicha(respuesta.data);
   }
 
+  if (error) return <p role="alert">{error}</p>;
   if (!ficha) return <p>Cargando...</p>;
 
   return (
@@ -189,19 +199,26 @@ function TabTratamientos({ pacienteId }) {
   const [fichaId, setFichaId] = useState(null);
   const [tratamientos, setTratamientos] = useState([]);
   const [form, setForm] = useState({ tipo: "", costo: "", estado: "presupuestado" });
+  const [error, setError] = useState("");
 
   function cargar(ficha) {
-    tratamientosApi.list({ ficha_clinica: ficha }).then((r) => setTratamientos(r.data));
+    tratamientosApi
+      .list({ ficha_clinica: ficha })
+      .then((r) => setTratamientos(r.data))
+      .catch(() => setError("No se pudieron cargar los tratamientos."));
   }
 
   useEffect(() => {
-    fichasClinicasApi.list({ paciente: pacienteId }).then((r) => {
-      const ficha = r.data[0];
-      if (ficha) {
-        setFichaId(ficha.id);
-        cargar(ficha.id);
-      }
-    });
+    fichasClinicasApi
+      .list({ paciente: pacienteId })
+      .then((r) => {
+        const ficha = r.data[0];
+        if (ficha) {
+          setFichaId(ficha.id);
+          cargar(ficha.id);
+        }
+      })
+      .catch(() => setError("No se pudo cargar la ficha clínica."));
   }, [pacienteId]);
 
   async function crear(e) {
@@ -213,6 +230,7 @@ function TabTratamientos({ pacienteId }) {
 
   return (
     <div>
+      {error && <p role="alert">{error}</p>}
       <TablaTratamientos tratamientos={tratamientos} />
       <form onSubmit={crear}>
         <label>
@@ -253,9 +271,13 @@ function TabTratamientos({ pacienteId }) {
 function TabPagos({ pacienteId }) {
   const [pagos, setPagos] = useState([]);
   const [form, setForm] = useState({ monto: "", fecha: "", medio_pago: "efectivo", estado: "pagado" });
+  const [error, setError] = useState("");
 
   function cargar() {
-    pagosApi.list({ paciente: pacienteId }).then((r) => setPagos(r.data));
+    pagosApi
+      .list({ paciente: pacienteId })
+      .then((r) => setPagos(r.data))
+      .catch(() => setError("No se pudieron cargar los pagos."));
   }
 
   useEffect(cargar, [pacienteId]);
@@ -269,6 +291,7 @@ function TabPagos({ pacienteId }) {
 
   return (
     <div>
+      {error && <p role="alert">{error}</p>}
       <TablaPagos pagos={pagos} />
       <form onSubmit={crear}>
         <label>
@@ -311,13 +334,20 @@ function TabCitas({ pacienteId }) {
   const [citas, setCitas] = useState([]);
   const [profesionales, setProfesionales] = useState([]);
   const [form, setForm] = useState({ profesional: "", fecha: "", hora: "", box: "" });
+  const [error, setError] = useState("");
 
   function cargar() {
-    citasApi.list({ paciente: pacienteId }).then((r) => setCitas(r.data));
+    citasApi
+      .list({ paciente: pacienteId })
+      .then((r) => setCitas(r.data))
+      .catch(() => setError("No se pudieron cargar las citas."));
   }
 
   useEffect(() => {
-    profesionalesApi.list().then((r) => setProfesionales(r.data));
+    profesionalesApi
+      .list()
+      .then((r) => setProfesionales(r.data))
+      .catch(() => setError("No se pudieron cargar los profesionales."));
     cargar();
   }, [pacienteId]);
 
@@ -335,6 +365,7 @@ function TabCitas({ pacienteId }) {
 
   return (
     <div>
+      {error && <p role="alert">{error}</p>}
       <table>
         <thead>
           <tr>
