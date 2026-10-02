@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import EquipoPage, { iniciales } from "./EquipoPage";
+import EquipoPage, { EQUIPO, iniciales } from "./EquipoPage";
 
 function renderPage() {
   return render(
@@ -35,5 +35,13 @@ describe("EquipoPage", () => {
   it("calcula iniciales para nombres con y sin tratamiento", () => {
     expect(iniciales("Dra. Ana Soto")).toBe("AS");
     expect(iniciales("Luis Pérez")).toBe("LP");
+  });
+
+  it("muestra iniciales cuando falta la foto de una persona", () => {
+    const fotoOriginal = EQUIPO[0].foto;
+    EQUIPO[0].foto = "";
+    renderPage();
+    expect(screen.getByText("MJ")).toBeInTheDocument();
+    EQUIPO[0].foto = fotoOriginal;
   });
 });

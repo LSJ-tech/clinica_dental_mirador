@@ -67,6 +67,17 @@ describe("ReservarPage", () => {
     expect(screen.getByText("09:30")).toBeInTheDocument();
   });
 
+  it("actualiza la disponibilidad al cambiar la fecha", async () => {
+    const user = userEvent.setup();
+    disponibilidadApi.get.mockResolvedValue({ data: { slots: ["09:00"] } });
+    renderPage();
+    await screen.findByText("Dra. Soto — General");
+    await user.selectOptions(screen.getByLabelText("Profesional"), "1");
+    await user.clear(screen.getByLabelText("Fecha"));
+    await user.type(screen.getByLabelText("Fecha"), "2026-10-03");
+    await waitFor(() => expect(disponibilidadApi.get).toHaveBeenCalledTimes(2));
+  });
+
   it("muestra un mensaje si no hay horas disponibles", async () => {
     const user = userEvent.setup();
     disponibilidadApi.get.mockResolvedValue({ data: { slots: [] } });
@@ -88,6 +99,10 @@ describe("ReservarPage", () => {
     await user.type(screen.getByLabelText("RUT"), "1-9");
     await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
     await user.type(screen.getByLabelText("Email"), "ana@example.com");
+    await user.type(
+      screen.getByPlaceholderText("Ej: me duele una muela, quiero un chequeo general..."),
+      "dolor"
+    );
     await user.click(screen.getByText("Confirmar hora de las 09:00"));
     await waitFor(() => expect(reservasApi.create).toHaveBeenCalled());
     expect(await screen.findByText(/quedó confirmada/)).toBeInTheDocument();
@@ -165,6 +180,22 @@ describe("ReservarPage", () => {
     expect(alerta).not.toHaveTextContent("horario ya no está disponible");
     // No debe haber perdido la hora elegida (el form sigue mostrando el boton de confirmar).
     expect(screen.getByText(/Confirmar hora/)).toBeInTheDocument();
+  });
+
+  it("muestra un mensaje genérico si el 400 no trae detalle", async () => {
+    const user = userEvent.setup();
+    disponibilidadApi.get.mockResolvedValue({ data: { slots: ["09:00"] } });
+    reservasApi.create.mockRejectedValue({ response: { status: 400, data: {} } });
+    renderPage();
+    await completarHastaElegirHora(user);
+    await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
+    await user.type(screen.getByLabelText("RUT"), "1-9");
+    await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.type(screen.getByLabelText("Email"), "ana@example.com");
+    await user.click(screen.getByText(/Confirmar hora/));
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No se pudo completar la reserva. Intenta nuevamente."
+    );
   });
 
   it("muestra un error generico si la reserva falla por otro motivo", async () => {

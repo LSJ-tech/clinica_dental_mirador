@@ -4,7 +4,7 @@ import "./landing.css";
 
 const BASE = "https://clinicadentalelmirador.cl/wp-content/uploads/2023/09";
 
-const EQUIPO = [
+export const EQUIPO = [
   {
     nombre: "Ing. Moisés Jáuregui Sevich",
     cargo: "Director",

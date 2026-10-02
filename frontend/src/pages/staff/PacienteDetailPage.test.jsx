@@ -106,6 +106,41 @@ describe("PacienteDetailPage", () => {
     );
   });
 
+  it("permite editar campos secundarios en las pestañas", async () => {
+    const user = userEvent.setup();
+    pacientesApi.update.mockResolvedValue({ data: { ...datosBase } });
+    fichasClinicasApi.update.mockResolvedValue({
+      data: { id: 5, historial: "hist", notas_clinicas: "nueva nota" },
+    });
+    pagosApi.create.mockResolvedValue({});
+    citasApi.list.mockResolvedValue({
+      data: [{ id: 1, fecha: "2026-01-05", hora: "10:00", profesional_nombre: "Dra. Soto", estado: "pendiente" }],
+    });
+    citasApi.update.mockResolvedValue({});
+    render(<PacienteDetailPage />);
+    await screen.findByRole("heading", { name: "Ana Torres" });
+
+    await user.clear(screen.getByLabelText("Teléfono"));
+    await user.type(screen.getByLabelText("Teléfono"), "+56922222222");
+    await user.clear(screen.getByLabelText("Fecha de nacimiento"));
+    await user.type(screen.getByLabelText("Fecha de nacimiento"), "2001-02-02");
+
+    await user.click(screen.getByRole("button", { name: "Ficha" }));
+    await screen.findByDisplayValue("hist");
+    await user.clear(screen.getByLabelText("Notas clínicas"));
+    await user.type(screen.getByLabelText("Notas clínicas"), "nueva nota");
+
+    await user.click(screen.getByRole("button", { name: "Pagos" }));
+    await screen.findByRole("button", { name: "Registrar pago" });
+    await user.selectOptions(screen.getByLabelText("Medio de pago"), "transferencia");
+
+    await user.click(screen.getByRole("button", { name: "Citas" }));
+    const tabla = await screen.findByRole("table");
+    await user.click(within(tabla).getByText("Completar"));
+    await user.click(within(tabla).getByText("Cancelar"));
+    expect(citasApi.update).toHaveBeenCalledWith(1, { estado: "cancelada" });
+  });
+
   it("tab Ficha: muestra historial/notas y permite guardarlos", async () => {
     const user = userEvent.setup();
     fichasClinicasApi.update.mockResolvedValue({
@@ -145,6 +180,7 @@ describe("PacienteDetailPage", () => {
     expect(within(tabla).getByText("Limpieza")).toBeInTheDocument();
     await user.type(screen.getByLabelText("Tipo"), "Endodoncia");
     await user.type(screen.getByLabelText("Costo"), "50000");
+    await user.selectOptions(screen.getByLabelText("Estado"), "en_curso");
     await user.click(screen.getByText("Agregar tratamiento"));
     await waitFor(() => expect(tratamientosApi.create).toHaveBeenCalled());
   });
@@ -214,6 +250,7 @@ describe("PacienteDetailPage", () => {
     await user.type(screen.getByLabelText("Fecha"), "2026-02-01");
     await user.click(await screen.findByText("11:00"));
     expect(screen.getByLabelText("Hora")).toHaveValue("11:00");
+    await user.type(screen.getByLabelText("Box"), "2");
     await user.click(screen.getByText("Agendar"));
     await waitFor(() => expect(citasApi.create).toHaveBeenCalled());
   });
@@ -283,6 +320,8 @@ describe("PacienteDetailPage", () => {
     expect(confirmSpy).toHaveBeenCalled();
     await waitFor(() => expect(pacientesApi.resetearPassword).toHaveBeenCalledWith("1"));
     expect(await screen.findByText("aB3dE7fG9h")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Cerrar" }));
+    expect(screen.queryByText("aB3dE7fG9h")).not.toBeInTheDocument();
     confirmSpy.mockRestore();
   });
 

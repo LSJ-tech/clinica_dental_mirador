@@ -39,6 +39,14 @@ describe("LoginPage", () => {
     expect(screen.queryByPlaceholderText("11.111.111-1")).not.toBeInTheDocument();
   });
 
+  it("permite volver al modo paciente desde Staff", async () => {
+    const user = userEvent.setup();
+    renderPage();
+    await user.click(screen.getByRole("button", { name: "Staff" }));
+    await user.click(screen.getByRole("button", { name: "Soy paciente" }));
+    expect(screen.getByLabelText("RUT")).toBeInTheDocument();
+  });
+
   it("cambiar de tab limpia lo escrito y el error previo", async () => {
     const user = userEvent.setup();
     mockLogin.mockRejectedValueOnce(new Error("mal"));

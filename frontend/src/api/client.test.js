@@ -36,6 +36,12 @@ describe("client (axios interceptors)", () => {
     expect(resultado.headers.Authorization).toBe("Bearer abc123");
   });
 
+  it("devuelve respuestas exitosas sin modificarlas", async () => {
+    await import("./client.js");
+    const respuesta = { data: { ok: true } };
+    expect(interceptors.response[0].onSuccess(respuesta)).toBe(respuesta);
+  });
+
   it("no agrega header Authorization si no hay token", async () => {
     await import("./client.js");
     const config = { headers: {} };

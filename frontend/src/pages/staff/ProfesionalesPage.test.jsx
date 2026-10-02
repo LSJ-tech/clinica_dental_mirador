@@ -37,10 +37,11 @@ describe("ProfesionalesPage", () => {
     await screen.findByText("Dra. Soto");
     await user.type(screen.getByLabelText("Nombre"), "Dr. Diaz");
     await user.type(screen.getByLabelText("Especialidad"), "Ortodoncia");
+    await user.type(screen.getByLabelText("Box asignado"), "2");
     await user.click(screen.getByText("Guardar"));
     await waitFor(() =>
       expect(profesionalesApi.create).toHaveBeenCalledWith({
-        nombre: "Dr. Diaz", especialidad: "Ortodoncia", box_asignado: "",
+        nombre: "Dr. Diaz", especialidad: "Ortodoncia", box_asignado: "2",
       })
     );
   });
@@ -80,12 +81,21 @@ describe("ProfesionalesPage", () => {
     render(<ProfesionalesPage />);
     await screen.findByText("Dra. Soto");
     await user.click(screen.getByText("Horario"));
+    await user.click(screen.getByText("Ocultar horario"));
+    await user.click(screen.getByText("Horario"));
     const desde = await screen.findByDisplayValue("09:00");
     await user.clear(desde);
     await user.type(desde, "10:00");
     await user.tab();
     await waitFor(() => expect(horariosProfesionalApi.update).toHaveBeenCalledWith(10, {
       hora_inicio: "10:00",
+    }));
+    const hasta = screen.getByDisplayValue("18:00");
+    await user.clear(hasta);
+    await user.type(hasta, "19:00");
+    await user.tab();
+    await waitFor(() => expect(horariosProfesionalApi.update).toHaveBeenCalledWith(10, {
+      hora_fin: "19:00",
     }));
   });
 

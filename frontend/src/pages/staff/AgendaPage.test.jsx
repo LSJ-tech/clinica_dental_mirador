@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import AgendaPage from "./AgendaPage";
 import { citasApi, disponibilidadApi, pacientesApi, profesionalesApi } from "../../api/resources";
@@ -23,6 +23,12 @@ describe("AgendaPage", () => {
   it("carga citas del dia actual al montar", async () => {
     render(<AgendaPage />);
     await waitFor(() => expect(citasApi.list).toHaveBeenCalled());
+  });
+
+  it("recarga citas al cambiar la fecha", async () => {
+    render(<AgendaPage />);
+    fireEvent.change(screen.getByLabelText("Fecha"), { target: { value: "2026-10-03" } });
+    await waitFor(() => expect(citasApi.list).toHaveBeenCalledWith({ fecha: "2026-10-03" }));
   });
 
   it("muestra la lista de citas del dia en la tabla", async () => {
@@ -49,6 +55,8 @@ describe("AgendaPage", () => {
     await user.selectOptions(screen.getByLabelText("Paciente"), "1");
     await user.selectOptions(screen.getByLabelText("Profesional"), "1");
     await user.type(screen.getByLabelText("Hora"), "10:00");
+    await user.clear(screen.getByLabelText("Box"));
+    await user.type(screen.getByLabelText("Box"), "2");
     await user.click(screen.getByText("Agendar"));
     await waitFor(() => expect(citasApi.create).toHaveBeenCalled());
   });

@@ -218,8 +218,7 @@ function TabTratamientos({ pacienteId }) {
           setFichaId(ficha.id);
           cargar(ficha.id);
         }
-      })
-      .catch(() => setError("No se pudo cargar la ficha clínica."));
+      }, () => setError("No se pudo cargar la ficha clínica."));
   }, [pacienteId]);
 
   async function crear(e) {

@@ -31,6 +31,16 @@ class NormalizarTelefonoTest(TestCase):
 
 
 class EnvioCorreoTest(TestCase):
+    def test_confirmacion_no_envia_si_paciente_no_tiene_email(self):
+        paciente = Paciente.objects.create(nombre="Ana", rut="1-9", telefono="+56911111111")
+        profesional = Profesional.objects.create(nombre="Dra. Soto", especialidad="General")
+        cita = Cita.objects.create(
+            paciente=paciente, profesional=profesional,
+            fecha=date.today(), hora="10:00", estado="confirmada",
+        )
+
+        self.assertFalse(enviar_confirmacion_reserva(cita))
+
     @patch("clinica.emails.render_to_string", side_effect=RuntimeError("fallo de template"))
     def test_reserva_no_falla_si_el_correo_no_se_puede_renderizar(self, _render_to_string):
         paciente = Paciente.objects.create(
