@@ -10,13 +10,15 @@ export default function PacientesListPage() {
   const [mostrarForm, setMostrarForm] = useState(false);
   const [form, setForm] = useState(VACIO);
   const [error, setError] = useState("");
+  const [listError, setListError] = useState("");
   const navigate = useNavigate();
 
   function buscar(query) {
+    setListError("");
     pacientesApi
       .list(query ? { q: query } : undefined)
       .then((r) => setPacientes(r.data))
-      .catch(() => setError("No se pudieron cargar los pacientes."));
+      .catch(() => setListError("No se pudieron cargar los pacientes."));
   }
 
   useEffect(() => buscar(""), []);
@@ -49,6 +51,7 @@ export default function PacientesListPage() {
         />
         <button type="submit">Buscar</button>
       </form>
+      {listError && <p role="alert">{listError}</p>}
 
       <table>
         <thead>

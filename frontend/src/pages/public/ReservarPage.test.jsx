@@ -38,6 +38,25 @@ describe("ReservarPage", () => {
     expect(await screen.findByText("Dra. Soto — General")).toBeInTheDocument();
   });
 
+  it("muestra un error si falla la carga de profesionales", async () => {
+    profesionalesApi.list.mockRejectedValue(new Error("network"));
+    renderPage();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No se pudieron cargar los profesionales."
+    );
+  });
+
+  it("muestra un error si falla la carga de disponibilidad", async () => {
+    const user = userEvent.setup();
+    disponibilidadApi.get.mockRejectedValue(new Error("network"));
+    renderPage();
+    await screen.findByText("Dra. Soto — General");
+    await user.selectOptions(screen.getByLabelText("Profesional"), "1");
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No se pudo cargar la disponibilidad."
+    );
+  });
+
   it("muestra los horarios disponibles al elegir profesional", async () => {
     const user = userEvent.setup();
     disponibilidadApi.get.mockResolvedValue({ data: { slots: ["09:00", "09:30"] } });
@@ -101,6 +120,27 @@ describe("ReservarPage", () => {
     await user.click(screen.getByText(/Confirmar hora/));
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Ese horario ya no está disponible. Elige otro por favor."
+    );
+    await waitFor(() => expect(disponibilidadApi.get).toHaveBeenCalledTimes(2));
+  });
+
+  it("muestra error si falla la recarga después de un choque", async () => {
+    const user = userEvent.setup();
+    disponibilidadApi.get
+      .mockResolvedValueOnce({ data: { slots: ["09:00"] } })
+      .mockRejectedValueOnce(new Error("network"));
+    reservasApi.create.mockRejectedValue({
+      response: { status: 400, data: { horario: "ocupado" } },
+    });
+    renderPage();
+    await completarHastaElegirHora(user);
+    await user.type(screen.getByLabelText("Nombre completo"), "Ana Torres");
+    await user.type(screen.getByLabelText("RUT"), "1-9");
+    await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.type(screen.getByLabelText("Email"), "ana@example.com");
+    await user.click(screen.getByText(/Confirmar hora/));
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No se pudo actualizar la disponibilidad."
     );
   });
 

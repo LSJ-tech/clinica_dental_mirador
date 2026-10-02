@@ -19,4 +19,11 @@ describe("DashboardPage", () => {
     expect(screen.getByText("Citas hoy")).toBeInTheDocument();
     expect(screen.getByText("Pacientes totales")).toBeInTheDocument();
   });
+
+  it("muestra un error si falla la carga del panel", async () => {
+    citasApi.list.mockRejectedValue(new Error("citas"));
+    pacientesApi.list.mockRejectedValue(new Error("pacientes"));
+    render(<DashboardPage />);
+    expect(await screen.findByRole("alert")).toBeInTheDocument();
+  });
 });

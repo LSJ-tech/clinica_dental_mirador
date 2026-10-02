@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import EquipoPage from "./EquipoPage";
+import EquipoPage, { iniciales } from "./EquipoPage";
 
 function renderPage() {
   return render(
@@ -30,5 +30,10 @@ describe("EquipoPage", () => {
     renderPage();
     const pamela = screen.getByText("Pamela González Ríos");
     expect(pamela.closest("li").querySelector(".cs-team-credenciales")).toBeNull();
+  });
+
+  it("calcula iniciales para nombres con y sin tratamiento", () => {
+    expect(iniciales("Dra. Ana Soto")).toBe("AS");
+    expect(iniciales("Luis Pérez")).toBe("LP");
   });
 });

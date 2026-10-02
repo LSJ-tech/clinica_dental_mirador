@@ -62,6 +62,7 @@ export default function PacienteDetailPage() {
     void navigate("/staff/pacientes");
   }
 
+  if (error && !paciente) return <p role="alert">{error}</p>;
   if (!paciente) return <p>Cargando...</p>;
 
   return (

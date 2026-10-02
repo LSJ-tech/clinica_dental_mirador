@@ -43,11 +43,27 @@ describe("ConfirmarCitaPage", () => {
     );
   });
 
+  it("muestra un mensaje genérico si falla sin detalle", async () => {
+    confirmarCitaApi.get.mockRejectedValue(new Error("network"));
+    renderConToken("abc:def:ghi");
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No se pudo confirmar la hora."
+    );
+  });
+
   it("muestra el estado correspondiente cuando la cita ya estaba cancelada", async () => {
     confirmarCitaApi.get.mockResolvedValue({
       data: { estado: "cancelada", fecha: "2026-02-01", hora: "10:00:00", profesional_nombre: "Dra. Soto" },
     });
     renderConToken("abc:def:ghi");
     expect(await screen.findByText("Esta hora ya fue cancelada.")).toBeInTheDocument();
+  });
+
+  it("usa el texto genérico para un estado desconocido", async () => {
+    confirmarCitaApi.get.mockResolvedValue({
+      data: { estado: "desconocido", fecha: "2026-02-01", hora: "10:00:00", profesional_nombre: "Dra. Soto" },
+    });
+    renderConToken("abc:def:ghi");
+    expect(await screen.findByText("Tu hora fue actualizada.")).toBeInTheDocument();
   });
 });

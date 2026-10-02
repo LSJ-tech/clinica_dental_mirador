@@ -35,6 +35,14 @@ describe("SelectorHorario", () => {
     ).toBeInTheDocument();
   });
 
+  it("muestra un error si falla la consulta de disponibilidad", async () => {
+    disponibilidadApi.get.mockRejectedValue(new Error("network"));
+    render(<SelectorHorario profesional="1" fecha="2026-02-01" value="" onChange={vi.fn()} />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No se pudo cargar la disponibilidad."
+    );
+  });
+
   it("clickear un slot llama a onChange con esa hora", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();

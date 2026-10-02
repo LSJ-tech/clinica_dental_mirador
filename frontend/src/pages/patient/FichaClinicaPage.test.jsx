@@ -26,6 +26,13 @@ describe("FichaClinicaPage", () => {
     expect(screen.getByText("No tienes tratamientos registrados.")).toBeInTheDocument();
   });
 
+  it("muestra carga indefinida si no existe una ficha", async () => {
+    fichasClinicasApi.list.mockResolvedValue({ data: [] });
+    render(<FichaClinicaPage />);
+    expect(await screen.findByText("Cargando...")).toBeInTheDocument();
+    expect(tratamientosApi.list).not.toHaveBeenCalled();
+  });
+
   it("muestra el historial, notas y tabla de tratamientos", async () => {
     fichasClinicasApi.list.mockResolvedValue({
       data: [{ id: 1, historial: "Sin alergias", notas_clinicas: "Paciente colaborador" }],

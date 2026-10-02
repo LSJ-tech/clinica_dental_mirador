@@ -58,6 +58,14 @@ describe("PacienteDetailPage", () => {
     expect(screen.getByLabelText("Nombre")).toHaveValue("Ana Torres");
   });
 
+  it("muestra un error si no puede cargar el paciente", async () => {
+    pacientesApi.get.mockRejectedValue(new Error("network"));
+    render(<PacienteDetailPage />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No se pudo cargar el paciente."
+    );
+  });
+
   it("guarda los cambios del formulario de datos del paciente", async () => {
     const user = userEvent.setup();
     pacientesApi.update.mockResolvedValue({
@@ -113,6 +121,17 @@ describe("PacienteDetailPage", () => {
     await waitFor(() => expect(fichasClinicasApi.update).toHaveBeenCalled());
   });
 
+  it("tab Ficha muestra un error si falla su carga", async () => {
+    const user = userEvent.setup();
+    fichasClinicasApi.list.mockRejectedValue(new Error("network"));
+    render(<PacienteDetailPage />);
+    await screen.findByRole("heading", { name: "Ana Torres" });
+    await user.click(screen.getByRole("button", { name: "Ficha" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No se pudo cargar la ficha clínica."
+    );
+  });
+
   it("tab Tratamientos: lista y crea un tratamiento", async () => {
     const user = userEvent.setup();
     tratamientosApi.list.mockResolvedValue({
@@ -130,6 +149,17 @@ describe("PacienteDetailPage", () => {
     await waitFor(() => expect(tratamientosApi.create).toHaveBeenCalled());
   });
 
+  it("tab Tratamientos muestra un error si falla la carga de tratamientos", async () => {
+    const user = userEvent.setup();
+    tratamientosApi.list.mockRejectedValue(new Error("network"));
+    render(<PacienteDetailPage />);
+    await screen.findByRole("heading", { name: "Ana Torres" });
+    await user.click(screen.getByRole("button", { name: "Tratamientos" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No se pudieron cargar los tratamientos."
+    );
+  });
+
   it("tab Pagos: lista y registra un pago", async () => {
     const user = userEvent.setup();
     pagosApi.list.mockResolvedValue({
@@ -145,6 +175,17 @@ describe("PacienteDetailPage", () => {
     await user.type(screen.getByLabelText("Monto"), "15000");
     await user.click(screen.getByText("Registrar pago"));
     await waitFor(() => expect(pagosApi.create).toHaveBeenCalled());
+  });
+
+  it("tab Pagos muestra un error si falla la carga", async () => {
+    const user = userEvent.setup();
+    pagosApi.list.mockRejectedValue(new Error("network"));
+    render(<PacienteDetailPage />);
+    await screen.findByRole("heading", { name: "Ana Torres" });
+    await user.click(screen.getByRole("button", { name: "Pagos" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No se pudieron cargar los pagos."
+    );
   });
 
   it("tab Citas: lista, crea y cambia estado de una cita", async () => {
@@ -175,6 +216,16 @@ describe("PacienteDetailPage", () => {
     expect(screen.getByLabelText("Hora")).toHaveValue("11:00");
     await user.click(screen.getByText("Agendar"));
     await waitFor(() => expect(citasApi.create).toHaveBeenCalled());
+  });
+
+  it("tab Citas muestra un error si falla su carga", async () => {
+    const user = userEvent.setup();
+    citasApi.list.mockRejectedValue(new Error("network"));
+    profesionalesApi.list.mockRejectedValue(new Error("network"));
+    render(<PacienteDetailPage />);
+    await screen.findByRole("heading", { name: "Ana Torres" });
+    await user.click(screen.getByRole("button", { name: "Citas" }));
+    expect(await screen.findByRole("alert")).toBeInTheDocument();
   });
 
   it("no muestra el botón eliminar paciente para staff normal", async () => {

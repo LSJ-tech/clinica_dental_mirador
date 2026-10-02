@@ -74,7 +74,7 @@ const EQUIPO = [
   },
 ];
 
-function iniciales(nombre) {
+export function iniciales(nombre) {
   return nombre
     .replace(/^(Ing\.|Dra\.|Dr\.)\s*/, "")
     .split(" ")

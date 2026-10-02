@@ -46,6 +46,14 @@ describe("PacientesListPage", () => {
     await waitFor(() => expect(pacientesApi.list).toHaveBeenLastCalledWith({ q: "Zoe" }));
   });
 
+  it("muestra un error si falla la carga de pacientes", async () => {
+    pacientesApi.list.mockRejectedValue(new Error("network"));
+    renderPage();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No se pudieron cargar los pacientes."
+    );
+  });
+
   it("muestra y oculta el formulario de nuevo paciente", async () => {
     const user = userEvent.setup();
     renderPage();
@@ -66,6 +74,21 @@ describe("PacientesListPage", () => {
     await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
     await user.click(screen.getByText("Crear"));
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/staff/pacientes/42"));
+  });
+
+  it("permite ingresar fecha de nacimiento al crear un paciente", async () => {
+    const user = userEvent.setup();
+    pacientesApi.create.mockResolvedValue({ data: { id: 42 } });
+    renderPage();
+    await user.click(screen.getByText("Nuevo paciente"));
+    await user.type(screen.getByLabelText("Nombre"), "Ana");
+    await user.type(screen.getByLabelText("RUT"), "1-9");
+    await user.type(screen.getByLabelText("Teléfono"), "+56911111111");
+    await user.type(screen.getByLabelText("Fecha de nacimiento"), "2000-01-01");
+    await user.click(screen.getByText("Crear"));
+    await waitFor(() => expect(pacientesApi.create).toHaveBeenCalledWith(
+      expect.objectContaining({ fecha_nacimiento: "2000-01-01" })
+    ));
   });
 
   it("muestra un error si la creacion falla", async () => {

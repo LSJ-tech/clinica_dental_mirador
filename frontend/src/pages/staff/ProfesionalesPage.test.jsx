@@ -22,6 +22,14 @@ describe("ProfesionalesPage", () => {
     expect(await screen.findByText("Dra. Soto")).toBeInTheDocument();
   });
 
+  it("muestra un error si falla la carga de profesionales", async () => {
+    profesionalesApi.list.mockRejectedValue(new Error("network"));
+    render(<ProfesionalesPage />);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No se pudieron cargar los profesionales."
+    );
+  });
+
   it("crea un profesional nuevo", async () => {
     const user = userEvent.setup();
     profesionalesApi.create.mockResolvedValue({});
@@ -46,6 +54,39 @@ describe("ProfesionalesPage", () => {
     expect(screen.getByLabelText("Nombre")).toHaveValue("Dra. Soto");
     await user.click(screen.getByText("Cancelar"));
     expect(screen.getByText("Nuevo profesional")).toBeInTheDocument();
+  });
+
+  it("actualiza un profesional existente", async () => {
+    const user = userEvent.setup();
+    profesionalesApi.update.mockResolvedValue({});
+    render(<ProfesionalesPage />);
+    await screen.findByText("Dra. Soto");
+    await user.click(screen.getByText("Editar"));
+    await user.clear(screen.getByLabelText("Especialidad"));
+    await user.type(screen.getByLabelText("Especialidad"), "Endodoncia");
+    await user.click(screen.getByText("Guardar"));
+    await waitFor(() => expect(profesionalesApi.update).toHaveBeenCalledWith(1, {
+      nombre: "Dra. Soto", especialidad: "Endodoncia", box_asignado: "1",
+    }));
+    await waitFor(() => expect(profesionalesApi.list).toHaveBeenCalledTimes(2));
+  });
+
+  it("actualiza una hora del horario al perder foco", async () => {
+    const user = userEvent.setup();
+    horariosProfesionalApi.list.mockResolvedValue({
+      data: [{ id: 10, profesional: 1, dia_semana: 0, hora_inicio: "09:00", hora_fin: "18:00" }],
+    });
+    horariosProfesionalApi.update.mockResolvedValue({});
+    render(<ProfesionalesPage />);
+    await screen.findByText("Dra. Soto");
+    await user.click(screen.getByText("Horario"));
+    const desde = await screen.findByDisplayValue("09:00");
+    await user.clear(desde);
+    await user.type(desde, "10:00");
+    await user.tab();
+    await waitFor(() => expect(horariosProfesionalApi.update).toHaveBeenCalledWith(10, {
+      hora_inicio: "10:00",
+    }));
   });
 
   it("elimina un profesional", async () => {
@@ -83,6 +124,18 @@ describe("ProfesionalesPage", () => {
     expect(screen.getByText("Martes")).toBeInTheDocument();
     await user.click(screen.getByText("Cerrado ese día"));
     expect(horariosProfesionalApi.remove).toHaveBeenCalledWith(10);
+    await waitFor(() => expect(horariosProfesionalApi.list).toHaveBeenCalledTimes(2));
+  });
+
+  it("muestra un error si falla la carga del horario", async () => {
+    const user = userEvent.setup();
+    horariosProfesionalApi.list.mockRejectedValue(new Error("network"));
+    render(<ProfesionalesPage />);
+    await screen.findByText("Dra. Soto");
+    await user.click(screen.getByText("Horario"));
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No se pudo cargar el horario."
+    );
   });
 
   it("permite abrir un dia cerrado", async () => {
@@ -97,5 +150,6 @@ describe("ProfesionalesPage", () => {
     expect(horariosProfesionalApi.create).toHaveBeenCalledWith({
       profesional: 1, dia_semana: 0, hora_inicio: "09:00", hora_fin: "18:00",
     });
+    await waitFor(() => expect(horariosProfesionalApi.list).toHaveBeenCalledTimes(2));
   });
 });
