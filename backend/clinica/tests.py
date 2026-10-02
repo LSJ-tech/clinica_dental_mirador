@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date, time as dt_time, timedelta
 from unittest.mock import patch
 
 from django.contrib.auth.models import User
@@ -36,7 +36,7 @@ class EnvioCorreoTest(TestCase):
         profesional = Profesional.objects.create(nombre="Dra. Soto", especialidad="General")
         cita = Cita.objects.create(
             paciente=paciente, profesional=profesional,
-            fecha=date.today(), hora="10:00", estado="confirmada",
+            fecha=date.today(), hora=dt_time(10, 0), estado="confirmada",
         )
 
         self.assertFalse(enviar_confirmacion_reserva(cita))
@@ -49,7 +49,7 @@ class EnvioCorreoTest(TestCase):
         profesional = Profesional.objects.create(nombre="Dra. Soto", especialidad="General")
         cita = Cita.objects.create(
             paciente=paciente, profesional=profesional,
-            fecha=date.today(), hora="10:00", estado="confirmada",
+            fecha=date.today(), hora=dt_time(10, 0), estado="confirmada",
         )
 
         self.assertFalse(enviar_confirmacion_reserva(cita))
