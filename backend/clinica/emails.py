@@ -1,4 +1,5 @@
 import logging
+from datetime import time
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -9,6 +10,17 @@ from .tokens import generar_token_confirmacion
 logger = logging.getLogger(__name__)
 
 _DIRECCION_CLINICA = "El Mirador #459 (Sitio 17-E), Casablanca"
+
+
+def _formatear_hora(hora):
+    if hasattr(hora, "strftime"):
+        return hora.strftime("%H:%M")
+    if isinstance(hora, str):
+        try:
+            return time.fromisoformat(hora).strftime("%H:%M")
+        except ValueError:
+            return hora
+    return str(hora)
 
 
 def _enviar(destinatario, asunto, cuerpo_texto, template_html, contexto):
@@ -33,7 +45,7 @@ def enviar_confirmacion_reserva(cita):
     if not paciente.email:
         return False
     fecha = cita.fecha.strftime("%d-%m-%Y")
-    hora = cita.hora.strftime("%H:%M")
+    hora = _formatear_hora(cita.hora)
     cuerpo_texto = (
         f"Hola {paciente.nombre},\n\n"
         f"Tu hora en Clínica Dental El Mirador quedó confirmada:\n\n"
@@ -62,7 +74,7 @@ def enviar_confirmacion_reserva(cita):
 def enviar_notificacion_nueva_reserva_a_clinica(cita):
     paciente = cita.paciente
     fecha = cita.fecha.strftime("%d-%m-%Y")
-    hora = cita.hora.strftime("%H:%M")
+    hora = _formatear_hora(cita.hora)
     cuerpo_texto = (
         f"Nueva reserva desde la web pública:\n\n"
         f"Paciente: {paciente.nombre}\n"
@@ -99,7 +111,7 @@ def enviar_recordatorio_cita(cita):
     token = generar_token_confirmacion(cita.id)
     link_confirmar = f"{settings.FRONTEND_URL}/confirmar-cita/{token}"
     fecha = cita.fecha.strftime("%d-%m-%Y")
-    hora = cita.hora.strftime("%H:%M")
+    hora = _formatear_hora(cita.hora)
     cuerpo_texto = (
         f"Hola {paciente.nombre},\n\n"
         f"Te recordamos tu hora en Clínica Dental El Mirador:\n\n"
