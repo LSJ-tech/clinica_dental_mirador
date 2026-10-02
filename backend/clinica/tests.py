@@ -54,6 +54,20 @@ class EnvioCorreoTest(TestCase):
 
         self.assertFalse(enviar_confirmacion_reserva(cita))
 
+    @patch("clinica.emails._enviar", return_value=True)
+    def test_confirmacion_formatea_hora_string(self, mock_enviar):
+        paciente = Paciente.objects.create(
+            nombre="Ana", rut="1-9", telefono="+56911111111", email="ana@example.com"
+        )
+        profesional = Profesional.objects.create(nombre="Dra. Soto", especialidad="General")
+        cita = Cita.objects.create(
+            paciente=paciente, profesional=profesional,
+            fecha=date.today(), hora="10:00:00", estado="confirmada",
+        )
+
+        self.assertTrue(enviar_confirmacion_reserva(cita))
+        self.assertEqual(mock_enviar.call_args.args[4]["hora"], "10:00")
+
 
 class CitaApiPermisosTest(APITestCase):
     def setUp(self):
