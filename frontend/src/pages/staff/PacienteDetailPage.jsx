@@ -59,7 +59,7 @@ export default function PacienteDetailPage() {
     );
     if (!confirmado) return;
     await pacientesApi.remove(id);
-    navigate("/staff/pacientes");
+    void navigate("/staff/pacientes");
   }
 
   if (!paciente) return <p>Cargando...</p>;

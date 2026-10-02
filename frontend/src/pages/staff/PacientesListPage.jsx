@@ -31,7 +31,7 @@ export default function PacientesListPage() {
     setError("");
     try {
       const respuesta = await pacientesApi.create(form);
-      navigate(`/staff/pacientes/${respuesta.data.id}`);
+      void navigate(`/staff/pacientes/${respuesta.data.id}`);
     } catch {
       setError("No se pudo crear el paciente (revisa que el RUT no esté repetido).");
     }
