@@ -10,6 +10,7 @@ from django.utils import timezone
 from rest_framework.test import APITestCase
 
 from .models import Cita, FichaClinica, HorarioProfesional, Paciente, Profesional
+from .emails import enviar_confirmacion_reserva
 from .tokens import generar_token_confirmacion
 from .validators import normalizar_telefono_cl
 
@@ -27,6 +28,21 @@ class NormalizarTelefonoTest(TestCase):
     def test_telefono_invalido_lanza_error(self):
         with self.assertRaises(ValidationError):
             normalizar_telefono_cl("123")
+
+
+class EnvioCorreoTest(TestCase):
+    @patch("clinica.emails.render_to_string", side_effect=RuntimeError("fallo de template"))
+    def test_reserva_no_falla_si_el_correo_no_se_puede_renderizar(self, _render_to_string):
+        paciente = Paciente.objects.create(
+            nombre="Ana", rut="1-9", telefono="+56911111111", email="ana@example.com"
+        )
+        profesional = Profesional.objects.create(nombre="Dra. Soto", especialidad="General")
+        cita = Cita.objects.create(
+            paciente=paciente, profesional=profesional,
+            fecha=date.today(), hora="10:00", estado="confirmada",
+        )
+
+        self.assertFalse(enviar_confirmacion_reserva(cita))
 
 
 class CitaApiPermisosTest(APITestCase):
