@@ -1,14 +1,19 @@
+import datetime
 import logging
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from django.utils import timezone
 
 from .tokens import generar_token_confirmacion
 
 logger = logging.getLogger(__name__)
 
 _DIRECCION_CLINICA = "El Mirador #459 (Sitio 17-E), Casablanca"
+
+# Estados que ya no necesitan recordatorio: la cita no va a pasar (o ya pasó).
+_ESTADOS_SIN_RECORDATORIO = ("cancelada", "completada", "no_asistio")
 
 
 def _enviar(destinatario, asunto, cuerpo_texto, template_html, contexto):
@@ -124,3 +129,32 @@ def enviar_recordatorio_cita(cita):
             "link_confirmar": link_confirmar,
         },
     )
+
+
+def enviar_recordatorios_pendientes():
+    # Import local: evita el ciclo emails -> models -> ... al importar este
+    # módulo (varios otros archivos de clinica importan emails al arrancar).
+    from .models import Cita
+
+    manana = timezone.localdate() + datetime.timedelta(days=1)
+    citas = (
+        Cita.objects.select_related("paciente", "profesional")
+        .filter(fecha=manana, recordatorio_estado="no_enviado")
+        .exclude(estado__in=_ESTADOS_SIN_RECORDATORIO)
+        .exclude(paciente__email="")
+    )
+
+    enviados = 0
+    fallidos = 0
+    for cita in citas:
+        if enviar_recordatorio_cita(cita):
+            cita.recordatorio_estado = "enviado"
+            cita.recordatorio_enviado_at = timezone.now()
+            cita.save(update_fields=["recordatorio_estado", "recordatorio_enviado_at"])
+            enviados += 1
+        else:
+            cita.recordatorio_estado = "fallido"
+            cita.save(update_fields=["recordatorio_estado"])
+            fallidos += 1
+
+    return manana, enviados, fallidos

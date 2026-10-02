@@ -9,7 +9,11 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .emails import enviar_confirmacion_reserva, enviar_notificacion_nueva_reserva_a_clinica
+from .emails import (
+    enviar_confirmacion_reserva,
+    enviar_notificacion_nueva_reserva_a_clinica,
+    enviar_recordatorios_pendientes,
+)
 from .models import Cita, FichaClinica, HorarioProfesional, Pago, Paciente, Profesional, Tratamiento
 from .permissions import EsPacientePropioOStaff, EsSuperusuario, SoloStaffEscribe
 from .serializers import (
@@ -288,3 +292,18 @@ class CambiarPasswordView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({"detail": "Contraseña actualizada."})
+
+
+class EnviarRecordatoriosView(APIView):
+    """
+    Dispara a mano el mismo envío que haría el cron diario (ver comando de
+    management enviar_recordatorios): el cron de Render tiene costo
+    (~US$1/mes, no existe en el plan free), así que mientras no se active,
+    el staff manda los recordatorios del día siguiente desde el panel.
+    """
+
+    permission_classes = [permissions.IsAuthenticated, SoloStaffEscribe]
+
+    def post(self, request):
+        manana, enviados, fallidos = enviar_recordatorios_pendientes()
+        return Response({"fecha": manana, "enviados": enviados, "fallidos": fallidos})

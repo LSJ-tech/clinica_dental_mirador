@@ -508,6 +508,44 @@ class EnviarRecordatoriosCommandTest(TestCase):
         self.assertEqual(cita.recordatorio_estado, "fallido")
 
 
+class EnviarRecordatoriosViewTest(APITestCase):
+    """Mismo envío que el comando, pero disparado a mano desde el panel de staff."""
+
+    def setUp(self):
+        self.profesional = Profesional.objects.create(nombre="Dra. Soto", especialidad="General")
+        self.manana = timezone.localdate() + timedelta(days=1)
+        self.paciente = Paciente.objects.create(
+            nombre="Con Email", rut="1-9", telefono="+56911111111", email="con@example.com"
+        )
+        self.cita = Cita.objects.create(
+            paciente=self.paciente, profesional=self.profesional,
+            fecha=self.manana, hora="10:00", estado="pendiente",
+        )
+
+    def test_staff_puede_disparar_el_envio(self):
+        staff = User.objects.create_user(username="staffr", password="x", is_staff=True)
+        self.client.force_authenticate(user=staff)
+        respuesta = self.client.post("/api/recordatorios/enviar/")
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertEqual(respuesta.data["enviados"], 1)
+        self.assertEqual(respuesta.data["fallidos"], 0)
+        self.assertEqual(len(mail.outbox), 1)
+        self.cita.refresh_from_db()
+        self.assertEqual(self.cita.recordatorio_estado, "enviado")
+
+    def test_paciente_no_puede_disparar_el_envio(self):
+        user = User.objects.create_user(username="+56988888888", password="x")
+        self.client.force_authenticate(user=user)
+        respuesta = self.client.post("/api/recordatorios/enviar/")
+        self.assertEqual(respuesta.status_code, 403)
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_anonimo_no_puede_disparar_el_envio(self):
+        respuesta = self.client.post("/api/recordatorios/enviar/")
+        self.assertIn(respuesta.status_code, (401, 403))
+        self.assertEqual(len(mail.outbox), 0)
+
+
 class CambiarPasswordTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username="staff5", password="claveVieja123")

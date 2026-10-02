@@ -63,6 +63,10 @@ export const cuentaApi = {
   cambiarPassword: (data) => client.post("/cambiar-password/", data),
 };
 
+export const recordatoriosApi = {
+  enviar: () => client.post("/recordatorios/enviar/"),
+};
+
 // El token no es un id de recurso propio (lo genera django.core.signing,
 // no idValidado): puede traer "-", "_" y ":" en base64url, formato
 // distinto al de los ids numéricos del resto de la API.
