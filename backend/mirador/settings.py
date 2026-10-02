@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'anymail',
     'clinica',
 ]
 
@@ -183,20 +184,22 @@ CORS_ALLOWED_ORIGINS = [
 
 
 # Email (confirmación de reserva y recordatorio de cita).
-# Sin EMAIL_HOST (desarrollo, o producción mientras no se configure un
-# proveedor real), se usa el backend de consola: los correos se imprimen
-# en los logs en vez de enviarse, así el flujo se puede probar entero sin
-# credenciales reales y sin que una reserva falle por esto.
+# Se manda por la API HTTP de Resend (vía django-anymail), no por SMTP:
+# Render bloquea el tráfico saliente a los puertos SMTP (25/465/587) en
+# servicios del plan free -- la conexión se queda colgada contra el
+# firewall hasta hacer timeout, lo que tira abajo el worker de gunicorn a
+# mitad de la petición (ver SIGKILL en logs). La API HTTP usa el puerto
+# 443, que no está bloqueado.
+# Sin EMAIL_HOST_PASSWORD (desarrollo, o producción mientras no se
+# configure un proveedor real), se usa el backend de consola: los correos
+# se imprimen en los logs en vez de enviarse, así el flujo se puede
+# probar entero sin credenciales reales y sin que una reserva falle por esto.
 
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173' if DEBUG else '')
 
-if os.environ.get('EMAIL_HOST'):
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = os.environ['EMAIL_HOST']
-    EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
-    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
-    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-    EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+if os.environ.get('EMAIL_HOST_PASSWORD'):
+    EMAIL_BACKEND = 'anymail.backends.resend.EmailBackend'
+    ANYMAIL = {'RESEND_API_KEY': os.environ['EMAIL_HOST_PASSWORD']}
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
