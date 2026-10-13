@@ -207,7 +207,7 @@ DEFAULT_FROM_EMAIL = os.environ.get(
     # Provisorio: hasta que la clínica configure su propio correo de envío
     # (o se elija un proveedor real, ej. Resend/SendGrid), se usa el de
     # DevQuad para no mandar nada desde la cuenta real de la clínica todavía.
-    'DEFAULT_FROM_EMAIL', 'Clínica Dental El Mirador <contacto@devquad.cl>'
+    'DEFAULT_FROM_EMAIL', 'DevQuad <contacto@devquad.cl>'
 )
 
 # A dónde llega el aviso de "nueva reserva" para el staff. Provisorio (etapa
